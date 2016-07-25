@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -16,9 +18,12 @@ public class DictionaryItem
 {
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(name="name")
 	private String name ;
+	@Column(name="innerid")
+	private int innerid ;
 	@Column(name="dictionaryid")
 	private int dictionaryid ;
 	@Column(name="description")
@@ -30,14 +35,28 @@ public class DictionaryItem
 	@Column(name="lastmodifytime")
 	private Date lastmodifytime;
 
+	
+	
+	public int getInnerid()
+	{
+		return innerid;
+	}
+
+	public DictionaryItem setInnerid(int innerid)
+	{
+		this.innerid = innerid;
+		return this;
+	}
+
 	public int getId()
 	{
 		return id;
 	}
 
-	public void setId(int id)
+	public DictionaryItem setId(int id)
 	{
 		this.id = id;
+		return this;
 	}
 
 	public String getName()
@@ -45,9 +64,10 @@ public class DictionaryItem
 		return name;
 	}
 
-	public void setName(String name)
+	public DictionaryItem setName(String name)
 	{
 		this.name = name;
+		return this;
 	}
 
 	public int getDictionaryid()
@@ -55,9 +75,10 @@ public class DictionaryItem
 		return dictionaryid;
 	}
 
-	public void setDictionaryid(int dictionaryid)
+	public DictionaryItem setDictionaryid(int dictionaryid)
 	{
 		this.dictionaryid = dictionaryid;
+		return this;
 	}
 
 	public String getDescription()
@@ -65,9 +86,10 @@ public class DictionaryItem
 		return description;
 	}
 
-	public void setDescription(String description)
+	public DictionaryItem setDescription(String description)
 	{
 		this.description = description;
+		return this;
 	}
 
 	public int getStatus()
@@ -75,9 +97,10 @@ public class DictionaryItem
 		return status;
 	}
 
-	public void setStatus(int status)
+	public DictionaryItem setStatus(int status)
 	{
 		this.status = status;
+		return this;
 	}
 
 	public Date getCreatetime()
@@ -85,9 +108,10 @@ public class DictionaryItem
 		return createtime;
 	}
 
-	public void setCreatetime(Date createtime)
+	public DictionaryItem setCreatetime(Date createtime)
 	{
 		this.createtime = createtime;
+		return this;
 	}
 
 	public Date getLastmodifytime()
@@ -95,9 +119,10 @@ public class DictionaryItem
 		return lastmodifytime;
 	}
 
-	public void setLastmodifytime(Date lastmodifytime)
+	public DictionaryItem setLastmodifytime(Date lastmodifytime)
 	{
 		this.lastmodifytime = lastmodifytime;
+		return this;
 	}
 
 	/**

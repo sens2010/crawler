@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -16,6 +18,7 @@ public class Dictionary
 {
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(name="name")
 	private String name ;
@@ -47,9 +50,10 @@ public class Dictionary
 		return name;
 	}
 
-	public void setName(String name)
+	public Dictionary setName(String name)
 	{
 		this.name = name;
+		return this;
 	}
 
 	public int getCategory()
@@ -57,9 +61,10 @@ public class Dictionary
 		return category;
 	}
 
-	public void setCategory(int category)
+	public Dictionary setCategory(int category)
 	{
 		this.category = category;
+		return this;
 	}
 
 	public String getDescription()
@@ -67,9 +72,10 @@ public class Dictionary
 		return description;
 	}
 
-	public void setDescription(String description)
+	public Dictionary setDescription(String description)
 	{
 		this.description = description;
+		return this;
 	}
 
 	public int getStatus()
@@ -77,9 +83,10 @@ public class Dictionary
 		return status;
 	}
 
-	public void setStatus(int status)
+	public Dictionary setStatus(int status)
 	{
 		this.status = status;
+		return this;
 	}
 
 	public Date getCreatetime()
@@ -87,9 +94,10 @@ public class Dictionary
 		return createtime;
 	}
 
-	public void setCreatetime(Date createtime)
+	public Dictionary setCreatetime(Date createtime)
 	{
 		this.createtime = createtime;
+		return this;
 	}
 
 	public Date getLastmodifytime()
@@ -97,9 +105,10 @@ public class Dictionary
 		return lastmodifytime;
 	}
 
-	public void setLastmodifytime(Date lastmodifytime)
+	public Dictionary setLastmodifytime(Date lastmodifytime)
 	{
 		this.lastmodifytime = lastmodifytime;
+		return this;
 	}
 
 	/**

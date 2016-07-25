@@ -1,6 +1,6 @@
 package cn.cnic.datapub.n.service;
 
-import java.lang.reflect.Field;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import cn.cnic.datapub.n.annotation.MyTest;
+import cn.cnic.datapub.n.model.Dictionary;
 import cn.cnic.datapub.n.serviceimpl.DictionaryServiceImpl;
 
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")
@@ -17,53 +17,41 @@ import cn.cnic.datapub.n.serviceimpl.DictionaryServiceImpl;
 public class DictionaryServiceImplTest
 {
 	
-	@MyTest
-	String name;
-	@MyTest(name="name1")
-	String name1;
-	@MyTest(name="name2")
-	String name2;
-	
 	
 	@Resource
 	DictionaryServiceImpl dictionaryServiceImpl;
 	
 	@Test
-	public void testAddBatch()
+	public void testAddDictionary()
 	{
 		
-		Field[] fileds = DictionaryServiceImplTest.class.getDeclaredFields();
-		System.out.println(fileds.length);
-		for(Field field:fileds)
-		{
-			System.out.println(field.getName());
-			MyTest myTest;
-			if((myTest = field.getAnnotation(MyTest.class))!=null)
-			{
-				System.out.println(field.getName()+":"+myTest.name());
-				
-			}
-		}
+		Dictionary dic = new Dictionary();
+		dic.setName("字典分类");
+		dic.setCategory(-1);
+		dic.setDescription("字典的不同类型");
+		dic.setStatus(1);
+		dic.setCreatetime(new Date());
 		
-		System.err.println(name);
+		dictionaryServiceImpl.addDictionary(dic);
+		
 	}
 	
 	
-	public void testDeleteBatch()
+	public void testDeleteDictionary()
 	{
 		
 	}
 	
-	public void testUpdateBatch()
+	public void testUpdateDictionary()
 	{
 	}
 	
-	public void testFindBatchById()
+	public void testFindDictionaryById()
 	{
 	}
 	
 	
-	public void testFindAllBatch()
+	public void testFindAllDictionary()
 	{
 	}
 	/**

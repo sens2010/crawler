@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -16,6 +18,7 @@ public class Parser extends Model
 {
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(name="subjobid")
 	private int subjobid;
@@ -43,8 +46,8 @@ public class Parser extends Model
 	private boolean artjs;
 	@Column(name="status")
 	private int status;
-	@Column(name="starttime")
-	private Date starttime;
+	@Column(name="createtime")
+	private Date createtime;
 	@Column(name="lastmodifytime")
 	private Date lastmodifytime;
 	
@@ -56,9 +59,10 @@ public class Parser extends Model
 		return id;
 	}
 
-	public void setId(int id)
+	public Parser setId(int id)
 	{
 		this.id = id;
+		return this;
 	}
 
 	public int getSubjobid()
@@ -66,9 +70,10 @@ public class Parser extends Model
 		return subjobid;
 	}
 
-	public void setSubjobid(int subjobid)
+	public Parser setSubjobid(int subjobid)
 	{
 		this.subjobid = subjobid;
+		return this;
 	}
 
 	public String getListparser()
@@ -76,9 +81,10 @@ public class Parser extends Model
 		return listparser;
 	}
 
-	public void setListparser(String listparser)
+	public Parser setListparser(String listparser)
 	{
 		this.listparser = listparser;
+		return this;
 	}
 
 	public boolean isListcss()
@@ -86,9 +92,10 @@ public class Parser extends Model
 		return listcss;
 	}
 
-	public void setListcss(boolean listcss)
+	public Parser setListcss(boolean listcss)
 	{
 		this.listcss = listcss;
+		return this;
 	}
 
 	public boolean isListjs()
@@ -96,9 +103,10 @@ public class Parser extends Model
 		return listjs;
 	}
 
-	public void setListjs(boolean listjs)
+	public Parser setListjs(boolean listjs)
 	{
 		this.listjs = listjs;
+		return this;
 	}
 
 	public String getNextparser()
@@ -106,9 +114,10 @@ public class Parser extends Model
 		return nextparser;
 	}
 
-	public void setNextparser(String nextparser)
+	public Parser setNextparser(String nextparser)
 	{
 		this.nextparser = nextparser;
+		return this;
 	}
 
 	public boolean isUrlrelativer()
@@ -116,9 +125,10 @@ public class Parser extends Model
 		return urlrelativer;
 	}
 
-	public void setUrlrelativer(boolean urlrelativer)
+	public Parser setUrlrelativer(boolean urlrelativer)
 	{
 		this.urlrelativer = urlrelativer;
+		return this;
 	}
 
 	public String getTitleparser()
@@ -126,9 +136,10 @@ public class Parser extends Model
 		return titleparser;
 	}
 
-	public void setTitleparser(String titleparser)
+	public Parser setTitleparser(String titleparser)
 	{
 		this.titleparser = titleparser;
+		return this;
 	}
 
 	public String getTimeparser()
@@ -136,9 +147,10 @@ public class Parser extends Model
 		return timeparser;
 	}
 
-	public void setTimeparser(String timeparser)
+	public Parser setTimeparser(String timeparser)
 	{
 		this.timeparser = timeparser;
+		return this;
 	}
 
 	public String getSourceparser()
@@ -146,9 +158,10 @@ public class Parser extends Model
 		return sourceparser;
 	}
 
-	public void setSourceparser(String sourceparser)
+	public Parser setSourceparser(String sourceparser)
 	{
 		this.sourceparser = sourceparser;
+		return this;
 	}
 
 	public String getTextparser()
@@ -156,9 +169,10 @@ public class Parser extends Model
 		return textparser;
 	}
 
-	public void setTextparser(String textparser)
+	public Parser setTextparser(String textparser)
 	{
 		this.textparser = textparser;
+		return this;
 	}
 
 	public boolean isArtcss()
@@ -166,9 +180,10 @@ public class Parser extends Model
 		return artcss;
 	}
 
-	public void setArtcss(boolean artcss)
+	public Parser setArtcss(boolean artcss)
 	{
 		this.artcss = artcss;
+		return this;
 	}
 
 	public boolean isArtjs()
@@ -176,9 +191,10 @@ public class Parser extends Model
 		return artjs;
 	}
 
-	public void setArtjs(boolean artjs)
+	public Parser setArtjs(boolean artjs)
 	{
 		this.artjs = artjs;
+		return this;
 	}
 
 	public int getStatus()
@@ -186,19 +202,21 @@ public class Parser extends Model
 		return status;
 	}
 
-	public void setStatus(int status)
+	public Parser setStatus(int status)
 	{
 		this.status = status;
+		return this;
 	}
 
-	public Date getStarttime()
+	public Date getCreatetime()
 	{
-		return starttime;
+		return createtime;
 	}
 
-	public void setStarttime(Date starttime)
+	public Parser setCreatetime(Date createtime)
 	{
-		this.starttime = starttime;
+		this.createtime = createtime;
+		return this;
 	}
 
 	public Date getLastmodifytime()
@@ -206,9 +224,10 @@ public class Parser extends Model
 		return lastmodifytime;
 	}
 
-	public void setLastmodifytime(Date lastmodifytime)
+	public Parser setLastmodifytime(Date lastmodifytime)
 	{
 		this.lastmodifytime = lastmodifytime;
+		return this;
 	}
 
 	/**

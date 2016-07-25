@@ -1,7 +1,11 @@
 package cn.cnic.datapub.n.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -14,6 +18,7 @@ public class SubJob extends Model
 {
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(name="jobid")
 	private int jobid;
@@ -26,16 +31,45 @@ public class SubJob extends Model
 	@Column(name="status")
 	private int status;
 	@Column(name="description")
-	private int description;
+	private String description;
+	@Column(name="createtime")
+	private Date createtime;
+	@Column(name="lastmodifytime")
+	private Date lastmodifytime;
+	
+	
+	
+	public Date getCreatetime()
+	{
+		return createtime;
+	}
+
+	public SubJob setCreatetime(Date createtime)
+	{
+		this.createtime = createtime;
+		return this;
+	}
+
+	public Date getLastmodifytime()
+	{
+		return lastmodifytime;
+	}
+
+	public SubJob setLastmodifytime(Date lastmodifytime)
+	{
+		this.lastmodifytime = lastmodifytime;
+		return this;
+	}
 
 	public int getId()
 	{
 		return id;
 	}
 
-	public void setId(int id)
+	public SubJob setId(int id)
 	{
 		this.id = id;
+		return this;
 	}
 
 	public int getJobid()
@@ -43,9 +77,10 @@ public class SubJob extends Model
 		return jobid;
 	}
 
-	public void setJobid(int jobid)
+	public SubJob setJobid(int jobid)
 	{
 		this.jobid = jobid;
+		return this;
 	}
 
 	public String getName()
@@ -53,9 +88,10 @@ public class SubJob extends Model
 		return name;
 	}
 
-	public void setName(String name)
+	public SubJob setName(String name)
 	{
 		this.name = name;
+		return this;
 	}
 
 	public String getUrl()
@@ -63,9 +99,10 @@ public class SubJob extends Model
 		return url;
 	}
 
-	public void setUrl(String url)
+	public SubJob setUrl(String url)
 	{
 		this.url = url;
+		return this;
 	}
 
 	public int getCategory()
@@ -73,9 +110,10 @@ public class SubJob extends Model
 		return category;
 	}
 
-	public void setCategory(int category)
+	public SubJob setCategory(int category)
 	{
 		this.category = category;
+		return this;
 	}
 
 	public int getStatus()
@@ -83,19 +121,21 @@ public class SubJob extends Model
 		return status;
 	}
 
-	public void setStatus(int status)
+	public SubJob setStatus(int status)
 	{
 		this.status = status;
+		return this;
 	}
 
-	public int getDescription()
+	public String getDescription()
 	{
 		return description;
 	}
 
-	public void setDescription(int description)
+	public SubJob setDescription(String description)
 	{
 		this.description = description;
+		return this;
 	}
 
 	/**
