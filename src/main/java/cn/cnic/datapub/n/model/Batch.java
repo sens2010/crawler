@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -16,9 +18,12 @@ public class Batch  extends Model
 {
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(name="jobid")
 	private int jobid;
+	@Column(name="subjobid")
+	private int subjobid;
 	@Column(name="starttime")
 	private Date starttime;
 	@Column(name="endtime")
@@ -27,8 +32,77 @@ public class Batch  extends Model
 	private int status;
 	@Column(name="monitorinfo")
 	private int monitorinfo;
+	@Column(name="psum")
+	private int psum;
+	@Column(name="csum")
+	private int csum;
+	@Column(name="fsum")
+	private int fsum;
+	@Column(name="ssum")
+	private int ssum;
+	@Column(name="asum")
+	private int asum;
 	
 	
+	public int getAsum()
+	{
+		return asum;
+	}
+
+	public void setAsum(int asum)
+	{
+		this.asum = asum;
+	}
+
+	public int getSubjobid()
+	{
+		return subjobid;
+	}
+
+	public void setSubjobid(int subjobid)
+	{
+		this.subjobid = subjobid;
+	}
+
+	public int getPsum()
+	{
+		return psum;
+	}
+
+	public void setPsum(int psum)
+	{
+		this.psum = psum;
+	}
+
+	public int getCsum()
+	{
+		return csum;
+	}
+
+	public void setCsum(int csum)
+	{
+		this.csum = csum;
+	}
+
+	public int getFsum()
+	{
+		return fsum;
+	}
+
+	public void setFsum(int fsum)
+	{
+		this.fsum = fsum;
+	}
+
+	public int getSsum()
+	{
+		return ssum;
+	}
+
+	public void setSsum(int ssum)
+	{
+		this.ssum = ssum;
+	}
 
 	public int getId()
 	{
@@ -95,8 +169,6 @@ public class Batch  extends Model
 	 */
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	public static long getSerialversionuid()

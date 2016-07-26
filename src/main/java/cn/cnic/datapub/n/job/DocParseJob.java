@@ -21,7 +21,6 @@ public class DocParseJob extends ParseJob implements MessageListener
 	private boolean doccss;
 	private boolean docscript;
 	private String url;
-	private boolean isrelative;
 	private String textmatch;
 	private String titlematch;
 	private String timematch;
@@ -58,16 +57,6 @@ public class DocParseJob extends ParseJob implements MessageListener
 	public void setUrl(String url)
 	{
 		this.url = url;
-	}
-
-	public boolean isIsrelative()
-	{
-		return isrelative;
-	}
-
-	public void setIsrelative(boolean isrelative)
-	{
-		this.isrelative = isrelative;
 	}
 
 	public String getTextmatch()
@@ -159,6 +148,15 @@ public class DocParseJob extends ParseJob implements MessageListener
 		int bid = decoration.getIntValue("batchid");
 		int sbid = decoration.getIntValue("subbatchid");
 		String nid = decoration.getString("newsid");
+		JSONObject parser = decoration.getJSONObject("parser");
+		this.setDoccss(parser.getBooleanValue("doccss"));
+		this.setDocscript(parser.getBooleanValue("docscript"));
+		this.setUrl(url);
+		this.setTextmatch(parser.getString("textmatch"));
+		this.setTitlematch(parser.getString("titlematch"));
+		this.setTimematch(parser.getString("timematch"));
+		this.setSourceurlmatch(parser.getString("sourceurlmatch"));
+	
 		System.err.println("url:"+url+",jobid:"+jid+",subjobid:"+sjid+",batchid:"+bid+",sbid:"+sbid+",nid:"+nid);
 	}
 	

@@ -1,6 +1,7 @@
 package cn.cnic.datapub.n.job;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 
+import cn.cnic.datapub.n.model.Batch;
+import cn.cnic.datapub.n.serviceimpl.BatchServiceImpl;
 import cn.cnic.datapub.n.utils.SpringUtils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -33,8 +36,7 @@ public class ListParseJob extends ParseJob
 	private int jobid;
 	private int subjobid;
 	private int batchid;
-	private int subbatchid;
-	
+	private String parser;
 	public int getBatchid()
 	{
 		return batchid;
@@ -43,16 +45,6 @@ public class ListParseJob extends ParseJob
 	public void setBatchid(int batchid)
 	{
 		this.batchid = batchid;
-	}
-
-	public int getSubbatchid()
-	{
-		return subbatchid;
-	}
-
-	public void setSubbatchid(int subbatchid)
-	{
-		this.subbatchid = subbatchid;
 	}
 
 	public int getJobid()
@@ -76,8 +68,9 @@ public class ListParseJob extends ParseJob
 	}
 
 	private AmqpTemplate amqpTemplate;
-	
+	private BatchServiceImpl batchServiceImpl;
 
+	
 	public boolean isListcss()
 	{
 		return listcss;
@@ -149,6 +142,15 @@ public class ListParseJob extends ParseJob
 		return this.amqpTemplate;
 	}
 	
+	public void setBatchServiceImpl(BatchServiceImpl batchServiceImpl)
+	{
+		this.batchServiceImpl=batchServiceImpl;
+	}
+	public BatchServiceImpl getBatchServiceImpl()
+	{
+		return this.batchServiceImpl;
+	}
+	
 	public void sendMQ(List<String> newslist)
 	{
 		System.out.println("newlist's size is "+newslist.size());
@@ -158,6 +160,7 @@ public class ListParseJob extends ParseJob
 		}
 		if(this.amqpTemplate!=null)
 		{
+			int sumacc=0;
 			for(String news:newslist)
 			{
 				String md5 = MD5.digest(news);
@@ -166,15 +169,52 @@ public class ListParseJob extends ParseJob
 				decoration.put("jobid", this.getJobid());
 				decoration.put("subjobid", this.getSubjobid());
 				decoration.put("batchid", this.getBatchid());
-				decoration.put("subbatchid", this.getSubbatchid());
 				decoration.put("newsid", md5);
-				 
+				decoration.put("parser",this.getParser());
+				sumacc++;
 				this.amqpTemplate.convertAndSend("news", decoration.toJSONString());
+			}
+			if(this.batchServiceImpl==null)
+			{
+				setBatchServiceImpl((BatchServiceImpl)SpringUtils.getBean("batchServiceImpl"));
+			}
+			if(this.batchServiceImpl!=null)
+			{
+				Batch batch = this.batchServiceImpl.getBatchById(this.getBatchid());
+				int psum = batch.getPsum();
+				psum+=sumacc;
+				batch.setPsum(psum);
+				this.batchServiceImpl.updateBatch(batch);
 			}
 		}
 		else
 		{
 			System.err.println("amqpTemplate is failed to be initialized!");
+		}
+	}
+	
+	public void initBatch()
+	{
+		logger.info("init batch:"+this.getJobid()+"/"+this.getSubjobid());
+		if(this.batchServiceImpl==null)
+		{
+			setBatchServiceImpl((BatchServiceImpl)SpringUtils.getBean("batchServiceImpl"));
+		}
+		if(this.batchServiceImpl!=null)
+		{
+			Batch batch = new Batch();
+			batch.setJobid(this.getJobid());
+			batch.setSubjobid(this.getSubjobid());
+			batch.setStarttime(new Date());
+			batch.setStatus(1);
+			batch.setPsum(0);
+			batch.setCsum(0);
+			batch.setFsum(0);
+			batch.setSsum(0);
+			batch.setAsum(0);
+			this.batchServiceImpl.addBatch(batch);
+			this.setBatchid(batch.getId());
+			
 		}
 	}
 	
@@ -185,6 +225,7 @@ public class ListParseJob extends ParseJob
 	{
 		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
 		{
+			
 			Set<String> previousone = Sets.newHashSet();
 			Set<String> foreone = Sets.newHashSet();
 			int page_count=1;
@@ -259,6 +300,16 @@ public class ListParseJob extends ParseJob
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public String getParser()
+	{
+		return parser;
+	}
+
+	public void setParser(String parser)
+	{
+		this.parser = parser;
 	}
 	
 }

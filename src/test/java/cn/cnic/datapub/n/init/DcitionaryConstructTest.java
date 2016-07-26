@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class DcitionaryConstructTest
 	ParserServiceImpl parserServiceImpl;
 	
 	
+	
 	//@Test
 	public void dictInit()
 	{
@@ -51,7 +53,9 @@ public class DcitionaryConstructTest
 		dicts.add((new Dictionary()).setCategory(2).setName("子任务状态").setStatus(1).setCreatetime(new Date()));
 		dicts.add((new Dictionary()).setCategory(2).setName("子任务类别").setStatus(1).setCreatetime(new Date()));
 		dicts.add((new Dictionary()).setCategory(2).setName("转换器状态").setStatus(1).setCreatetime(new Date()));
-				
+		dicts.add((new Dictionary()).setCategory(3).setName("监控结果").setStatus(1).setCreatetime(new Date()));
+		dicts.add((new Dictionary()).setCategory(3).setName("采集状态").setStatus(1).setCreatetime(new Date()));
+		
 		List<DictionaryItem> dict_items = new ArrayList<DictionaryItem>();
 		//表类型
 		dict_items.add((new DictionaryItem()).setName("基础表").setInnerid(1).setStatus(1).setDictionaryid(1).setDescription("").setCreatetime(new Date()));
@@ -73,10 +77,21 @@ public class DcitionaryConstructTest
 		//子任务类别
 		dict_items.add((new DictionaryItem()).setName("暂无分类").setInnerid(1).setStatus(1).setDictionaryid(5).setDescription("").setCreatetime(new Date()));
 		//转换器状态
-		dict_items.add((new DictionaryItem()).setName("启用").setInnerid(1).setStatus(1).setDictionaryid(4).setDescription("").setCreatetime(new Date()));
-		dict_items.add((new DictionaryItem()).setName("停用").setInnerid(2).setStatus(1).setDictionaryid(4).setDescription("").setCreatetime(new Date()));
-		dict_items.add((new DictionaryItem()).setName("删除").setInnerid(3).setStatus(1).setDictionaryid(4).setDescription("").setCreatetime(new Date()));
-	
+		dict_items.add((new DictionaryItem()).setName("启用").setInnerid(1).setStatus(1).setDictionaryid(6).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("停用").setInnerid(2).setStatus(1).setDictionaryid(6).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("删除").setInnerid(3).setStatus(1).setDictionaryid(6).setDescription("").setCreatetime(new Date()));
+		//监控结果
+		dict_items.add((new DictionaryItem()).setName("正常结束").setInnerid(1).setStatus(1).setDictionaryid(7).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("采集失败").setInnerid(2).setStatus(1).setDictionaryid(7).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("解析失败").setInnerid(3).setStatus(1).setDictionaryid(7).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("部分采集失败").setInnerid(4).setStatus(1).setDictionaryid(7).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("部分解析失败").setInnerid(5).setStatus(1).setDictionaryid(7).setDescription("").setCreatetime(new Date()));
+		//采集状态
+		dict_items.add((new DictionaryItem()).setName("运行").setInnerid(1).setStatus(1).setDictionaryid(8).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("结束").setInnerid(2).setStatus(1).setDictionaryid(8).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("异常").setInnerid(3).setStatus(1).setDictionaryid(8).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("被删除").setInnerid(4).setStatus(1).setDictionaryid(8).setDescription("").setCreatetime(new Date()));
+				
 		for(Dictionary dict:dicts)
 		{
 			logger.info("add dictionary:"+dictionaryServiceImpl.addDictionary(dict));

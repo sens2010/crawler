@@ -22,16 +22,22 @@ public class BatchServiceImplTest
 	@Resource
 	BatchServiceImpl batchServiceImpl;
 	
-	
+	@Test
 	public void testAddBatch()
 	{
 		Batch batch = new Batch();
+		batch.setSubjobid(1);
 		batch.setJobid(1);
 		batch.setMonitorinfo(2);
 		batch.setStatus(1);
 		batch.setStarttime(new Date());
 		batch.setEndtime(new Date());
+		batch.setCsum(1);
+		batch.setSsum(1);
+		batch.setFsum(1);
+		batch.setPsum(1);
 		batchServiceImpl.addBatch(batch);
+		System.out.println(batch.getId());
 	}
 	
 	public void testDeleteBatch()

@@ -31,6 +31,7 @@ public class SchedulerUtils
 	Scheduler scheduler;
 	private Map<Integer, Map<Integer, String[]>> configs = new HashMap<Integer, Map<Integer, String[]>>();
 	
+	
 	public boolean addConfig(Job job)
 	{
 		int jid = job.getId();
@@ -69,6 +70,16 @@ public class SchedulerUtils
 				{
 					Job job = JSONObject.parseObject(config.get(-1)[0],
 							Job.class);
+					
+					JSONObject docparser = new JSONObject();
+					docparser.put("doccss", parser.isArtcss());
+					docparser.put("docscript", parser.isArtcss());
+					docparser.put("textmatch", parser.getTextparser());
+					docparser.put("titlematch", parser.getTitleparser());
+					docparser.put("timematch", parser.getTimeparser());
+					docparser.put("sourceurlmatch", parser.getSourceparser());
+					
+					
 					JobDetail jobdetail = newJob(ListParseJob.class)
 							.withIdentity(job.getId() + "", subjob.getId() + "")
 							.usingJobData("listcss", parser.isListcss())
@@ -78,6 +89,7 @@ public class SchedulerUtils
 							.usingJobData("listmatch", parser.getListparser())
 							.usingJobData("nextmatch", parser.getNextparser())
 							.usingJobData("jobid", job.getId())
+							.usingJobData("parser",docparser.toJSONString())
 							.usingJobData("subjobid", subjob.getId()).build();
 					
 					TriggerKey tk = new TriggerKey(job.getId() + "",
