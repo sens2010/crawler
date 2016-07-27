@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.annotation.Resource;
 
-import org.apache.http.util.Asserts;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;

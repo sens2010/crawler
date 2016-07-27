@@ -40,6 +40,8 @@ public class Parser extends Model
 	private String sourceparser;
 	@Column(name="textparser")
 	private String textparser;
+	@Column(name="timetransfer")
+	private String timetransfer;
 	@Column(name="artcss")
 	private boolean artcss;
 	@Column(name="artjs")
@@ -53,6 +55,16 @@ public class Parser extends Model
 	
 	
 	
+
+	public String getTimetransfer()
+	{
+		return timetransfer;
+	}
+
+	public void setTimetransfer(String timetransfer)
+	{
+		this.timetransfer = timetransfer;
+	}
 
 	public int getId()
 	{

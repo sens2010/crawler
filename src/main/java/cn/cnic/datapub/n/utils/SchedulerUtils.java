@@ -78,6 +78,7 @@ public class SchedulerUtils
 					docparser.put("titlematch", parser.getTitleparser());
 					docparser.put("timematch", parser.getTimeparser());
 					docparser.put("sourceurlmatch", parser.getSourceparser());
+					docparser.put("timetransfer", parser.getTimetransfer());
 					
 					
 					JobDetail jobdetail = newJob(ListParseJob.class)

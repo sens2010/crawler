@@ -42,7 +42,11 @@ public class DcitionaryConstructTest
 	@Resource
 	ParserServiceImpl parserServiceImpl;
 	
-	
+	@Test
+	public void partInit()
+	{
+		
+	}
 	
 	//@Test
 	public void dictInit()
@@ -55,7 +59,7 @@ public class DcitionaryConstructTest
 		dicts.add((new Dictionary()).setCategory(2).setName("转换器状态").setStatus(1).setCreatetime(new Date()));
 		dicts.add((new Dictionary()).setCategory(3).setName("监控结果").setStatus(1).setCreatetime(new Date()));
 		dicts.add((new Dictionary()).setCategory(3).setName("采集状态").setStatus(1).setCreatetime(new Date()));
-		
+		dicts.add((new Dictionary()).setCategory(3).setName("采集结果").setStatus(1).setCreatetime(new Date()));
 		List<DictionaryItem> dict_items = new ArrayList<DictionaryItem>();
 		//表类型
 		dict_items.add((new DictionaryItem()).setName("基础表").setInnerid(1).setStatus(1).setDictionaryid(1).setDescription("").setCreatetime(new Date()));
@@ -92,6 +96,14 @@ public class DcitionaryConstructTest
 		dict_items.add((new DictionaryItem()).setName("异常").setInnerid(3).setStatus(1).setDictionaryid(8).setDescription("").setCreatetime(new Date()));
 		dict_items.add((new DictionaryItem()).setName("被删除").setInnerid(4).setStatus(1).setDictionaryid(8).setDescription("").setCreatetime(new Date()));
 				
+		//采集结果
+		dict_items.add((new DictionaryItem()).setName("采集中").setInnerid(1).setStatus(1).setDictionaryid(9).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("成功").setInnerid(2).setStatus(1).setDictionaryid(9).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("失败").setInnerid(3).setStatus(1).setDictionaryid(9).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("存在问题").setInnerid(4).setStatus(1).setDictionaryid(9).setDescription("").setCreatetime(new Date()));
+		dict_items.add((new DictionaryItem()).setName("被删除").setInnerid(5).setStatus(1).setDictionaryid(9).setDescription("").setCreatetime(new Date()));
+		
+		
 		for(Dictionary dict:dicts)
 		{
 			logger.info("add dictionary:"+dictionaryServiceImpl.addDictionary(dict));

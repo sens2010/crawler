@@ -18,4 +18,6 @@ public interface DictionaryItemDao extends CrudRepository<DictionaryItem, Intege
 	
 	@Query("from DictionaryItem")
 	List<DictionaryItem> findAll();
+	
+	
 }
