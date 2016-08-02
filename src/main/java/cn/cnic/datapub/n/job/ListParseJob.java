@@ -169,8 +169,9 @@ public class ListParseJob extends ParseJob
 				decoration.put("jobid", this.getJobid());
 				decoration.put("subjobid", this.getSubjobid());
 				decoration.put("batchid", this.getBatchid());
-				decoration.put("newsid", md5);
-				decoration.put("parser",this.getParser());
+				decoration.put("newsid", md5.substring(4));
+				System.err.println(this.getParser());
+				decoration.put("parser",JSONObject.parse(this.getParser()));
 				sumacc++;
 				this.amqpTemplate.convertAndSend("news", decoration.toJSONString());
 			}
@@ -180,7 +181,9 @@ public class ListParseJob extends ParseJob
 			}
 			if(this.batchServiceImpl!=null)
 			{
+				System.out.println("batch:"+this.getBatchid());
 				Batch batch = this.batchServiceImpl.getBatchById(this.getBatchid());
+				System.err.println("batch(str)："+batch.toJSONString());
 				int psum = batch.getPsum();
 				psum+=sumacc;
 				batch.setPsum(psum);
@@ -213,6 +216,7 @@ public class ListParseJob extends ParseJob
 			batch.setSsum(0);
 			batch.setAsum(0);
 			this.batchServiceImpl.addBatch(batch);
+			
 			this.setBatchid(batch.getId());
 			
 		}
@@ -223,6 +227,7 @@ public class ListParseJob extends ParseJob
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException
 	{
+		initBatch();
 		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
 		{
 			

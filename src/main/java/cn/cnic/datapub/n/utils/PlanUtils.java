@@ -17,7 +17,7 @@ public class PlanUtils
 			}
 			else if(plan.startsWith("intr:"))
 			{
-				String intr = plan.substring(5);
+				String intr = plan;
 				if(plan.endsWith("h"))
 				{
 					return simpleSchedule().withIntervalInHours(Integer.parseInt(intr.subSequence(5, plan.length()-1).toString()))

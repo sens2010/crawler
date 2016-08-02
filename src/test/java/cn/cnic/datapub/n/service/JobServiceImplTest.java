@@ -1,8 +1,6 @@
 package cn.cnic.datapub.n.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -22,8 +20,24 @@ public class JobServiceImplTest
 	
 	@Resource
 	JobServiceImpl jobServiceImpl;
-	
 	@Test
+	public void testInitJob()
+	{
+		jobServiceImpl.initJob();
+		while(true)
+		{
+			try
+			{
+				Thread.sleep(3000);
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 	public void testAddJob()
 	{
 		/*List<Job> list = new ArrayList<Job>();
@@ -36,7 +50,7 @@ public class JobServiceImplTest
 		Job job2 = new Job();
 		job2.setName("和讯网");
 		job2.setPlan("");
-		job2.setStatus(1);
+		job2s.setStatus(1);
 		job2.setDescription("");
 		Job job3 = new Job();
 		job3.setName("发改委");

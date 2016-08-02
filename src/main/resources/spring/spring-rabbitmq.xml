@@ -23,7 +23,7 @@
     
    <bean id="messageReceiver" class="cn.cnic.datapub.n.job.DocParseJob"></bean>
 	
-	<rabbit:listener-container connection-factory="connectionFactory" concurrency="2">
+	<rabbit:listener-container connection-factory="connectionFactory" concurrency="6">
              <rabbit:listener queues="news" ref="messageReceiver"/>
     </rabbit:listener-container>
 </beans>

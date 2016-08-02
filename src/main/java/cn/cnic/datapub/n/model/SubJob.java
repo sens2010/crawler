@@ -36,9 +36,19 @@ public class SubJob extends Model
 	private Date createtime;
 	@Column(name="lastmodifytime")
 	private Date lastmodifytime;
+	@Column(name="interval")
+	private int interval;
 	
-	
-	
+	public int getInterval()
+	{
+		return interval;
+	}
+
+	public void setInterval(int interval)
+	{
+		this.interval = interval;
+	}
+
 	public Date getCreatetime()
 	{
 		return createtime;

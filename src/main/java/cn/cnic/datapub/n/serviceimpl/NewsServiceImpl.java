@@ -3,6 +3,7 @@ package cn.cnic.datapub.n.serviceimpl;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.persistence.Transient;
 
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,13 @@ public class NewsServiceImpl implements INewsService
 	@Resource
 	NewsDao newsDao;
 
+	@Transient
 	@Override
 	public News addNews(News news)
 	{
 		return newsDao.save(news);
 	}
-
+	@Transient
 	@Override
 	public boolean deleteById(int id)
 	{
@@ -36,7 +38,7 @@ public class NewsServiceImpl implements INewsService
 		}
 		return false;
 	}
-
+	@Transient
 	@Override
 	public News updateNews(News news)
 	{

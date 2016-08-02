@@ -3,6 +3,7 @@ package cn.cnic.datapub.n.serviceimpl;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.persistence.Transient;
 
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,13 @@ public class BatchServiceImpl implements IBatchService
 {
 	@Resource
 	BatchDao batchDao;
-
+	@Transient
 	@Override
 	public Batch addBatch(Batch batch)
 	{
 		return batchDao.save(batch);
 	}
-
+	@Transient
 	@Override
 	public boolean deleteById(int id)
 	{
@@ -37,6 +38,7 @@ public class BatchServiceImpl implements IBatchService
 		return false;
 	}
 
+	@Transient
 	@Override
 	public Batch updateBatch(Batch batch)
 	{

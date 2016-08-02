@@ -1,5 +1,6 @@
 package cn.cnic.datapub.n.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,10 @@ public interface SubJobDao extends CrudRepository<SubJob, Integer>
 	
 	@Query("from SubJob")
 	List<SubJob> findAll();
+	
+	List<SubJob> findByStatusIn(Collection<Integer> codes);
+	
+	@Query("from SubJob j where j.status in ?1 and j.jobid in ?2")
+	List<SubJob> findNormal(Collection<Integer> codes,Collection<Integer> jobs);
+	
 }

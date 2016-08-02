@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-public class ServiceAspect
+public class JobSchedulerAspect
 {
-	private final Logger logger = Logger.getLogger(ServiceAspect.class);
+	private final Logger logger = Logger.getLogger(JobSchedulerAspect.class);
 	
-	@Pointcut("execution(* cn.cnic.datapub.n.service..*(..))")
+	@Pointcut("execution(* cn.cnic.datapub.n.utils.SchedulerUtils.*(..))")
 	public void aspect(){	}
 	
 	@Before("aspect()")
@@ -40,7 +40,7 @@ public class ServiceAspect
 	@Around("aspect()")
 	public Object around(JoinPoint joinPoint){
 		long start = System.currentTimeMillis();
-		Object object = null;
+		Object object = null ;
 		try {
 			object = ((ProceedingJoinPoint) joinPoint).proceed();
 			long end = System.currentTimeMillis();

@@ -1,7 +1,6 @@
 package cn.cnic.datapub.n.job;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import cn.cnic.datapub.n.serviceimpl.BatchServiceImpl;
 import cn.cnic.datapub.n.serviceimpl.NewsServiceImpl;
 import cn.cnic.datapub.n.utils.SpringUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -28,28 +28,17 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class DocParseJob extends ParseJob implements MessageListener 
 {
-	private boolean doccss;
-	private boolean docscript;
-	private String textmatch;
-	private String titlematch;
-	private String timematch;
-	private String sourceurlmatch;
-	private String timetransfer;
-	private List<String> newsconfigs = new ArrayList<String>();;
 	private INewsService newsService;
 	private IBatchService batchService;
-	private int batchid;
-	
-	
-	
-	public int getBatchid()
+
+	public INewsService getNewsService()
 	{
-		return batchid;
+		return newsService;
 	}
 
-	public void setBatchid(int batchid)
+	public void setNewsService(INewsService newsService)
 	{
-		this.batchid = batchid;
+		this.newsService = newsService;
 	}
 
 	public IBatchService getBatchService()
@@ -62,122 +51,51 @@ public class DocParseJob extends ParseJob implements MessageListener
 		this.batchService = batchService;
 	}
 
-	public List<String> getNewsconfigs()
-	{
-		return newsconfigs;
-	}
-
-	public void setNewsconfigs(List<String> newsconfigs)
-	{
-		this.newsconfigs = newsconfigs;
-	}
-
-	public INewsService getNewsService()
-	{
-		return newsService;
-	}
-
-	public void setNewsService(INewsService newsService)
-	{
-		this.newsService = newsService;
-	}
-
 	private Logger logger = LoggerFactory.getLogger(DocParseJob.class);
 	
-	
-	public boolean isDoccss()
-	{
-		return doccss;
-	}
-
-	public void setDoccss(boolean doccss)
-	{
-		this.doccss = doccss;
-	}
-
-	public boolean isDocscript()
-	{
-		return docscript;
-	}
-
-	public void setDocscript(boolean docscript)
-	{
-		this.docscript = docscript;
-	}
-
-	public String getTextmatch()
-	{
-		return textmatch;
-	}
-
-	public void setTextmatch(String textmatch)
-	{
-		this.textmatch = textmatch;
-	}
-
-	public String getTitlematch()
-	{
-		return titlematch;
-	}
-
-	public void setTitlematch(String titlematch)
-	{
-		this.titlematch = titlematch;
-	}
-
-	public String getTimematch()
-	{
-		return timematch;
-	}
-
-	public void setTimematch(String timematch)
-	{
-		this.timematch = timematch;
-	}
-
-	public String getSourceurlmatch()
-	{
-		return sourceurlmatch;
-	}
-
-	public void setSourceurlmatch(String sourceurlmatch)
-	{
-		this.sourceurlmatch = sourceurlmatch;
-	}
-	
-	public String getTimetransfer()
-	{
-		return timetransfer;
-	}
-
-	public void setTimetransfer(String timetransfer)
-	{
-		this.timetransfer = timetransfer;
-	}
-	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException
 	{
 
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void consumer(String webconfigs)
+	{
+		JSONObject rootconfig = JSONObject.parseObject(webconfigs);
+		
+		boolean doccss=rootconfig.getBooleanValue("doccss");
+		boolean docscript=rootconfig.getBooleanValue("docscript");
+		String textmatch=rootconfig.getString("textmatch");
+		String titlematch=rootconfig.getString("titlematch");
+		String timematch=rootconfig.getString("timematch");
+		String sourceurlmatch=rootconfig.getString("sourceurlmatch");
+		String timetransfer=rootconfig.getString("timetransfer");
+		JSONArray newsconfigs = rootconfig.getJSONArray("newsconfigs");
+		int interval = rootconfig.getIntValue("interval");
+		int batchid = rootconfig.getIntValue("batchid");
+		
 		try (final WebClient newClient = new WebClient(BrowserVersion.CHROME))
 		{
-			List<String> configs = this.getNewsconfigs();
 			
 			
-			newClient.getOptions().setCssEnabled(this.isDoccss());
-			newClient.getOptions().setJavaScriptEnabled(this.isDocscript());
-			for(String config:configs)
+			newClient.getOptions().setCssEnabled(doccss);
+			newClient.getOptions().setJavaScriptEnabled(docscript);
+			for(int i=0; i<newsconfigs.size();i++)
 			{
-				JSONObject conf = JSONObject.parseObject(config);
+				
+				JSONObject conf = newsconfigs.getJSONObject(0);
 				String url = conf.getString("url");
-				String newsid = conf.getString("newsid");
+				int newsid = conf.getIntValue("newsid");
+				System.err.println("????????????????"+newsid+"???????????????????:");
+				String code = conf.getString("code");
 			final HtmlPage newspage = newClient.getPage(url);
-			List<HtmlElement> titlelist = (List<HtmlElement>)newspage.getByXPath(this.getTitlematch());
-			List<HtmlElement> timelist = (List<HtmlElement>)newspage.getByXPath(this.getTimematch());
-			List<HtmlElement> sourceurllist = (List<HtmlElement>)newspage.getByXPath(this.getSourceurlmatch());
-			List<HtmlElement> textlist = (List<HtmlElement>)newspage.getByXPath(this.getTextmatch());
+			List<HtmlElement> titlelist = (List<HtmlElement>)newspage.getByXPath(titlematch);
+			List<HtmlElement> timelist = (List<HtmlElement>)newspage.getByXPath(timematch);
+			List<HtmlElement> sourceurllist = (List<HtmlElement>)newspage.getByXPath(sourceurlmatch);
+			List<HtmlElement> textlist = (List<HtmlElement>)newspage.getByXPath(textmatch);
 			String title=null,source = null,text=null;
 			Date pubtime=null;
 			if(titlelist.size()>0)
@@ -187,8 +105,28 @@ public class DocParseJob extends ParseJob implements MessageListener
 			if(timelist.size()>0)
 			{
 				String timestr = timelist.get(0).asText();
-				SimpleDateFormat sdf = new SimpleDateFormat(this.getTimetransfer());
-				pubtime = sdf.parse(timestr);
+				String[] fa = timetransfer.split("\\|");
+				String format = fa[0];
+				
+				if(fa.length>1&&fa[1]!=null)
+				{
+					String se = fa[1];
+					System.out.println(se);
+					String[]stend = se.split(",");
+					int start = Integer.parseInt(stend[0]);
+					int end = Integer.parseInt(stend[1]);
+					timestr = timestr.substring(start,end);
+				}
+				
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				try
+				{
+					pubtime = sdf.parse(timestr);
+				}
+				catch(Exception ee)
+				{
+					ee.printStackTrace();
+				}
 			}
 			if(sourceurllist.size()>0)
 			{
@@ -208,12 +146,16 @@ public class DocParseJob extends ParseJob implements MessageListener
 				setBatchService((BatchServiceImpl)SpringUtils.getBean("batchServiceImpl"));
 			}
 			
-			Batch batch = this.getBatchService().getBatchById(this.getBatchid());
+			Batch batch = this.getBatchService().getBatchById(batchid);
 			
-			News news = this.getNewsService().getNewsByNewsId(newsid);
+			News news = this.getNewsService().getNewsById(newsid);
 			//判断是否有值未取到
+			
+			System.err.println("this.code:"+code);
+			news.setText(text).setResource(source).setPubtime(pubtime).setTitle(title);
 			boolean partly = ((text==null)||(source==null)||(pubtime==null)||(title==null));
 			boolean fail = ((text==null)&&(source==null)&&(pubtime==null)&&(title==null));
+			
 			if(news.getStatus()==1)
 			{
 				if(partly)
@@ -259,7 +201,7 @@ public class DocParseJob extends ParseJob implements MessageListener
 			}	
 				newspage.cleanUp();
 			
-			
+				Thread.sleep(interval*1000);
 			}
 			
 			
@@ -268,7 +210,6 @@ public class DocParseJob extends ParseJob implements MessageListener
 		{
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/**
@@ -282,6 +223,7 @@ public class DocParseJob extends ParseJob implements MessageListener
 	@Override
 	public void onMessage(Message message)
 	{
+		JSONObject rootconfig = new JSONObject();
 		System.out.println("this:"+this);
 		logger.error("receive msg:{}",message);
 		System.out.println(message.getBody());
@@ -292,42 +234,46 @@ public class DocParseJob extends ParseJob implements MessageListener
 		int bid = decoration.getIntValue("batchid");
 		int sbid = decoration.getIntValue("subbatchid");
 		String nid = decoration.getString("newsid");
-		JSONObject parser = decoration.getJSONObject("parser");
-		this.setDoccss(parser.getBooleanValue("doccss"));
-		this.setDocscript(parser.getBooleanValue("docscript"));
+		String parserstr = decoration.getString("parser");
 		
-		List<String> configs = this.getNewsconfigs();
-		configs.clear();
+		JSONObject parser = JSONObject.parseObject(parserstr);
+		rootconfig.put("doccss",parser.getBooleanValue("doccss"));
+		rootconfig.put("doccss",parser.getBooleanValue("docscript"));
+		rootconfig.put("textmatch",parser.getString("textmatch"));
+		rootconfig.put("titlematch",parser.getString("titlematch"));
+		rootconfig.put("timematch",parser.getString("timematch"));
+		rootconfig.put("sourceurlmatch",parser.getString("sourceurlmatch"));
+		rootconfig.put("timetransfer",parser.getString("timetransfer"));
+		rootconfig.put("interval",parser.getString("interval"));
+		JSONArray newsconfigs = new JSONArray();
+		
+		
+		
+		System.err.println(parser.getString("timetransfer")+":"+parser.toJSONString());
+		
 		JSONObject config = new JSONObject();
 		config.put("url", url);
-		config.put("newsid", nid);
-		configs.add(config.toJSONString());
-		this.setTextmatch(parser.getString("textmatch"));
-		this.setTitlematch(parser.getString("titlematch"));
-		this.setTimematch(parser.getString("timematch"));
-		this.setSourceurlmatch(parser.getString("sourceurlmatch"));
-		this.setTimetransfer(parser.getString("timetransfer"));
-		try
+		config.put("code", nid);
+		if(this.newsService==null)
 		{
-			if(this.newsService==null)
-			{
-				setNewsService((NewsServiceImpl)SpringUtils.getBean("newsServiceImpl"));
-			}
-			if(this.batchService==null)
-			{
-				setBatchService((BatchServiceImpl)SpringUtils.getBean("batchServiceImpl"));
-			}
-			News news = new News();
-			news.setNewsid(nid).setCreatetime(new Date()).setPagecount(0)
-				.setUrl(url).setRelatebatch(bid).setStatus(1);
-			this.getNewsService().addNews(news);
-			this.setBatchid(bid);
-			this.execute(null);
-		} catch (JobExecutionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setNewsService((NewsServiceImpl)SpringUtils.getBean("newsServiceImpl"));
 		}
+		if(this.batchService==null)
+		{
+			setBatchService((BatchServiceImpl)SpringUtils.getBean("batchServiceImpl"));
+		}
+		News news = new News();
+		System.err.println("bid"+bid);
+		news.setNewsid(nid).setCreatetime(new Date()).setPagecount(0)
+			.setUrl(url).setRelatebatch(bid).setStatus(1);
+		this.getNewsService().addNews(news);
+		if(news.getId()==0){throw new NullPointerException();}
+		config.put("newsid", news.getId());
+		System.err.println("************newsid:"+news.getId()+"******************");
+		rootconfig.put("batchid",bid);
+		newsconfigs.add(config);
+		rootconfig.put("newsconfigs",newsconfigs);
+		this.consumer(rootconfig.toJSONString());
 		System.err.println("url:"+url+",jobid:"+jid+",subjobid:"+sjid+",batchid:"+bid+",sbid:"+sbid+",nid:"+nid);
 	}
 

@@ -8,6 +8,8 @@ import static org.quartz.TriggerKey.triggerKey;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -16,6 +18,9 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import cn.cnic.datapub.n.job.ListParseJob;
@@ -28,6 +33,7 @@ import com.alibaba.fastjson.JSONObject;
 @Service
 public class SchedulerUtils
 {
+	private Logger logger = LoggerFactory.getLogger(SchedulerUtils.class);
 	Scheduler scheduler;
 	private Map<Integer, Map<Integer, String[]>> configs = new HashMap<Integer, Map<Integer, String[]>>();
 	
@@ -36,6 +42,7 @@ public class SchedulerUtils
 	{
 		int jid = job.getId();
 		Map<Integer, String[]> config = new HashMap<Integer, String[]>();
+		logger.info(job.toJSONString());
 		config.put(-1, new String[] { job.toJSONString(), null });
 		this.configs.put(jid, config);
 		return true;
@@ -59,6 +66,8 @@ public class SchedulerUtils
 	public boolean addJob(SubJob subjob, Parser parser)
 	{
 		Map<Integer, String[]> config = configs.get(subjob.getJobid());
+		logger.info("subjob:"+subjob.toJSONString());
+		logger.info("parser:"+parser.toJSONString());
 		if (config == null)
 		{
 			return false;
@@ -78,8 +87,9 @@ public class SchedulerUtils
 					docparser.put("titlematch", parser.getTitleparser());
 					docparser.put("timematch", parser.getTimeparser());
 					docparser.put("sourceurlmatch", parser.getSourceparser());
+					System.err.println(parser.getTimetransfer());
 					docparser.put("timetransfer", parser.getTimetransfer());
-					
+					docparser.put("interval", subjob.getInterval());
 					
 					JobDetail jobdetail = newJob(ListParseJob.class)
 							.withIdentity(job.getId() + "", subjob.getId() + "")
@@ -94,17 +104,18 @@ public class SchedulerUtils
 							.usingJobData("subjobid", subjob.getId()).build();
 					
 					TriggerKey tk = new TriggerKey(job.getId() + "",
-							job.getId() + "");
+							subjob.getId() + "");
 					Trigger trigger = scheduler.getTrigger(tk);
 					if (trigger == null)
 					{
 						trigger = newTrigger()
 								.withIdentity(
 										triggerKey(job.getId() + "",
-												job.getId() + ""))
+												subjob.getId() + ""))
 								.withSchedule(PlanUtils.parse(job.getPlan()))
 								.startAt(futureDate(10, SECOND)).build();
 					}
+				
 					scheduler.scheduleJob(jobdetail, trigger);
 					config.put(
 							subjob.getId(),
@@ -155,10 +166,15 @@ public class SchedulerUtils
 				config.get(-1)[0] = job.toJSONString();
 			} else
 			{
-				TriggerKey tk = new TriggerKey(job.getId() + "", job.getId()
-						+ "");
+				GroupMatcher<TriggerKey> matcher = GroupMatcher.triggerGroupEndsWith(job.getId() + "");
+				
+				
 				try
 				{
+					Set<TriggerKey> tks = scheduler.getTriggerKeys(matcher);
+					for(TriggerKey tk : tks)
+					{
+					
 					if (scheduler.checkExists(tk))
 					{
 						Trigger newtrigger = newTrigger()
@@ -172,6 +188,7 @@ public class SchedulerUtils
 					} else
 					{
 						
+					}
 					}
 				} catch (Exception ee)
 				{
@@ -277,6 +294,10 @@ public class SchedulerUtils
 	{
 		try
 		{
+			Properties p = new Properties();
+			p.setProperty("org.quartz.threadPool.threadCount", "30");
+			p.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
+			
 			this.scheduler = StdSchedulerFactory.getDefaultScheduler();
 			this.scheduler.start();
 			return true;
