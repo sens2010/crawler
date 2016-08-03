@@ -3,7 +3,7 @@ package cn.cnic.datapub.job;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
+@Deprecated
 public class HelloJob implements Job
 {
 	private String name;

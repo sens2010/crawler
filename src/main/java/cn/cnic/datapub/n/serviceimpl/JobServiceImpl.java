@@ -43,6 +43,10 @@ public class JobServiceImpl implements IJobService
 
 	public void initJob()
 	{
+		 initJob(false);
+	}
+	public void initJob(boolean once)
+	{
 		List<Integer> statuses = new ArrayList<Integer>();
 		statuses.add(1);
 		statuses.add(2);
@@ -106,7 +110,7 @@ public class JobServiceImpl implements IJobService
 		
 		for(SubJob subjob:subjobs)
 		{
-			scheduleUtils.addJob(subjob, parser_mapping.get(subjob.getId()));
+			scheduleUtils.addJob(subjob, parser_mapping.get(subjob.getId()),once);
 		}
 	}
 	

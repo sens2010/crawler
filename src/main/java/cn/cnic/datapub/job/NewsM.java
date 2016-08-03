@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.alibaba.fastjson.JSONObject;
-
+@Deprecated
 public class NewsM
 {
 	private int id;

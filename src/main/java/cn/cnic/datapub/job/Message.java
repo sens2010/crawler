@@ -1,5 +1,5 @@
 package cn.cnic.datapub.job;
-
+@Deprecated
 public class Message
 {
 	

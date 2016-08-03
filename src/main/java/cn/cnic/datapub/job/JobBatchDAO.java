@@ -6,7 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
-@Repository(value="jobBatchDAO")
+//@Repository(value="jobBatchDAO")
+@Deprecated
 public class JobBatchDAO extends AbstractDAO<JobBatchM>
 {
 	@Resource

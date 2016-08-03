@@ -10,7 +10,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
+@Deprecated
 public class CrawlerDocumentJob implements Job
 {
 	private boolean doccss;

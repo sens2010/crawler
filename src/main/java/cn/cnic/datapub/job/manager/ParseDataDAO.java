@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
 
-@Repository(value="parseDataDAO")
+//@Repository(value="parseDataDAO")
+@Deprecated
 public class ParseDataDAO extends AbstractDAO<ParseDataM> 
 {
 	@Resource

@@ -12,6 +12,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:rdb.properties</value>
+				<value>classpath:quartz.properties</value>
 			</list>
 		</property>
 	</bean>

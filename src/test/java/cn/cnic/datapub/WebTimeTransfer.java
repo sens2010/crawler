@@ -13,10 +13,10 @@ public class WebTimeTransfer
 	public static void main(String[] args)
 	{
 		// TODO Auto-generated method stub
-		String timestr = "2016年08月01日09:16 新浪财经";
-		timestr = "2016-07-15 14:17:30";
-		String format = "yyyy年MM月dd日hh:mm|0,16";
-		format = "yyyy-MM-dd hh:mm:ss";
+		String timestr = "2016-03-31  来源：国民经济综合司子站";
+		//timestr = "2016-07-15 14:17:30";
+		String format = "yyyy年MM月dd日|0,10";
+		//format = "yyyy-MM-dd hh:mm:ss";
 		String[] fa = format.split("\\|");
 		String f = fa[0];
 		System.out.println(fa.clone());

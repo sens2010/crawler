@@ -1,5 +1,5 @@
 package cn.cnic.datapub.vm;
-
+@Deprecated
 public class JobMetadataM
 {
 	private int id;

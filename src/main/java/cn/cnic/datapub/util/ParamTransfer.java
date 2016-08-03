@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
-
+@Deprecated
 public class ParamTransfer
 {
 	public static Object[] paramsAnalyseSQL(JSONObject params)

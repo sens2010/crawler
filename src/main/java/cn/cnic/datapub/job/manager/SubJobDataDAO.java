@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
 
-@Repository(value="subJobDataDAO")
+//@Repository(value="subJobDataDAO")
+@Deprecated
 public class SubJobDataDAO extends AbstractDAO<SubJobDataM>
 {
 	@Resource

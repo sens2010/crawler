@@ -14,6 +14,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
+@Deprecated
 public class WebCrawler
 {
 	private List<Map<String, Object>> weblist = new ArrayList<Map<String, Object>>();
@@ -297,7 +298,7 @@ public class WebCrawler
 		web14.put("url", "http://www.sdpc.gov.cn/jjxsfx/");
 		web14.put("list",
 				"//*/ul[@class='list_02 clearfix']//li/a");
-		web14.put("next", "//*/ul[@class='pages clearfix']/li[@class='L']/a[5]");
+		web14.put("next", "//*/ul[@class='pages clearfix']/li[@class='L']/a[span[@class='f']][2]");
 		web14.put("title",
 				"//*/div[@class='txt_title1 tleft']");
 		web14.put(
@@ -318,7 +319,7 @@ public class WebCrawler
 		web15.put("url", "http://www.sdpc.gov.cn/fzgggz/hgjj/");
 		web15.put("list",
 				"//*/ul[@class='list_02 clearfix']//li/a");
-		web15.put("next", "//*/ul[@class='pages clearfix']/li[@class='L']/a[5]");
+		web15.put("next", "//*/ul[@class='pages clearfix']/li[@class='L']/a[span[@class='f']][2]");
 		web15.put("title",
 				"//*/div[@class='txt_title1 tleft']");
 		web15.put(
@@ -370,7 +371,7 @@ public class WebCrawler
 		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 		 java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl").setLevel(Level.OFF); 
 		 java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF);
-		for(int i=6;i<wc.getWebList().size();i++)
+		for(int i=14;i<15;i++)
 		{
 			
 		Map<String, Object> config = wc.getWebList().get(i);
@@ -385,13 +386,13 @@ public class WebCrawler
 			List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(config
 					.get("list").toString());
 			List<String> newslist = new ArrayList<String>();
-			//System.out
-			//		.println("******************************list******************************");
-			//System.out.println("list_size:" + list.size());
+			System.out
+					.println("******************************list******************************");
+			System.out.println("list_size:" + list.size());
 			for (HtmlAnchor ha : list)
 			{
-				//System.out.println(ha.getHrefAttribute() + " "
-				//		+ ha.getTextContent());
+				System.out.println(ha.getHrefAttribute() + " "
+						+ ha.getTextContent());
 				if(config.get("isrelative")!=null&&(boolean)config.get("isrelative"))
 				{
 					newslist.add(config.get("url")+ha.getHrefAttribute());
@@ -401,31 +402,31 @@ public class WebCrawler
 					newslist.add(ha.getHrefAttribute());
 				}
 			}
-			//System.out
-			//		.println("****************************list-end****************************");
+			System.out
+					.println("****************************list-end****************************");
 			List<HtmlAnchor> click = (List<HtmlAnchor>) page.getByXPath(config
 					.get("next").toString());
 			page.cleanUp();
-			//System.out.println("click_size:" + click.size());
+			System.out.println("click_size:" + click.size());
 			if (click.size() > 0)
 			{
 				final HtmlPage nextpage = click.get(0).click();
 				list = (List<HtmlAnchor>) nextpage.getByXPath(config
 						.get("list").toString());
-				//System.out
-				//		.println("****************************next-list****************************");
-				//System.out.println("list_size:" + list.size());
+				System.out
+						.println("****************************next-list****************************");
+				System.out.println("list_size:" + list.size());
 				for (HtmlAnchor ha : list)
 				{
-				//	System.out.println(ha.getHrefAttribute() + " "
-				//			+ ha.getTextContent());
+					System.out.println(ha.getHrefAttribute() + " "
+							+ ha.getTextContent());
 				}
-				//System.out
-				//		.println("**************************next-list-end**************************");
+				System.out
+					.println("**************************next-list-end**************************");
 				nextpage.cleanUp();
 			}
-			//System.out
-			//.println("******************************news******************************");
+			System.out
+				.println("******************************news******************************");
 			if(newslist.size()>0)
 			{
 				System.out.println(newslist.get(0));
@@ -442,8 +443,8 @@ public class WebCrawler
 					List<HtmlElement> sourceurl = (List<HtmlElement>)newspage.getByXPath(config.get("sourceurl").toString());
 					List<HtmlElement> text = (List<HtmlElement>)newspage.getByXPath(config.get("text").toString());
 					//System.out.println("title:"+(title.size()>0?title.get(0).asText():""));
-					System.err.println("time:"+(time.size()>0?time.get(0).asText():""));
-					System.out.println("sourceurl:"+(sourceurl.size()>0?sourceurl.get(0).asText():""));
+					//System.err.println("time:"+(time.size()>0?time.get(0).asText():""));
+					//System.out.println("sourceurl:"+(sourceurl.size()>0?sourceurl.get(0).asText():""));
 					//System.out.println("text:"+(text.size()>0?text.get(0).asText():""));
 					newspage.cleanUp();
 					newClient.close();

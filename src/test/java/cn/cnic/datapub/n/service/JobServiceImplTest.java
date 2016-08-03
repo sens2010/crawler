@@ -23,7 +23,7 @@ public class JobServiceImplTest
 	@Test
 	public void testInitJob()
 	{
-		jobServiceImpl.initJob();
+		jobServiceImpl.initJob(true);
 		while(true)
 		{
 			try

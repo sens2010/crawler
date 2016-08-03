@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import cn.cnic.datapub.util.ParamTransfer;
 import com.alibaba.fastjson.JSONObject;
+@Deprecated
 public abstract class AbstractDAO<T> implements IGeneralDAO<T>
 {
 	@Resource

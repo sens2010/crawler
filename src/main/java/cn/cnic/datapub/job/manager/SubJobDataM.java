@@ -1,7 +1,7 @@
 package cn.cnic.datapub.job.manager;
 
 import com.alibaba.fastjson.JSONObject;
-
+@Deprecated
 public class SubJobDataM
 {
 	private int id;

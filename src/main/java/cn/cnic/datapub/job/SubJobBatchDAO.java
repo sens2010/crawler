@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
 @Repository(value="subJobBatchDAO")
+@Deprecated
 public class SubJobBatchDAO extends AbstractDAO<SubJobBatchM>
 {
 	@Resource

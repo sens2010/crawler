@@ -1,7 +1,7 @@
 package cn.cnic.datapub.job;
 
 import java.util.Date;
-
+@Deprecated
 public class AnalyseMessage extends Message
 {
 	private String url;

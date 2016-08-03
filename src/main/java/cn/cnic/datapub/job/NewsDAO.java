@@ -6,7 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
-@Repository(value="newsDAO")
+//@Repository(value="newsDAO")
+@Deprecated
 public class NewsDAO extends AbstractDAO<NewsM>
 {
 	@Resource

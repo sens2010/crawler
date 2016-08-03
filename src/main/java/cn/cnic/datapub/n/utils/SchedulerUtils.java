@@ -65,6 +65,11 @@ public class SchedulerUtils
 	
 	public boolean addJob(SubJob subjob, Parser parser)
 	{
+		return addJob(subjob, parser, false);
+	}
+	
+	public boolean addJob(SubJob subjob, Parser parser, boolean isinit)
+	{
 		Map<Integer, String[]> config = configs.get(subjob.getJobid());
 		logger.info("subjob:"+subjob.toJSONString());
 		logger.info("parser:"+parser.toJSONString());
@@ -108,12 +113,24 @@ public class SchedulerUtils
 					Trigger trigger = scheduler.getTrigger(tk);
 					if (trigger == null)
 					{
-						trigger = newTrigger()
-								.withIdentity(
-										triggerKey(job.getId() + "",
-												subjob.getId() + ""))
-								.withSchedule(PlanUtils.parse(job.getPlan()))
-								.startAt(futureDate(10, SECOND)).build();
+						if(isinit)
+						{
+							trigger = newTrigger()
+									.withIdentity(
+											triggerKey(job.getId() + "",
+													subjob.getId() + ""))
+									.startAt(futureDate(10, SECOND)).build();
+						}
+						else
+						{
+							trigger = newTrigger()
+									.withIdentity(
+											triggerKey(job.getId() + "",
+													subjob.getId() + ""))
+									.withSchedule(PlanUtils.parse(job.getPlan()))
+									.startAt(futureDate(10, SECOND)).build();
+						}
+						
 					}
 				
 					scheduler.scheduleJob(jobdetail, trigger);
@@ -289,7 +306,7 @@ public class SchedulerUtils
 		return false;
 	}
 	
-	
+	@Deprecated
 	public boolean initScheduler()
 	{
 		try

@@ -10,7 +10,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
+@Deprecated
 public class SchedulePool
 {
 	@Resource

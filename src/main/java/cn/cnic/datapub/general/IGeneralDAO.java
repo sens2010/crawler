@@ -3,7 +3,7 @@ package cn.cnic.datapub.general;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
-
+@Deprecated
 public interface IGeneralDAO<T>
 {
 	public T findById(Object id);

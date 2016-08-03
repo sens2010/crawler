@@ -238,6 +238,10 @@ public class ListParseJob extends ParseJob
 			webClient.getOptions().setJavaScriptEnabled(this.isListscript());
 			List<String> newslist = new ArrayList<String>();
 			HtmlPage page = webClient.getPage(this.getUrl());
+			int page_size=0;
+			String first_href =null;
+			boolean first_href_flag=false;
+			String last_page_href = null;
 			do
 			{
 				Set<String> now,other;
@@ -256,6 +260,19 @@ public class ListParseJob extends ParseJob
 				System.out
 						.println("******************************list("+page_count+")******************************");
 				System.out.println("list_size:" + list.size());
+				String now_href = list.get(0).getHrefAttribute();
+				if(first_href!=null&&first_href.equals(now_href))
+				{
+					break;
+				}
+				if(last_page_href!=null&&last_page_href.equals(now_href))
+				{
+					break;
+				}
+				else
+				{
+					last_page_href = now_href;
+				}
 				for (HtmlAnchor ha : list)
 				{
 					System.out.println(ha.getHrefAttribute() + " "
@@ -268,8 +285,16 @@ public class ListParseJob extends ParseJob
 					{
 						newslist.add(ha.getHrefAttribute());
 					}
+					
 					now.add(ha.getHrefAttribute());
+					if(!first_href_flag)
+					{
+						
+						first_href=ha.getHrefAttribute();
+						first_href_flag=true;
+					}
 				}
+			
 			System.out
 					.println("****************************list-end("+page_count+")****************************");
 			List<HtmlAnchor> click = (List<HtmlAnchor>) page.getByXPath(this.getNextmatch());
@@ -279,13 +304,27 @@ public class ListParseJob extends ParseJob
 			{
 				page = click.get(0).click();
 				Thread.sleep(2000);
-				page_count++;
-				if(other!=null&&other.size()!=0)
+				if(page_count>1)
 				{
-					other.removeAll(now);
-					if(other.size()==0)
+					if(now.size()==0)
+					{
 						break;
+					}
+					else if(other.size()!=0)
+					{
+						other.removeAll(now);
+						if(other.size()==0)
+							break;
+					}
+					else
+					{
+						break;
+					}
+					System.err.println("now.size:"+now.size()+", other.size:"+other.size()+", page_count:"+page_count);
 				}
+				
+				page_count++;
+				
 			}
 			else
 			{
