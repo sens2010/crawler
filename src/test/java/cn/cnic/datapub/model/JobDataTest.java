@@ -13,7 +13,7 @@ import cn.cnic.datapub.job.manager.JobDataDAO;
 import cn.cnic.datapub.job.manager.JobDataM;
 
 import com.alibaba.fastjson.JSONObject;
-
+@SuppressWarnings("deprecation")
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JobDataTest

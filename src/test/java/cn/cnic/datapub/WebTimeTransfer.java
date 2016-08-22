@@ -3,7 +3,7 @@ package cn.cnic.datapub;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+@SuppressWarnings("deprecation")
 public class WebTimeTransfer
 {
 	

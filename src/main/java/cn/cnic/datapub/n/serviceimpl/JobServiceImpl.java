@@ -64,7 +64,8 @@ public class JobServiceImpl implements IJobService
 		for(SubJob subjob:subjobs)
 		{
 			int id = subjob.getId();
-			ids.add(id);
+			int pid = subjob.getParserid();
+			ids.add(pid);
 			if(subjob_mapping.containsKey(id))
 			{
 				logger.warn("subjob_mapping id:"+id+" is multiple!");
@@ -80,7 +81,7 @@ public class JobServiceImpl implements IJobService
 		Map<Integer,Parser> parser_mapping = new HashMap<Integer,Parser>();
 		for(Parser parser:parsers)
 		{
-			int id = parser.getSubjobid();
+			int id = parser.getId();
 			if(parser_mapping.get(id)!=null)
 			{
 				logger.warn("parser_mapping id:"+id+" is multiple!");
@@ -110,7 +111,7 @@ public class JobServiceImpl implements IJobService
 		
 		for(SubJob subjob:subjobs)
 		{
-			scheduleUtils.addJob(subjob, parser_mapping.get(subjob.getId()),once);
+			scheduleUtils.addJob(subjob, parser_mapping.get(subjob.getParserid()),once);
 		}
 	}
 	

@@ -3,7 +3,6 @@ package cn.cnic.datapub.job;
 import javax.annotation.Resource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
 //@Repository(value="jobBatchDAO")

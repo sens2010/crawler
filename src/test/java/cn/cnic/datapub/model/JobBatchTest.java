@@ -15,6 +15,7 @@ import cn.cnic.datapub.job.JobBatchM;
 
 import com.alibaba.fastjson.JSONObject;
 
+@SuppressWarnings("deprecation")
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JobBatchTest

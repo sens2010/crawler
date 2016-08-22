@@ -128,10 +128,23 @@ public class DcitionaryConstructTest
 		jobServiceImpl.addJob(job);
 		System.out.println(job.toJSONString());
 		//sohu宏观经济
+		
+		parser = (new Parser()).setListcss(false).setListjs(true)
+				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
+				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
+				.setNextparser("//*/div[@class='pages']/p/table/tbody/tr/td/a[3]")
+				.setTitleparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/h1")
+				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
+				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
+				.setTextparser("//*/div[@itemprop='articleBody']")
+				.setUrlrelativer(false).setStatus(1);
+		parser = parserServiceImpl.addParser(parser);
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("宏观经济")
 				.setUrl("http://business.sohu.com/hgjj/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//sohu金融政策/监管
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
@@ -140,13 +153,14 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
 				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
 				.setTextparser("//*/div[@itemprop='articleBody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//sohu金融政策/监管
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("金融监管")
 				.setUrl("http://business.sohu.com/hgjj/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//sohu金融改革/创新
+
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
@@ -155,13 +169,14 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
 				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
 				.setTextparser("//*/div[@itemprop='articleBody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//sohu金融改革/创新
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("金融改革")
 				.setUrl("http://business.sohu.com/jqgg/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//sohu金融机构
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
@@ -170,13 +185,14 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
 				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
 				.setTextparser("//*/div[@itemprop='articleBody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//sohu金融机构
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("金融机构")
 				.setUrl("http://business.sohu.com/c241863626/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//sohu金融动态
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
@@ -185,13 +201,14 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
 				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
 				.setTextparser("//*/div[@itemprop='articleBody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//sohu金融动态
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("金融动态")
 				.setUrl("http://business.sohu.com/jrqj/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//sohu证券要闻
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
@@ -200,33 +217,35 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
 				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
 				.setTextparser("//*/div[@itemprop='articleBody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//sohu证券要闻
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("证券要闻")
 				.setUrl("http://stock.sohu.com/news/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
-		parser = (new Parser()).setListcss(false).setListjs(true)
-				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
-				.setListparser("//*/div[@class='main area']/*/div[@class='f14list']/ul/li/a")
-				.setNextparser("//*/div[@class='pages']/p/table/tbody/tr/td/a[3]")
-				.setTitleparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/h1")
-				.setTimeparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='time']")
-				.setSourceparser("//*/div[@id='container']/div[1]/div[@class='content-box clear']/div[@class='time-fun clear']/*/div[@class='source']/span/span")
-				.setTextparser("//*/div[@itemprop='articleBody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
-		parser = parserServiceImpl.addParser(parser);
 		
 		//hexun
 		job= new Job();
 		job= job.setName("和讯网").setPlan("intr:2h").setCategory(1).setDescription("").setStatus(1).setCreatetime(new Date());
 		jobServiceImpl.addJob(job);
 		//hexun宏观经济
+		
+		parser = (new Parser()).setListcss(false).setListjs(true)
+				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
+				.setListparser("//*/div[@id='temp01']/ul/li/a")
+				.setNextparser("//*/div[@class='hx_paging']/ul/li[@class='next']/a")
+				.setTitleparser("//*/div[@class='layout mg articleName']/h1")
+				.setTimeparser("//*/div[@class='tip fl']/span")
+				.setSourceparser("//*/div[@class='tip fl']/a")
+				.setTextparser("//*/div[@class='art_contextBox']")
+				.setUrlrelativer(false).setStatus(1);
+		parser = parserServiceImpl.addParser(parser);
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("宏观经济")
 				.setUrl("http://news.hexun.com/economy/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//hexun产业报道
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@id='temp01']/ul/li/a")
@@ -235,13 +254,14 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@class='tip fl']/span")
 				.setSourceparser("//*/div[@class='tip fl']/a")
 				.setTextparser("//*/div[@class='art_contextBox']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//hexun产业报道
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("产业报道")
 				.setUrl("http://news.hexun.com/company/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//hexun国际经济
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@id='temp01']/ul/li/a")
@@ -250,43 +270,30 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@class='tip fl']/span")
 				.setSourceparser("//*/div[@class='tip fl']/a")
 				.setTextparser("//*/div[@class='art_contextBox']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//hexun国际经济
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("国际经济")
 				.setUrl("http://news.hexun.com/international/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
-		parser = (new Parser()).setListcss(false).setListjs(true)
-				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
-				.setListparser("//*/div[@id='temp01']/ul/li/a")
-				.setNextparser("//*/div[@class='hx_paging']/ul/li[@class='next']/a")
-				.setTitleparser("//*/div[@class='layout mg articleName']/h1")
-				.setTimeparser("//*/div[@class='tip fl']/span")
-				.setSourceparser("//*/div[@class='tip fl']/a")
-				.setTextparser("//*/div[@class='art_contextBox']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
-		parser = parserServiceImpl.addParser(parser);
 		//hexun原油行业资讯
+	
+		parser = (new Parser()).setListcss(false).setListjs(false)
+				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
+				.setListparser("//*/div[@class='dList pl14 pt6']/ul/li/a")
+				.setNextparser("//*/div[@class='hx_paging']/ul/li[@class='next']/a")
+				.setTitleparser("//*/div[@id='artibodyTitle']/h1")
+				.setTimeparser("//*/span[@id='pubtime_baidu']")
+				.setSourceparser("//*/span[@id='source_baidu']/a")
+				.setTextparser("//*/div[@id='artibody']")
+				.setUrlrelativer(false).setStatus(1);
+		parser = parserServiceImpl.addParser(parser);
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("原油行业资讯")
 				.setUrl("http://crudeoil.hexun.com/crudeoilhy/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
-		parser = (new Parser()).setListcss(false).setListjs(false)
-				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
-				.setListparser("//*/div[@class='dList pl14 pt6']/ul/li/a")
-				.setNextparser("//*/div[@class='hx_paging']/ul/li[@class='next']/a")
-				.setTitleparser("//*/div[@id='artibodyTitle']/h1")
-				.setTimeparser("//*/span[@id='pubtime_baidu']")
-				.setSourceparser("//*/span[@id='source_baidu']/a")
-				.setTextparser("//*/div[@id='artibody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
-		parser = parserServiceImpl.addParser(parser);
 		//hexun能源资讯
-		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("能源资讯")
-				.setUrl("http://futures.hexun.com/nyzx/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
-		subJobServiceImpl.addSubJob(subjob);
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@id='temp01']/ul/li/a")
@@ -295,13 +302,14 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@class='tip fl']/span")
 				.setSourceparser("//*/div[@class='tip fl']/a")
 				.setTextparser("//*/div[@class='art_contextBox']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//hexun国际油市要闻
-		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("国际油市要闻")
-				.setUrl("http://crudeoil.hexun.com/oiloverseas/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("能源资讯")
+				.setUrl("http://futures.hexun.com/nyzx/").setStatus(1)
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//hexun国际油市要闻
+		
 		parser = (new Parser()).setListcss(false).setListjs(false)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='dList pl14 pt6']/ul/li/a")
@@ -310,13 +318,15 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/span[@id='pubtime_baidu']")
 				.setSourceparser("//*/span[@id='source_baidu']/a")
 				.setTextparser("//*/div[@id='artibody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//hexun原油深度评论
-		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("原油深度评论")
-				.setUrl("http://crudeoil.hexun.com/sdpl/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("国际油市要闻")
+				.setUrl("http://crudeoil.hexun.com/oiloverseas/").setStatus(1)
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		
+		//hexun原油深度评论
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='dList pl14 pt6']/ul/li/a")
@@ -325,17 +335,34 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@class='tip fl']/span")
 				.setSourceparser("//*/div[@class='tip fl']/a")
 				.setTextparser("//*/div[@class='art_contextBox']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
+		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("原油深度评论")
+				.setUrl("http://crudeoil.hexun.com/sdpl/").setStatus(1)
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
+		subJobServiceImpl.addSubJob(subjob);
 		//发改委
 		job= new Job();
 		job= job.setName("发改委官网").setPlan("intr:2h").setCategory(2).setDescription("").setStatus(1).setCreatetime(new Date());
 		jobServiceImpl.addJob(job);
 		//发改委-经济形势
+		
+		parser = (new Parser()).setListcss(false).setListjs(true)
+				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
+				.setListparser("//*/ul[@class='list_02 clearfix']//li/a")
+				.setNextparser("//*/ul[@class='pages clearfix']/li[@class='L']/a[5]")
+				.setTitleparser("//*/div[@class='txt_title1 tleft']")
+				.setTimeparser("//*/div[@class='txt_subtitle1 tleft']")
+				.setSourceparser("//*/span[@id='dSourceText']/a")
+				.setTextparser("//*/div[@class='TRS_Editor']")
+				.setUrlrelativer(true).setStatus(1);
+		parser = parserServiceImpl.addParser(parser);
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("经济形势")
 				.setUrl("http://www.sdpc.gov.cn/jjxsfx/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
+		//发改委-宏观经济
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/ul[@class='list_02 clearfix']//li/a")
@@ -344,23 +371,12 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/div[@class='txt_subtitle1 tleft']")
 				.setSourceparser("//*/span[@id='dSourceText']/a")
 				.setTextparser("//*/div[@class='TRS_Editor']")
-				.setUrlrelativer(true).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(true).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
-		//发改委-宏观经济
 		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("宏观经济")
 				.setUrl("http://www.sdpc.gov.cn/fzgggz/hgjj/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
 		subJobServiceImpl.addSubJob(subjob);
-		parser = (new Parser()).setListcss(false).setListjs(true)
-				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
-				.setListparser("//*/ul[@class='list_02 clearfix']//li/a")
-				.setNextparser("//*/ul[@class='pages clearfix']/li[@class='L']/a[5]")
-				.setTitleparser("//*/div[@class='txt_title1 tleft']")
-				.setTimeparser("//*/div[@class='txt_subtitle1 tleft']")
-				.setSourceparser("//*/span[@id='dSourceText']/a")
-				.setTextparser("//*/div[@class='TRS_Editor']")
-				.setUrlrelativer(true).setSubjobid(subjob.getId()).setStatus(1);
-		parser = parserServiceImpl.addParser(parser);
 		
 		//中国人民银行
 		//中国人民银行-新闻发布
@@ -375,10 +391,7 @@ public class DcitionaryConstructTest
 		job= job.setName("新浪财经").setPlan("intr:2h").setCategory(1).setDescription("").setStatus(1).setCreatetime(new Date());
 		jobServiceImpl.addJob(job);
 		//新浪财经-国内财经
-		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("国内财经")
-				.setUrl("http://finance.sina.com.cn/china/").setStatus(1)
-				.setCreatetime(new Date()).setDescription("");
-		subJobServiceImpl.addSubJob(subjob);
+		
 		parser = (new Parser()).setListcss(false).setListjs(true)
 				.setArtcss(false).setArtjs(false).setCreatetime(new Date())
 				.setListparser("//*/div[@class='feed-card-content']/div[1]/div/*/a")
@@ -387,8 +400,12 @@ public class DcitionaryConstructTest
 				.setTimeparser("//*/span[@class='time-source']")
 				.setSourceparser("//*/div[@class='page-info']/span/*/a")
 				.setTextparser("//*/div[@id='artibody']")
-				.setUrlrelativer(false).setSubjobid(subjob.getId()).setStatus(1);
+				.setUrlrelativer(false).setStatus(1);
 		parser = parserServiceImpl.addParser(parser);
+		subjob = (new SubJob()).setJobid(job.getId()).setCategory(0).setName("国内财经")
+				.setUrl("http://finance.sina.com.cn/china/").setStatus(1)
+				.setCreatetime(new Date()).setDescription("").setParserid(parser.getId());
+		subJobServiceImpl.addSubJob(subjob);
 	}
 	
 	/**

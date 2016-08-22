@@ -238,7 +238,6 @@ public class ListParseJob extends ParseJob
 			webClient.getOptions().setJavaScriptEnabled(this.isListscript());
 			List<String> newslist = new ArrayList<String>();
 			HtmlPage page = webClient.getPage(this.getUrl());
-			int page_size=0;
 			String first_href =null;
 			boolean first_href_flag=false;
 			String last_page_href = null;

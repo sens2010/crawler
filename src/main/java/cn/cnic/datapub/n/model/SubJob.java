@@ -22,6 +22,8 @@ public class SubJob extends Model
 	private int id;
 	@Column(name="jobid")
 	private int jobid;
+	@Column(name="parserid")
+	private int parserid;
 	@Column(name="name")
 	private String name;
 	@Column(name="url")
@@ -39,6 +41,17 @@ public class SubJob extends Model
 	@Column(name="interval")
 	private int interval;
 	
+	public int getParserid()
+	{
+		return parserid;
+	}
+
+	public SubJob setParserid(int parserid)
+	{
+		this.parserid = parserid;
+		return this;
+	}
+
 	public int getInterval()
 	{
 		return interval;

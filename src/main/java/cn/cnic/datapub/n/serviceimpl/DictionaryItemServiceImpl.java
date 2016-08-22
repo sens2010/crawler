@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import cn.cnic.datapub.n.dao.DictionaryItemDao;
-import cn.cnic.datapub.n.model.Batch;
 import cn.cnic.datapub.n.model.DictionaryItem;
 import cn.cnic.datapub.n.service.IDictionaryItemService;
 

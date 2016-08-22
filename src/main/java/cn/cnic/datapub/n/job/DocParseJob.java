@@ -91,13 +91,16 @@ public class DocParseJob extends ParseJob implements MessageListener
 				int newsid = conf.getIntValue("newsid");
 				System.err.println("????????????????"+newsid+"???????????????????:");
 				String code = conf.getString("code");
+				String title=null,source = null,text=null;
+				Date pubtime=null;
+				try
+				{
 			final HtmlPage newspage = newClient.getPage(url);
 			List<HtmlElement> titlelist = (List<HtmlElement>)newspage.getByXPath(titlematch);
 			List<HtmlElement> timelist = (List<HtmlElement>)newspage.getByXPath(timematch);
 			List<HtmlElement> sourceurllist = (List<HtmlElement>)newspage.getByXPath(sourceurlmatch);
 			List<HtmlElement> textlist = (List<HtmlElement>)newspage.getByXPath(textmatch);
-			String title=null,source = null,text=null;
-			Date pubtime=null;
+			
 			if(titlelist.size()>0)
 			{
 				title = titlelist.get(0).asText();
@@ -136,7 +139,12 @@ public class DocParseJob extends ParseJob implements MessageListener
 			{
 				text = textlist.get(0).asText();
 			}
-			
+			newspage.cleanUp();
+				}
+				catch(Exception ee)
+				{
+					ee.printStackTrace();
+				}
 			if(this.newsService==null)
 			{
 				setNewsService((NewsServiceImpl)SpringUtils.getBean("newsServiceImpl"));
@@ -152,7 +160,7 @@ public class DocParseJob extends ParseJob implements MessageListener
 			//判断是否有值未取到
 			
 			System.err.println("this.code:"+code);
-			news.setText(text).setResource(source).setPubtime(pubtime).setTitle(title);
+			news.setText(text).setResource(source).setPubtime(pubtime).setTitle(title).setLastmodifytime(new Date());
 			boolean partly = ((text==null)||(source==null)||(pubtime==null)||(title==null));
 			boolean fail = ((text==null)&&(source==null)&&(pubtime==null)&&(title==null));
 			
@@ -199,7 +207,7 @@ public class DocParseJob extends ParseJob implements MessageListener
 				news.setLastmodifytime(new Date());
 				this.getNewsService().updateNews(news);
 			}	
-				newspage.cleanUp();
+				
 			
 				Thread.sleep(interval*1000);
 			}

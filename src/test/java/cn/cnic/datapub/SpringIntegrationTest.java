@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.cnic.datapub.integration.HelloService;
-
 @ContextConfiguration(locations = "classpath:/spring/spring-integration-gateway.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SpringIntegrationTest

@@ -14,7 +14,7 @@ import cn.cnic.datapub.job.manager.ParseDataDAO;
 import cn.cnic.datapub.job.manager.ParseDataM;
 
 import com.alibaba.fastjson.JSONObject;
-
+@SuppressWarnings("deprecation")
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ParseDataTest

@@ -18,7 +18,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
+@SuppressWarnings("unchecked")
 public class CrawlerTest
 {
 	
@@ -96,6 +96,7 @@ public class CrawlerTest
 	}
 	
 	// @Test
+	
 	public void testBussinessSohu()
 	{
 		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))

@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.cnic.datapub.job.HelloJob;
 import cn.cnic.datapub.schedule.SchedulePool;
-
+@SuppressWarnings("deprecation")
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TaskTest

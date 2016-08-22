@@ -20,9 +20,6 @@ public interface ParserDao extends CrudRepository<Parser, Integer>
 	@Query("from Parser")
 	List<Parser> findAll();
 	
-	@Query("from Parser p where p.subjobid in ?1")
-	List<Parser> findBySubJobId(Collection<Integer> subjobs);
-	
-	@Query("from Parser p where p.subjobid in ?2 and p.status in ?1")
+	@Query("from Parser p where p.id in ?2 and p.status in ?1")
 	List<Parser> findNormal(Collection<Integer> codes,Collection<Integer> subjobs);
 }

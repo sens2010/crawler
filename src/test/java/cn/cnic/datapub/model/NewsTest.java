@@ -14,7 +14,7 @@ import cn.cnic.datapub.job.NewsDAO;
 import cn.cnic.datapub.job.NewsM;
 
 import com.alibaba.fastjson.JSONObject;
-
+@SuppressWarnings("deprecation")
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class NewsTest

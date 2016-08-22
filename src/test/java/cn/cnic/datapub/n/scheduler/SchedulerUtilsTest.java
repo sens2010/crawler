@@ -16,7 +16,6 @@ import cn.cnic.datapub.n.dao.JobDao;
 import cn.cnic.datapub.n.dao.ParserDao;
 import cn.cnic.datapub.n.dao.SubJobDao;
 import cn.cnic.datapub.n.model.Job;
-import cn.cnic.datapub.n.serviceimpl.NewsServiceImpl;
 import cn.cnic.datapub.n.utils.SchedulerUtils;
 
 @ContextConfiguration(locations = "classpath:/spring/spring-context.xml")

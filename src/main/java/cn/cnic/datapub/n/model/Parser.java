@@ -20,8 +20,6 @@ public class Parser extends Model
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column(name="subjobid")
-	private int subjobid;
 	@Column(name="listparser")
 	private String listparser;
 	@Column(name="listcss")
@@ -74,17 +72,6 @@ public class Parser extends Model
 	public Parser setId(int id)
 	{
 		this.id = id;
-		return this;
-	}
-
-	public int getSubjobid()
-	{
-		return subjobid;
-	}
-
-	public Parser setSubjobid(int subjobid)
-	{
-		this.subjobid = subjobid;
 		return this;
 	}
 

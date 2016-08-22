@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
-import org.springframework.stereotype.Service;
 
 //@Service
 @Deprecated

@@ -10,7 +10,7 @@
 
   <!-- Site Properties -->
   <title>Login Example - Semantic</title>
-  <P>  The time on the server is ${serverTime}. </P>
+  
  
   <link rel="stylesheet" type="text/css" href="resources/semanticui/semantic.min.css">
 
@@ -75,10 +75,10 @@
 <div class="ui middle aligned center aligned grid">
   <div class="column">
     <h2 class="ui teal image header">
-      <img src="resources/semanticui/assets/images/logo.png" class="image">
-      <div class="content">
+      <img src="resources/semanticui/assets/images/logo.png" class="image"/>
+      <span class="content">
         Log-in to your account
-      </div>
+      </span>
     </h2>
     <form class="ui large form">
       <div class="ui stacked segment">

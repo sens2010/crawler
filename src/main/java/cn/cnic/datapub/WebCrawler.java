@@ -442,10 +442,10 @@ public class WebCrawler
 					List<HtmlElement> time = (List<HtmlElement>)newspage.getByXPath(config.get("time").toString());
 					List<HtmlElement> sourceurl = (List<HtmlElement>)newspage.getByXPath(config.get("sourceurl").toString());
 					List<HtmlElement> text = (List<HtmlElement>)newspage.getByXPath(config.get("text").toString());
-					//System.out.println("title:"+(title.size()>0?title.get(0).asText():""));
-					//System.err.println("time:"+(time.size()>0?time.get(0).asText():""));
-					//System.out.println("sourceurl:"+(sourceurl.size()>0?sourceurl.get(0).asText():""));
-					//System.out.println("text:"+(text.size()>0?text.get(0).asText():""));
+					System.out.println("title:"+(title.size()>0?title.get(0).asText():""));
+					System.err.println("time:"+(time.size()>0?time.get(0).asText():""));
+					System.out.println("sourceurl:"+(sourceurl.size()>0?sourceurl.get(0).asText():""));
+					System.out.println("text:"+(text.size()>0?text.get(0).asText():""));
 					newspage.cleanUp();
 					newClient.close();
 				}

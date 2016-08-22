@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cn.cnic.datapub.general.AbstractDAO;
+@SuppressWarnings("deprecation")
 @Repository(value="subJobBatchDAO")
 @Deprecated
 public class SubJobBatchDAO extends AbstractDAO<SubJobBatchM>

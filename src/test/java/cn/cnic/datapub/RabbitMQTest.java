@@ -13,6 +13,7 @@ public class RabbitMQTest
 	public static void main(String[] args)
 	{
 		// TODO Auto-generated method stub
+		@SuppressWarnings("resource")
 		ApplicationContext context =
 			    new GenericXmlApplicationContext("classpath:spring/spring-rabbitmq.xml");
 			AmqpTemplate template = context.getBean(AmqpTemplate.class);
