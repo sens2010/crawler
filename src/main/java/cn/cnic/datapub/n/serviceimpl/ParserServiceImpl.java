@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import cn.cnic.datapub.n.dao.ParserDao;
@@ -59,5 +61,13 @@ public class ParserServiceImpl implements IParserService
 	public List<Parser> findAll()
 	{
 		return parserDao.findAll();
+	}
+	
+	@Override
+	public List<Parser> list(int pid, int size)
+	{
+		Pageable pagable = new PageRequest(pid, size);
+		
+		return parserDao.findAll(pagable).getContent();
 	}
 }

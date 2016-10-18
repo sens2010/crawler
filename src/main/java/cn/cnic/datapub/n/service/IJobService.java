@@ -1,5 +1,6 @@
 package cn.cnic.datapub.n.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import cn.cnic.datapub.n.model.Job;
@@ -13,4 +14,10 @@ public interface IJobService
 	Job getJobById(int id);
 	int countAll();
 	List<Job> findAll();
+	List<Job> findByIds(Collection<Integer> ids);
+	List<Job> list(int pid, int size);
+	String startJob(int jobid);
+	String deleteJob(int jobid);
+	String stopJob(int jobid);
+	String restartJob(int jobid);
 }

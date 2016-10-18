@@ -1,5 +1,6 @@
 package cn.cnic.datapub.n.aop;
 
+
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

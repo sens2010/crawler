@@ -1,5 +1,8 @@
 package cn.cnic.datapub.n.job;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -274,21 +277,27 @@ public class ListParseJob extends ParseJob
 				}
 				for (HtmlAnchor ha : list)
 				{
-					System.out.println(ha.getHrefAttribute() + " "
+					String attrurl = ha.getHrefAttribute();
+					if(attrurl.startsWith("javascript"))
+					{
+						HtmlPage jspage = ha.click();
+						attrurl = jspage.getUrl().toString();
+						
+					}
+					System.out.println(attrurl + " "
 							+ ha.getTextContent());
 					if(this.isRelative())
 					{
-						newslist.add(this.getUrl()+ha.getHrefAttribute());
+						newslist.add(this.getUrl()+attrurl);
 					}
 					else
 					{
 						newslist.add(ha.getHrefAttribute());
 					}
 					
-					now.add(ha.getHrefAttribute());
+					now.add(attrurl);
 					if(!first_href_flag)
 					{
-						
 						first_href=ha.getHrefAttribute();
 						first_href_flag=true;
 					}
@@ -353,6 +362,24 @@ public class ListParseJob extends ParseJob
 	public void setParser(String parser)
 	{
 		this.parser = parser;
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		try
+		{
+			URL url = new URL("http://news.hexun.com:80/2016-06-28/184627838.html&page=1&abc=2");
+			System.out.println(url.toURI());
+		} catch (MalformedURLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

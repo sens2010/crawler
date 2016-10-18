@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.Transient;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import cn.cnic.datapub.n.dao.BatchDao;
@@ -63,4 +65,12 @@ public class BatchServiceImpl implements IBatchService
 		return batchDao.findAll();
 	}
 
+	@Override
+	public List<Batch>  list(int pid, int size)
+	{
+		Pageable pagable = new PageRequest(pid, size);
+		return batchDao.findAll(pagable).getContent();
+	}
+	 
+	
 }

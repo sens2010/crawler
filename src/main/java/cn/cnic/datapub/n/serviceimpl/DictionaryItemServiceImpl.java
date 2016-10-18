@@ -60,4 +60,10 @@ public class DictionaryItemServiceImpl implements IDictionaryItemService
 	{
 		return dictionaryItemDao.findAll();
 	}
+	
+	@Override
+	public List<DictionaryItem> findCodes(int did)
+	{
+		return dictionaryItemDao.findCodes(did);
+	}
 }

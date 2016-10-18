@@ -36,6 +36,43 @@ public class HomeController
 	@Deprecated
 	SchedulePool schedulePool;
 	
+	@RequestMapping(value="/admin", method = RequestMethod.GET)
+	public String admin()
+	{
+		return "admin";
+	}
+	
+	
+	@RequestMapping(value="/status", method = RequestMethod.GET)
+	public String status()
+	{
+		return "status";
+	}
+	
+	@RequestMapping(value="/job", method = RequestMethod.GET)
+	public String job()
+	{
+		return "job";
+	}
+	
+	@RequestMapping(value="/system", method = RequestMethod.GET)
+	public String system()
+	{
+		return "system";
+	}
+	
+	@RequestMapping(value="/display", method = RequestMethod.GET)
+	public String display()
+	{
+		return "display";
+	}
+	
+	@RequestMapping(value="/analysor", method = RequestMethod.GET)
+	public String analysor()
+	{
+		return "analysor";
+	}
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */

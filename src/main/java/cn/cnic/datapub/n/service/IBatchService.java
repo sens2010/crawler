@@ -13,4 +13,5 @@ public interface IBatchService
 	Batch getBatchById(int id);
 	int countAll();
 	List<Batch> findAll();
+	List<Batch> list(int pid, int size);
 }

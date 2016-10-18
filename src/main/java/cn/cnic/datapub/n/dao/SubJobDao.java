@@ -25,4 +25,10 @@ public interface SubJobDao extends CrudRepository<SubJob, Integer>
 	@Query("from SubJob j where j.status in ?1 and j.jobid in ?2")
 	List<SubJob> findNormal(Collection<Integer> codes,Collection<Integer> jobs);
 	
+	@Query("from SubJob j where j.id in ?1")
+	List<SubJob> findByIds(Collection<Integer> ids);
+	
+	@Query("from SubJob j where j.jobid = ?1")
+	List<SubJob> findByJobId(int jid);
+	
 }

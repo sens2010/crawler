@@ -3,7 +3,6 @@ var HelloMessage = React.createClass({
     return <h1>Hello {this.props.name}</h1>;
   }
 });
-
 ReactDOM.render(
   <HelloMessage name="hanyueqi" />,
   document.getElementById('content')

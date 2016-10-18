@@ -20,6 +20,8 @@ public class Parser extends Model
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@Column(name="name")
+	private String name;
 	@Column(name="listparser")
 	private String listparser;
 	@Column(name="listcss")
@@ -73,6 +75,16 @@ public class Parser extends Model
 	{
 		this.id = id;
 		return this;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 
 	public String getListparser()

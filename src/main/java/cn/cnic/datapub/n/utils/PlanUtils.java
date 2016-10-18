@@ -15,22 +15,22 @@ public class PlanUtils
 				String cron = plan.substring(5);
 				return cronSchedule(cron);
 			}
-			else if(plan.startsWith("intr:"))
+			else if(plan.startsWith("intv:"))
 			{
-				String intr = plan;
+				String intv = plan;
 				if(plan.endsWith("h"))
 				{
-					return simpleSchedule().withIntervalInHours(Integer.parseInt(intr.subSequence(5, plan.length()-1).toString()))
+					return simpleSchedule().withIntervalInHours(Integer.parseInt(intv.subSequence(5, plan.length()-1).toString()))
 					.repeatForever();
 				}
 				else if(plan.endsWith("m"))
 				{
-					return simpleSchedule().withIntervalInMinutes(Integer.parseInt(intr.subSequence(5, plan.length()-1).toString()))
+					return simpleSchedule().withIntervalInMinutes(Integer.parseInt(intv.subSequence(5, plan.length()-1).toString()))
 							.repeatForever(); 
 				}
 				else if(plan.endsWith("s"))
 				{
-					return simpleSchedule().withIntervalInSeconds(Integer.parseInt(intr.subSequence(5, plan.length()-1).toString()))
+					return simpleSchedule().withIntervalInSeconds(Integer.parseInt(intv.subSequence(5, plan.length()-1).toString()))
 							.repeatForever();
 				}
 				else

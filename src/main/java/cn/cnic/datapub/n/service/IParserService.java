@@ -13,4 +13,5 @@ public interface IParserService
 	Parser getParserById(int id);
 	int countAll();
 	List<Parser> findAll();
+	List<Parser> list(int pid, int size);
 }

@@ -13,4 +13,5 @@ public interface IDictionaryItemService
 	DictionaryItem getBatchById(int id);
 	int countAll();
 	List<DictionaryItem> findAll();
+	List<DictionaryItem> findCodes(int did);
 }
