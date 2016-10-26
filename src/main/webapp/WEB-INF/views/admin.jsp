@@ -50,11 +50,28 @@
 	</div>
 <script type="text/javascript">
 	changeContent("status");
-	$("#content_modal").modal();
+	$("#content_modal").modal({allowMultiple: true});
+	$("#second_content_modal").modal({allowMultiple: true});
 </script>
 
 
-<div class="ui modal" id="content_modal">
+
+<div class="ui modal" id="second_content_modal">
+<i class="close icon"></i>
+  <div class="header" id="second_content_modal_header">
+    	标题
+  </div>
+  <div class="image content" id="second_content_modal_content">
+    
+    <div class="description" id="second_content_modal_description">
+		内容
+    </div>
+  </div>
+  <div class="actions" id="second_content_modal_actions">
+  </div>
+</div>
+
+<div class="ui modal large" id="content_modal">
 <i class="close icon"></i>
   <div class="header" id="content_modal_header">
     	标题
@@ -68,6 +85,8 @@
   <div class="actions" id="content_modal_actions">
   </div>
 </div>
+
+
 
 </body>
 

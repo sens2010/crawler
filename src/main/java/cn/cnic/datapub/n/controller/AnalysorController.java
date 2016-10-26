@@ -1,7 +1,10 @@
 package cn.cnic.datapub.n.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -14,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.cnic.datapub.n.model.Parser;
+import cn.cnic.datapub.n.model.SubJob;
 import cn.cnic.datapub.n.serviceimpl.ParserServiceImpl;
+import cn.cnic.datapub.n.serviceimpl.SubJobServiceImpl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,6 +35,22 @@ public class AnalysorController
 	@Resource
 	ParserServiceImpl parserServiceImpl;
 	
+	@Resource
+	SubJobServiceImpl subJobServiceImpl;
+	
+	
+	@RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json;charset=UTF8")
+	public String getAllAnalysor()
+	{
+		List<Parser> parserlist= parserServiceImpl.findAll();
+		JSONArray parserarr = new JSONArray();
+		for(Parser parser:parserlist)
+		{
+			parserarr.add(parser);
+		}
+		return parserarr.toJSONString();
+	}
+	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getAnalysor(@PathVariable("id") int id)
@@ -37,6 +58,18 @@ public class AnalysorController
 		Parser parser = parserServiceImpl.getParserById(id);
 		if(parser!=null)
 		{
+			JSONObject  element = JSONObject.parseObject(parser.toJSONString());
+			SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+			String createtime = df.format(parser.getCreatetime());
+			element.put("createtime", createtime);
+			if(parser.getLastmodifytime()!=null)
+			{
+				element.put("lastmodifytime", parser.getLastmodifytime());
+			}
+			if(parser.getLastchecktime()!=null)
+			{
+				element.put("lastchecktime", parser.getLastchecktime());
+			}
 			return parser.toJSONString();
 		}
 		else
@@ -45,7 +78,7 @@ public class AnalysorController
 		}
 	}
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getAnalysors()
 	{
 		return getAnalysors(0);
@@ -54,17 +87,61 @@ public class AnalysorController
 	@RequestMapping(value = "/list/{pid}",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getAnalysors(@PathVariable("pid") int pid)
 	{
+		JSONObject result = new JSONObject();
+		
 		int pagesize = 10;
+		
+		int sum = parserServiceImpl.countAll();
+		int page_count=sum/pagesize+(sum%pagesize==0?0:1);
+		int courrent_index = pid;
+		
+		List<SubJob> subjobs = subJobServiceImpl.findAll();
+		Map<Integer,Integer> parser_count = new HashMap<Integer,Integer>();
+		for(SubJob sj:subjobs)
+		{
+			int parserid = sj.getParserid();
+			if(parser_count.containsKey(parserid))
+			{
+				Integer pcount= parser_count.get(parserid);
+				pcount +=1;
+				parser_count.put(parserid, pcount);
+			}
+			else
+			{
+				parser_count.put(parserid,1);
+			}
+		}
+		
 		List<Parser> parsers = parserServiceImpl.list(pid, pagesize);
 		
 		
 		JSONArray list = new JSONArray();
 		for(Parser parser:parsers)
 		{
-			list.add(parser);
+			parser_count.get(parser.getId());
+			JSONObject element = JSONObject.parseObject(parser.toJSONString());
+			element.put("jcount", parser_count.containsKey(parser.getId())?parser_count.get(parser.getId()):0);
+			Date createtime = parser.getCreatetime();
+			Date lastmodifytime = parser.getLastmodifytime();
+			Date lastchecktime = parser.getLastchecktime();
+			SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+			element.put("createtime",df.format(createtime));
+			if(lastmodifytime!=null)
+			{
+				element.put("lastmoditytime", df.format(parser.getLastmodifytime()));
+			}
+			if(lastchecktime!=null)
+			{
+				element.put("lastchecktime", df.format(parser.getLastchecktime()));
+			}
+			
+			list.add(element);
 		}
+		result.put("index", courrent_index);
+		result.put("count", page_count);
+		result.put("data", list);
 		
-		return list.toJSONString();
+		return result.toJSONString();
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF8")
@@ -155,6 +232,10 @@ public class AnalysorController
 			Set<String> keys = element.keySet();
 			for(String key:keys)
 			{
+				if(key.equals("name"))
+				{
+					parser.setName(element.get("name")==null?"":element.getString("name"));
+				}
 				if(key.equals("artcss"))
 				{
 					parser.setArtcss((element.get("artcss")==null?false:element.getBooleanValue("artcss")));
@@ -207,8 +288,14 @@ public class AnalysorController
 				{
 					parser.setUrlrelativer((element.get("urlrelativer")==null?false:element.getBooleanValue("urlrelativer")));
 				}
-				parser.setLastmodifytime(new Date());
-				
+				if(key.equals("lastchecktime"))
+				{
+					parser.setLastchecktime(new Date());
+				}
+				else
+				{
+					parser.setLastmodifytime(new Date());
+				}
 			}
 			parser = parserServiceImpl.updateParser(parser);
 			//System.err.println(content);
@@ -219,6 +306,18 @@ public class AnalysorController
 			return null;
 		}
 	}
+	
+	@RequestMapping(value = "/test/{id}",method = RequestMethod.POST, produces = "application/json;charset=UTF8")
+	public String testAnalysor(@PathVariable("id") int id,@RequestBody String content )
+	{
+		JSONObject jcontent = JSONObject.parseObject(content);
+		String url = jcontent.getString("url");
+		String result = parserServiceImpl.testParser(id, url);
+		return result;
+	}
+	
+	
+	
 	
 	@RequestMapping(value = "/{id}",method = RequestMethod.DELETE, produces = "application/json;charset=UTF8")
 	public String deleteAnalysor(@PathVariable("id") int id)
@@ -243,7 +342,7 @@ public class AnalysorController
 		{
 			JSONObject result = new JSONObject();
 			result.put("code", 404);
-			result.put("message", "未找到数据！");
+			result.put("message", "未找到解析器！");
 			return result.toJSONString();
 		}
 	}

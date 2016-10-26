@@ -38,7 +38,7 @@ public class SubJob extends Model
 	private Date createtime;
 	@Column(name="lastmodifytime")
 	private Date lastmodifytime;
-	@Column(name="interval")
+	@Column(name="minterval")
 	private int interval;
 	
 	public int getParserid()

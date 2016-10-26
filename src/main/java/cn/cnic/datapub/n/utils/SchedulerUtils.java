@@ -53,6 +53,16 @@ public class SchedulerUtils
 	//200成功，300操作状态不对，301数据已存在，403操作不允许，404未找到，500处理过程异常
 	
 	
+	public Map<Integer,String[]> getJobs()
+	{
+		return this.jobs;
+	}
+	
+	public Map<Integer,String[]> getSubJobs()
+	{
+		return this.subjobs;
+	}
+	
 	
 	public String startJob(int jobid)
 	{
@@ -226,7 +236,7 @@ public class SchedulerUtils
 	public String deleteJob(int jobid)
 	{
 		JSONObject result = new JSONObject();
-		if(!jobs.containsKey(jobid))
+		if(jobs.containsKey(jobid))
 		{
 			
 			String[] jdetail = jobs.get(jobid);
@@ -620,8 +630,16 @@ public class SchedulerUtils
 					subjobs.remove(subjobid);
 					String[] configs = jobs.get(jobid);
 					JSONArray subjoblist = JSONArray.parseArray(configs[2]);
-					subjoblist.remove(subjobid);
-					configs[2] = subjoblist.toJSONString();
+					JSONArray newlist = new JSONArray();
+					for(int i = 0; i<subjoblist.size();i++)
+					{
+						int id = subjoblist.getInteger(i);
+						if(id!=subjobid)
+						{
+							newlist.add(id);
+						}
+					}
+					configs[2] = newlist.toJSONString();
 					scheduler.deleteJob(jk);
 					result.put("code", 200);
 					result.put("message", subjobid+"删除子任务成功！");

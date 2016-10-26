@@ -20,4 +20,5 @@ public interface ISubJobService
 	String stopSubJob(int subjobid);
 	String deleteSubJob(int subjobid);
 	String restartSubJob(int subjobid);
+	SubJob findSubJobById(int subjobid);
 }

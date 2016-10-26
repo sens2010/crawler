@@ -52,9 +52,20 @@ public class Parser extends Model
 	private Date createtime;
 	@Column(name="lastmodifytime")
 	private Date lastmodifytime;
+	@Column(name="lastchecktime")
+	private Date lastchecktime;
 	
 	
-	
+
+	public Date getLastchecktime()
+	{
+		return lastchecktime;
+	}
+
+	public void setLastchecktime(Date lastchecktime)
+	{
+		this.lastchecktime = lastchecktime;
+	}
 
 	public String getTimetransfer()
 	{

@@ -22,6 +22,49 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class CrawlerTest
 {
 	
+	@Test
+	public void listGet()throws Exception
+	{
+		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
+		{
+			String url = "https://itjuzi.com/investevents";
+			//final HtmlPage page = webClient.getPage("https://itjuzi.com/investevents");
+			webClient.getOptions().setCssEnabled(false);
+			webClient.getOptions().setJavaScriptEnabled(false);
+			webClient.getOptions().setUseInsecureSSL(true);
+			//webClient.getOptions().setSSLClientCertificate(certificateInputStream, certificatePassword, certificateType)
+			//List<HtmlElement> list = (List<HtmlElement>) page.getByXPath("//*/div[@class='list-main-eventset']/li/i");
+						
+			//System.out.println(list.size());
+			
+			
+			webClient.getOptions().setUseInsecureSSL(true);
+			webClient.getOptions().setRedirectEnabled(true);
+			webClient.getOptions().setThrowExceptionOnScriptError(false);
+			webClient.getOptions().setCssEnabled(false);
+			webClient.getOptions().setTimeout(60000);
+			webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+			HtmlPage page = webClient.getPage(url);
+			System.out.println(page.getTitleText());
+			
+			List<HtmlElement> list = (List<HtmlElement>) page.getByXPath("//*/ul[@class='list-main-eventset']/li");
+			for(HtmlElement element:list)
+			{
+				System.out.println(element.asText());
+			}
+			System.out.println(list.size());
+			
+			
+			
+			
+			
+		}
+		
+		
+	}
+	
+	
+	
 	public void homePage() throws Exception
 	{
 		// final WebClient webClient = new WebClient();
@@ -232,7 +275,7 @@ public class CrawlerTest
 		}
 	}
 	
-	@Test
+	//@Test
 	public void testHexun()
 	{
 		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))

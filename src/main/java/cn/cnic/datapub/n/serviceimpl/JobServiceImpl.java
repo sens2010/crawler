@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -188,6 +190,21 @@ public class JobServiceImpl implements IJobService
 	
 	@Transactional
 	@Override
+	public String getJobStatus()
+	{
+		Map<Integer,String[]>  jobs = scheduleUtils.getJobs();
+		JSONObject result = new JSONObject();
+		for(Integer key :jobs.keySet())
+		{
+			result.put(key+"", jobs.get(key)[1]);
+		}
+		return result.toJSONString();
+	}
+	
+	
+	
+	@Transactional
+	@Override
 	public String startJob(int jobid)
 	{
 		return scheduleUtils.startJob(jobid);
@@ -218,11 +235,12 @@ public class JobServiceImpl implements IJobService
 	@Override
 	public Job addJob(Job job)
 	{
+		job = jobDao.save(job);
 		String result = scheduleUtils.addJob(job);
 		JSONObject jresult= JSONObject.parseObject(result);
 		if(jresult.getInteger("code")==200)
 		{
-			return jobDao.save(job);
+			return job;
 		}
 		else
 		{
@@ -295,8 +313,10 @@ public class JobServiceImpl implements IJobService
 	@Override
 	public List<Job> list(int pid, int size)
 	{
-		Pageable pagable = new PageRequest(pid, size);
-		return jobDao.findAll(pagable).getContent();
+		/*Pageable pagable = new PageRequest(pid, size,new Sort(Direction.DESC,"createtime"));
+		return jobDao.findAll(pagable).getContent();*/
+		int offset = pid*size;
+		return jobDao.findAll(size, offset);
 	}
 	
 }

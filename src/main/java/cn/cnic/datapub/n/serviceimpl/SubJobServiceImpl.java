@@ -33,13 +33,16 @@ public class SubJobServiceImpl implements ISubJobService
 	@Override
 	public SubJob addSubJob(SubJob subjob)
 	{
+
+		
+		subjob = subJobDao.save(subjob);
 		int parserid = subjob.getParserid();
 		Parser parser = parserDao.findById(parserid);
 		String result = scheduleUtils.addSubJob(subjob, parser);
 		JSONObject jresult= JSONObject.parseObject(result);
 		if(jresult.getInteger("code")==200)
 		{
-			return subJobDao.save(subjob);
+			return subjob;
 		}
 		else
 		{
@@ -162,5 +165,11 @@ public class SubJobServiceImpl implements ISubJobService
 	public List<SubJob> findByJobId(int jid)
 	{
 		return subJobDao.findByJobId(jid);
+	}
+	
+	@Override
+	public SubJob findSubJobById(int sid)
+	{
+		return subJobDao.findSubJobById(sid);
 	}
 }

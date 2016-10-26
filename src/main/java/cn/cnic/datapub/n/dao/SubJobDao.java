@@ -31,4 +31,7 @@ public interface SubJobDao extends CrudRepository<SubJob, Integer>
 	@Query("from SubJob j where j.jobid = ?1")
 	List<SubJob> findByJobId(int jid);
 	
+	@Query("from SubJob j where j.id = ?1")
+	SubJob findSubJobById(int sid);
+	
 }

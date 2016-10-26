@@ -1,5 +1,8 @@
 package cn.cnic.datapub.n.serviceimpl;
 
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -12,12 +15,19 @@ import cn.cnic.datapub.n.dao.ParserDao;
 import cn.cnic.datapub.n.model.Parser;
 import cn.cnic.datapub.n.service.IParserService;
 
+import com.alibaba.fastjson.JSONObject;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 @Service("parserServiceImpl")
 public class ParserServiceImpl implements IParserService
 {
 	@Resource
 	ParserDao parserDao;
-
+	
 	@Override
 	public Parser addParser(Parser parser)
 	{
@@ -58,11 +68,116 @@ public class ParserServiceImpl implements IParserService
 	}
 
 	@Override
+	public String testParser(int id, String url)
+	{
+		JSONObject result = new JSONObject();
+		Parser parser = parserDao.findById(id);
+	
+		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
+		{
+			webClient.getOptions().setCssEnabled(parser.isListcss());
+			webClient.getOptions().setJavaScriptEnabled(parser.isListjs());
+			final HtmlPage page = webClient.getPage(url);
+			@SuppressWarnings("unchecked")
+			List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(parser.getListparser());
+			if(list.size()<=0)
+			{
+				result.put("code", 404);
+				result.put("message","列表数据不存在！");
+			}
+			else
+			{
+				HtmlAnchor news = list.get(0);
+				String news_url = "";
+				if(parser.isUrlrelativer())
+				{
+					news_url = url+news.getHrefAttribute();
+				}
+				else
+				{
+					news_url = news.getHrefAttribute();
+				}
+				
+				webClient.getOptions().setCssEnabled(parser.isArtcss());
+				webClient.getOptions().setJavaScriptEnabled(parser.isArtjs());
+				
+				final HtmlPage newspage = webClient.getPage(news_url);
+				
+				@SuppressWarnings("unchecked")
+				List<HtmlElement> titles = (List<HtmlElement>)newspage.getByXPath(parser.getTitleparser());
+				@SuppressWarnings("unchecked")
+				List<HtmlElement> times = (List<HtmlElement>)newspage.getByXPath(parser.getTimeparser());
+				@SuppressWarnings("unchecked")
+				List<HtmlElement> sourceurls = (List<HtmlElement>)newspage.getByXPath(parser.getSourceparser());
+				@SuppressWarnings("unchecked")
+				List<HtmlElement> texts = (List<HtmlElement>)newspage.getByXPath(parser.getTextparser());
+			
+				String title = titles.get(0).asText();
+				String time = times.get(0).asText();
+				String sourceurl = sourceurls.get(0).asText();
+				String text = texts.get(0).asText();
+				
+				JSONObject data = new JSONObject();
+				data.put("title",title);
+				data.put("source",sourceurl);
+				data.put("text",text);
+				data.put("url", news_url);
+				if(time!=null&&!time.equals(""))
+				{
+					String timetransfer = parser.getTimetransfer();
+					String[] fa = timetransfer.split("\\|");
+					String format = fa[0];
+					
+					if(fa.length>1&&fa[1]!=null)
+					{
+						String se = fa[1];
+						System.out.println(se);
+						String[]stend = se.split(",");
+						int start = Integer.parseInt(stend[0]);
+						int end = Integer.parseInt(stend[1]);
+						time = time.substring(start,end);
+					}
+					
+					SimpleDateFormat sdf = new SimpleDateFormat(format);
+					try
+					{
+						Date pubtime = sdf.parse(time);
+						SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+						data.put("time", df.format(pubtime));
+					}
+					catch(Exception ee)
+					{
+						ee.printStackTrace();
+					}
+				}
+				result.put("code", 200);
+				result.put("message", "成功");
+				result.put("data", data);
+				newspage.cleanUp();
+			}
+			page.cleanUp();
+			webClient.close();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result.toJSONString();
+	
+	}
+	
+	
+	
+	@Override
 	public List<Parser> findAll()
 	{
 		return parserDao.findAll();
 	}
 	
+	@Override
+	public List<Parser> findParsers(Collection<Integer> ids)
+	{
+		return parserDao.findByIds(ids);
+	}
 	@Override
 	public List<Parser> list(int pid, int size)
 	{

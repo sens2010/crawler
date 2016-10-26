@@ -1,6 +1,7 @@
 package cn.cnic.datapub.n.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class SubJobDaoTest
 	@Test
 	public void testFindNews()
 	{
-		List<Integer> codes = new ArrayList<Integer>();
+		/*List<Integer> codes = new ArrayList<Integer>();
 		codes.add(1);
 		codes.add(2);
 		Set<Integer> ids = new HashSet<Integer>();
@@ -39,7 +40,21 @@ public class SubJobDaoTest
 		for(SubJob job:subjobs)
 		{
 			System.out.println(job.toJSONString());
-		}
+		}*/
+		
+		SubJob sj = new SubJob();
+		sj.setCategory(1);
+		sj.setCreatetime(new Date());
+		sj.setDescription("description");
+		sj.setInterval(1);
+		sj.setJobid(18);
+		sj.setName("name");
+		sj.setParserid(18);
+		sj.setStatus(1);
+		sj.setUrl("url");
+		
+		sj = subJobDao.save(sj);
+		
 	}
 	
 	

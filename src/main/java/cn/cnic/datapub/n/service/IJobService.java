@@ -20,4 +20,5 @@ public interface IJobService
 	String deleteJob(int jobid);
 	String stopJob(int jobid);
 	String restartJob(int jobid);
+	String getJobStatus();
 }
