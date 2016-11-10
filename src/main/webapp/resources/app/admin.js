@@ -75,7 +75,7 @@ function getContent(index)
 {
 	if(index=="status")
 	{
-		getStatusContent();
+		getStatusContent(0);
 	}
 	else if(index == "job")
 	{
@@ -96,22 +96,36 @@ function getContent(index)
 }
 
 
-function getStatusContent()
+function getStatusContent(index)
 {
-	$.get("admin/status/list",function(result){
+	$.get("admin/status/list/"+index,function(raw_result){
+		
+		var result = raw_result.data;
+		var count = raw_result.count;
+		var pre = "<button class=\"ui primary button\" onclick=\"getStatusContent("+eval(index-1)+")\">上一页</button>";
+		var next = "<button class=\"ui primary button\" onclick=\"getStatusContent("+eval(index+1)+")\">下一页</button>";
+		var pagelist="";
+		if(index>0)
+		{
+			pagelist+=pre;
+		}
+		if(index<count-1)
+		{
+			pagelist+=next;
+		}
 		var table = "<thead><tr>";
-		table += "<th>任务名称</th><th>任务类型</th><th>时间</th><th>采集结果</th><th>采集总数</th><th>成功数量</th><th>失败数量</th><th>重复数量</th>";
+		table += "<th>任务名称</th><th>任务类型</th><th>起始时间</th><th>终止时间</th><th>采集结果</th><th>采集总数</th><th>成功数量</th><th>失败数量</th><th>重复数量</th>";
 		table += "</tr></thead>";
 		table += "<tbody>";
 		for(var i=0;i<result.length;i++)
 		{
 			table += "<tr>";
-			table += "<td>"+result[i]["name"]+"</td><td>"+result[i]["type"]+"</td><td>"+(typeof(result[i]["endtime"])=="undefined"?"-":result[i]["endtime"])+"</td><td>"+(result[i]["result"]=="正常结束"? result[i]["result"]:"<div class=\"ui red ribbon label\">"+result[i]["result"]+"<div>")+"</td><td>"+result[i]["sum"]+"</td><td>"+result[i]["success"]+"</td><td>"+result[i]["fail"]+"</td><td>"+result[i]["same"]+"</td>";
+			table += "<td>"+result[i]["name"]+"</td><td>"+result[i]["type"]+"</td><td>"+(typeof(result[i]["starttime"])=="undefined"?"-":result[i]["starttime"])+"</td><td>"+(typeof(result[i]["endtime"])=="undefined"?"-":result[i]["endtime"])+"</td><td>"+(result[i]["result"]=="正常结束"? result[i]["result"]:"<div class=\"ui red ribbon label\">"+result[i]["result"]+"<div>")+"</td><td>"+result[i]["sum"]+"</td><td>"+result[i]["success"]+"</td><td>"+result[i]["fail"]+"</td><td>"+result[i]["same"]+"</td>";
 			table += "</tr>";
 		}
 		table += "</tbody>";
 		table += "<tfoot>";
-		table += "<th><span class=\"ui left floated\"><button class=\"ui primary button\">下一页</button></span></th>";
+		table += "<th><span class=\"ui left floated\">"+pagelist+"</span></th>";
 		table += "</tfoot>";
 		$("#content_table").html(table);
 	});
@@ -279,6 +293,56 @@ function restartJob(jobid)
 	});
 }
 
+function startSubJob(subjobid,jobid)
+{
+	var params = {};
+	params["operation"]="start";
+	$.putJSON("admin/job/sjstat/"+subjobid,params,function(result){
+		if(result.code==200)
+		{
+			modalfade();
+			changeJob(jobid);
+		}
+		else
+		{
+			alert(result.message);
+		}
+	});
+}
+
+function stopSubJob(subjobid,jobid)
+{
+	var params = {};
+	params["operation"]="stop";
+	$.putJSON("admin/job/sjstat/"+subjobid,params,function(result){
+		if(result.code==200)
+		{
+			modalfade();
+			changeJob(jobid);
+		}
+		else
+		{
+			alert(result.message);
+		}
+	});
+}
+
+function restartSubJob(subjobid,jobid)
+{
+	var params = {};
+	params["operation"]="restart";
+	$.putJSON("admin/job/sjstat/"+subjobid,params,function(result){
+		if(result.code==200)
+		{
+			modalfade();
+			changeJob(jobid);
+		}
+		else
+		{
+			alert(result.message);
+		}
+	});
+}
 
 function addJob()
 {
@@ -426,10 +490,20 @@ function changeJob(jobid)
 		
 		for(var i=0;i<subjobs.length;i++)
 		{
+			var statuslist = "";
+			if(subjobs[i]["sstatus"]=="R")
+			{
+				statuslist = "<td><span class=\"ui small basic icon buttons\"><div class=\"ui active button\" onclick=\"startSubJob("+subjobs[i]["id"]+","+jobid+");\"><i class=\"play icon\" /></div><div class=\"ui button\" onclick=\"stopSubJob("+subjobs[i]["id"]+","+jobid+");\"><i class=\"pause icon\" /></div><div class=\"ui button\" onclick=\"restartSubJob("+subjobs[i]["id"]+","+jobid+");\"><i class=\"undo icon\" /></div></span></td>";
+			}
+			else
+			{
+				statuslist = "<td><span class=\"ui small basic icon buttons\"><div class=\"ui  button\" onclick=\"startSubJob("+subjobs[i]["id"]+","+jobid+");\"><i class=\"play icon\" /></div><div class=\"ui active button\" onclick=\"stopSubJob("+subjobs[i]["id"]+","+jobid+");\"><i class=\"pause icon\" /></div><div class=\"ui button\" onclick=\"restartSubJob("+subjobs[i]["id"]+","+jobid+");\"><i class=\"undo icon\" /></div></span></td>";
+			}
+			
 			var subjob = subjobs[i];
 			subjoblist += "<tr>";
-			subjoblist += "<td>"+subjob.name+"</td><td>"+subjob.url+"</td><td>"+parsers[subjob.parserid+""].name+"</td><td>"+(subjob.category==0?"暂无分类":subjob.category)+"</td><td>"+(subjob.status==1?"正常":"异常")+"</td><td>"+subjob.createtime+"</td>";
-			subjoblist += "<td> <span class=\"ui small basic icon buttons\"><div class=\"ui button\" onclick=\"changeSubJob("+subjob.id+")\"><i class=\"write icon\" /></div><div class=\"ui button\" onclick=\"infoSubJob("+subjob.id+")\"><i class=\"info Circle icon\" /></div><div class=\"ui button\" onclick=\"deleteSubJob("+subjob.id+")\"><i class=\"remove icon\" /></div></span></td>";
+			subjoblist += "<td>"+subjob.name+"</td><td>"+subjob.url+"</td><td>"+parsers[subjob.parserid+""].name+"</td><td>"+(subjob.category==0?"暂无分类":subjob.category)+"</td><td>"+subjob.createtime+"</td>"+statuslist+"";
+			subjoblist += "<td> <span class=\"ui small basic icon buttons\"><div class=\"ui button\" onclick=\"changeSubJob("+subjob.id+")\"><i class=\"write icon\" /></div><div class=\"ui button\" onclick=\"infoSubJob("+subjob.id+")\"><i class=\"info Circle icon\" /></div><div class=\"ui button\" onclick=\"deleteSubJob("+subjob.id+","+jobid+")\"><i class=\"remove icon\" /></div></span></td>";
 			subjoblist += "</tr>";
 		}
 		
@@ -475,7 +549,7 @@ function changeJob(jobid)
 			  +"<table class=\"ui celled table\" id=\"job_content_table\">"
 			  +"<thead>"
 			  +"<tr>"
-			  +"<th>子任务名称</th><th>网站地址</th><th>解析器</th><th>类别</th><th>状态</th><th>创建时间</th><th>操作</th>"
+			  +"<th>子任务名称</th><th>网站地址</th><th>解析器</th><th>类别</th><th>创建时间</th><th>状态</th><th>操作</th>"
 			  +"</tr>"
 			  +"</thead>"
 			  +"<tbody>"
@@ -487,7 +561,7 @@ function changeJob(jobid)
 			  +"</form>";
 	$("#content_modal_description").html(form);
 	var actions = "<div class=\"ui primary button close\" onclick=\"modifyJob("+jobid+")\">修改</div>";
-	actions += "<div class=\"ui button\">取消</div>";
+	actions += "<div class=\"ui button\" onclick=\"modalfade();\">取消</div>";
 	$("#content_modal_actions").html(actions);
 	$("#content_modal").modal("show");
 		
@@ -752,11 +826,13 @@ function infoSubJob(subjobid)
 	
 }
 
-function deleteSubJob(subjobid)
+function deleteSubJob(subjobid,jobid)
 {
 	$.deleteJSON("admin/job/subjob/"+subjobid, function(result){
 		alert("子任务删除成功！");
 		console.log(result);
+		modalfade();
+		changeJob(jobid);
 	});
 }
 

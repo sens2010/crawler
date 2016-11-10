@@ -22,7 +22,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class CrawlerTest
 {
 	
-	@Test
+	
 	public void listGet()throws Exception
 	{
 		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
@@ -53,17 +53,75 @@ public class CrawlerTest
 				System.out.println(element.asText());
 			}
 			System.out.println(list.size());
+		}
+	}
+	@Test
+	public void testIfeng()throws Exception
+	{
+		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
+		{
+			String url = "http://finance.ifeng.com/macro/";
+			//final HtmlPage page = webClient.getPage("https://itjuzi.com/investevents");
+			webClient.getOptions().setCssEnabled(false);
+			webClient.getOptions().setJavaScriptEnabled(false);
+			webClient.getOptions().setUseInsecureSSL(true);
+			//webClient.getOptions().setSSLClientCertificate(certificateInputStream, certificatePassword, certificateType)
+			//List<HtmlElement> list = (List<HtmlElement>) page.getByXPath("//*/div[@class='list-main-eventset']/li/i");
+						
+			//System.out.println(list.size());
 			
 			
+			webClient.getOptions().setUseInsecureSSL(true);
+			webClient.getOptions().setRedirectEnabled(true);
+			webClient.getOptions().setThrowExceptionOnScriptError(false);
+			webClient.getOptions().setCssEnabled(false);
+			webClient.getOptions().setTimeout(60000);
+			webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+			HtmlPage page = webClient.getPage(url);
+			System.out.println(page.getTitleText());
 			
+			List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath("//*/ul[@id='list01']/li/h3/a");
+			for(HtmlAnchor element:list)
+			{
+				System.out.println(element.getHrefAttribute());
+			}
+			String article = list.get(0).getHrefAttribute();
 			
+			HtmlPage artpage = webClient.getPage(article);
+			List<HtmlElement> titles = (List<HtmlElement>)artpage.getByXPath("//*/div[@id='artical']/h1");
+			List<HtmlElement> times = (List<HtmlElement>)artpage.getByXPath("//*/div[@id='artical_sth']/p/span[@class='ss01']");
+			List<HtmlElement> sourceurls = (List<HtmlElement>)artpage.getByXPath("//*/div[@id='artical_sth']/p[@class='p_time']/span[@itemprop='publisher']/span[@class='ss03']");
+			List<HtmlElement> texts = (List<HtmlElement>)artpage.getByXPath("//*/div[@id='main_content']");
+			
+			String title ="";
+			String time ="";
+			String sourceurl ="";
+			String text ="";
+			if(titles!=null&&titles.size()>=1)
+			{
+				title = titles.get(0).asText();
+			}
+			if(times!=null&&times.size()>=1)
+			{
+				time = times.get(0).asText();
+			}
+			if(sourceurls!=null&&sourceurls.size()>=1)
+			{
+				sourceurl = sourceurls.get(0).asText();
+			}
+			if(texts!=null&&texts.size()>=1)
+			{
+				text = texts.get(0).asText();
+			}
+			System.out.println(title);
+			System.out.println(time);
+			System.out.println(sourceurl);
+			System.out.println(text);
 			
 		}
 		
 		
 	}
-	
-	
 	
 	public void homePage() throws Exception
 	{

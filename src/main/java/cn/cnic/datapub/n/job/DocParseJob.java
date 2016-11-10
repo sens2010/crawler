@@ -207,12 +207,8 @@ public class DocParseJob extends ParseJob implements MessageListener
 				news.setLastmodifytime(new Date());
 				this.getNewsService().updateNews(news);
 			}	
-				
-			
 				Thread.sleep(interval*1000);
 			}
-			
-			
 			newClient.close();
 		} catch (Exception e)
 		{
@@ -227,7 +223,6 @@ public class DocParseJob extends ParseJob implements MessageListener
 	{
 
 	}
-
 	@Override
 	public void onMessage(Message message)
 	{

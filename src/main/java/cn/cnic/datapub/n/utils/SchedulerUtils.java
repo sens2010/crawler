@@ -401,6 +401,7 @@ public class SchedulerUtils
 						if(scheduler.checkExists(jk))
 						{
 							scheduler.resumeJob(jk);
+							subjobdetail[1]="R";
 							result.put("code", 200);
 							result.put("message", subjobid+"子任务启动成功！");
 						}
@@ -654,7 +655,6 @@ public class SchedulerUtils
 				
 				}
 		}
-		
 		return result.toJSONString();
 	}
 	

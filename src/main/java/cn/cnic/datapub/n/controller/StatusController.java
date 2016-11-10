@@ -48,6 +48,10 @@ public class StatusController
 	{
 		int pagesize = 10;
 		
+		int csum = batchServiceImpl.countAll();
+		int page_count=csum/pagesize+(csum%pagesize==0?0:1);
+		
+		
 		List<Batch> batches = batchServiceImpl.list(pid, pagesize);
 		Set<Integer> jids = new HashSet<Integer>();
 		Set<Integer> sids = new HashSet<Integer>();
@@ -113,6 +117,13 @@ public class StatusController
 				SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
 				endtime = df.format(dendtime);
 			}
+			Date dstarttime = batch.getStarttime();
+			String starttime = null;
+			if(dstarttime!=null)
+			{
+				SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+				starttime = df.format(dstarttime);
+			}
 			int status = batch.getStatus();
 			String result_text = null;
 			switch(status)
@@ -133,6 +144,7 @@ public class StatusController
 			result.put("name", name);
 			result.put("type", type);
 			result.put("endtime", endtime);
+			result.put("starttime", starttime);
 			result.put("result", result_text);
 			result.put("sum", sum);
 			result.put("success", success);
@@ -142,7 +154,11 @@ public class StatusController
 			resultlist.add(result);
 		}
 		
-		return resultlist.toJSONString();
+		JSONObject result = new JSONObject();
+		result.put("count", page_count);
+		result.put("index",pid );
+		result.put("data", resultlist);
+		return result.toJSONString();
 		
 	}
 	

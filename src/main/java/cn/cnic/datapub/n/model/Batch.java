@@ -42,8 +42,19 @@ public class Batch  extends Model
 	private int ssum;
 	@Column(name="asum")
 	private int asum;
+	@Column(name="flag")
+	private String flag;
 	
-	
+	public String getFlag()
+	{
+		return flag;
+	}
+
+	public void setFlag(String flag)
+	{
+		this.flag = flag;
+	}
+
 	public int getAsum()
 	{
 		return asum;

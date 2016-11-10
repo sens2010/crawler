@@ -66,6 +66,13 @@ public class BatchServiceImpl implements IBatchService
 	}
 
 	@Override
+	public Batch findLastBatch(int subjobid,int batchnow )
+	{
+		return batchDao.findLastBatch(subjobid,batchnow);
+	}
+	
+	
+	@Override
 	public List<Batch>  list(int pid, int size)
 	{
 		Pageable pagable = new PageRequest(pid, size);

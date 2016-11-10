@@ -112,10 +112,27 @@ public class ParserServiceImpl implements IParserService
 				@SuppressWarnings("unchecked")
 				List<HtmlElement> texts = (List<HtmlElement>)newspage.getByXPath(parser.getTextparser());
 			
-				String title = titles.get(0).asText();
-				String time = times.get(0).asText();
-				String sourceurl = sourceurls.get(0).asText();
-				String text = texts.get(0).asText();
+				String title ="";
+				String time ="";
+				String sourceurl ="";
+				String text ="";
+				if(titles!=null&&titles.size()>=1)
+				{
+					title = titles.get(0).asText();
+				}
+				if(times!=null&&times.size()>=1)
+				{
+					time = times.get(0).asText();
+				}
+				if(sourceurls!=null&&sourceurls.size()>=1)
+				{
+					sourceurl = sourceurls.get(0).asText();
+				}
+				if(texts!=null&&texts.size()>=1)
+				{
+					text = texts.get(0).asText();
+				}
+			
 				
 				JSONObject data = new JSONObject();
 				data.put("title",title);
@@ -147,6 +164,7 @@ public class ParserServiceImpl implements IParserService
 					}
 					catch(Exception ee)
 					{
+						data.put("time", "$请检查日期格式$");
 						ee.printStackTrace();
 					}
 				}
@@ -162,10 +180,7 @@ public class ParserServiceImpl implements IParserService
 			e.printStackTrace();
 		}
 		return result.toJSONString();
-	
 	}
-	
-	
 	
 	@Override
 	public List<Parser> findAll()

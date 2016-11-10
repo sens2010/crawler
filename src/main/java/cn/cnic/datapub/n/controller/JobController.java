@@ -235,6 +235,7 @@ public class JobController
 		JSONObject result = new JSONObject();
 		Job job = jobServiceImpl.getJobById(id);
 		List<SubJob> subjobs = subJobServiceImpl.findByJobId(id);
+		JSONObject subjobstatus = JSONObject.parseObject(subJobServiceImpl.getSubJobStatus());
 		result.put("job", job);
 		JSONArray jsubjobs = new JSONArray();
 		
@@ -246,6 +247,7 @@ public class JobController
 			
 			SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 			String createtime = df.format(sj.getCreatetime());
+			jsj.put("sstatus",subjobstatus.get(sj.getId()+""));
 			jsj.put("createtime", createtime);
 			jsubjobs.add(jsj);
 			parserids.add(sj.getParserid());

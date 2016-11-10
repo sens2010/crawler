@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -218,7 +219,7 @@ public class ListParseJob extends ParseJob
 			batch.setFsum(0);
 			batch.setSsum(0);
 			batch.setAsum(0);
-			this.batchServiceImpl.addBatch(batch);
+			batch = this.batchServiceImpl.addBatch(batch);
 			
 			this.setBatchid(batch.getId());
 			
@@ -244,6 +245,9 @@ public class ListParseJob extends ParseJob
 			String first_href =null;
 			boolean first_href_flag=false;
 			String last_page_href = null;
+			//int flag_count=3;
+			boolean isflag=false;
+			Set<String> lastflag = new HashSet<String>();
 			do
 			{
 				Set<String> now,other;
@@ -259,6 +263,43 @@ public class ListParseJob extends ParseJob
 				}
 				now.clear();
 				List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(this.getListmatch());
+				if(!isflag)
+				{
+					String flagstr = "";
+					if(list.size()>=3)
+					{
+						flagstr = list.get(0).getHrefAttribute()+"|"+list.get(1).getHrefAttribute()+"|"+list.get(2);
+					}
+					else if(list.size()==1)
+					{
+						flagstr = list.get(0).getHrefAttribute();
+					}
+					else if(list.size()==2)
+					{
+						flagstr = list.get(0).getHrefAttribute()+"|"+list.get(1).getHrefAttribute();
+					}
+					if(this.batchServiceImpl==null)
+					{
+						setBatchServiceImpl((BatchServiceImpl)SpringUtils.getBean("batchServiceImpl"));
+					}
+					if(this.batchServiceImpl!=null)
+					{
+						Batch batch = this.batchServiceImpl.getBatchById(this.getBatchid());
+						batch.setFlag(flagstr);
+						this.batchServiceImpl.updateBatch(batch);
+						String lastflagstr = this.batchServiceImpl.findLastBatch(batch.getSubjobid(), batch.getId()).getFlag();
+						String[] strarr = lastflagstr.split("|");
+						for(int i=0;i<strarr.length;i++)
+						{
+							if(strarr[i]!=null&&!strarr[i].equals(""))
+							{
+								lastflag.add(strarr[i]);
+							}
+						}
+					}
+					isflag=true;
+				}
+				
 				System.out
 						.println("******************************list("+page_count+")******************************");
 				System.out.println("list_size:" + list.size());
@@ -282,7 +323,6 @@ public class ListParseJob extends ParseJob
 					{
 						HtmlPage jspage = ha.click();
 						attrurl = jspage.getUrl().toString();
-						
 					}
 					System.out.println(attrurl + " "
 							+ ha.getTextContent());

@@ -2,6 +2,7 @@ package cn.cnic.datapub.n.serviceimpl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -118,6 +119,19 @@ public class SubJobServiceImpl implements ISubJobService
 	public String stopSubJob(int subjobid)
 	{
 		return scheduleUtils.stopSubJob(subjobid);
+	}
+	
+	@Transactional
+	@Override
+	public String getSubJobStatus()
+	{
+		Map<Integer,String[]>  subjobs = scheduleUtils.getSubJobs();
+		JSONObject result = new JSONObject();
+		for(Integer key :subjobs.keySet())
+		{
+			result.put(key+"", subjobs.get(key)[1]);
+		}
+		return result.toJSONString();
 	}
 	
 	@Transactional
