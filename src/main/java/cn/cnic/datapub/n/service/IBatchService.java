@@ -15,4 +15,5 @@ public interface IBatchService
 	List<Batch> findAll();
 	List<Batch> list(int pid, int size);
 	Batch findLastBatch(int subjobid, int batchnow);
+	List<Batch> findLastBatches(int subjobid, int batchnow,int number);
 }

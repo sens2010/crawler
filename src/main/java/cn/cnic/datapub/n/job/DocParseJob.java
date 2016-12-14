@@ -240,17 +240,15 @@ public class DocParseJob extends ParseJob implements MessageListener
 		String parserstr = decoration.getString("parser");
 		
 		JSONObject parser = JSONObject.parseObject(parserstr);
-		rootconfig.put("doccss",parser.getBooleanValue("doccss"));
-		rootconfig.put("doccss",parser.getBooleanValue("docscript"));
-		rootconfig.put("textmatch",parser.getString("textmatch"));
-		rootconfig.put("titlematch",parser.getString("titlematch"));
-		rootconfig.put("timematch",parser.getString("timematch"));
-		rootconfig.put("sourceurlmatch",parser.getString("sourceurlmatch"));
+		rootconfig.put("doccss",parser.getBooleanValue("artcss"));
+		rootconfig.put("docscript",parser.getBooleanValue("artjs"));
+		rootconfig.put("textmatch",parser.getString("textparser"));
+		rootconfig.put("titlematch",parser.getString("titleparser"));
+		rootconfig.put("timematch",parser.getString("timeparser"));
+		rootconfig.put("sourceurlmatch",parser.getString("sourceparser"));
 		rootconfig.put("timetransfer",parser.getString("timetransfer"));
 		rootconfig.put("interval",parser.getString("interval"));
 		JSONArray newsconfigs = new JSONArray();
-		
-		
 		
 		System.err.println(parser.getString("timetransfer")+":"+parser.toJSONString());
 		
@@ -269,6 +267,14 @@ public class DocParseJob extends ParseJob implements MessageListener
 		System.err.println("bid"+bid);
 		news.setNewsid(nid).setCreatetime(new Date()).setPagecount(0)
 			.setUrl(url).setRelatebatch(bid).setStatus(1);
+		News newsone = this.getNewsService().getNewsByNewsId(nid);
+		if(newsone!=null)
+		{
+			Batch bt = this.getBatchService().getBatchById(bid);
+			bt.setCsum(bt.getCsum()+1);
+			bt.setAsum(bt.getAsum()+1);
+			this.getBatchService().updateBatch(bt);
+		}
 		this.getNewsService().addNews(news);
 		if(news.getId()==0){throw new NullPointerException();}
 		config.put("newsid", news.getId());

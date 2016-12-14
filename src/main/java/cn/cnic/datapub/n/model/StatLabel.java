@@ -12,23 +12,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name="stat_label")
 @PrimaryKeyJoinColumn( name = "id" ) 
-public class StatLabel
+public class StatLabel  extends Model
 {
 	private static final long serialVersionUID = 1L;
 	@Id
 	private int id;
-	@Column(name="name")
-	private String name;
-	@Column(name="relation")
-	private	int relation;
+	@Column(name="categoryid")
+	private	int categoryid;
+	@Column(name="newsid")
+	private	int newsid;
 	@Column(name="status")
 	private int status;
 	@Column(name="createtime")
 	private Date createtime;
 	@Column(name="lastmodifytime")
 	private Date lastmodifytime;
-	
-	
 
 	public int getId()
 	{
@@ -40,24 +38,24 @@ public class StatLabel
 		this.id = id;
 	}
 
-	public String getName()
+	public int getCategoryid()
 	{
-		return name;
+		return categoryid;
 	}
 
-	public void setName(String name)
+	public void setCategoryid(int categoryid)
 	{
-		this.name = name;
+		this.categoryid = categoryid;
 	}
 
-	public int getRelation()
+	public int getNewsid()
 	{
-		return relation;
+		return newsid;
 	}
 
-	public void setRelation(int relation)
+	public void setNewsid(int newsid)
 	{
-		this.relation = relation;
+		this.newsid = newsid;
 	}
 
 	public int getStatus()

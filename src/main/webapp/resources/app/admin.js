@@ -1,3 +1,6 @@
+var chooselabels = [];
+var choosenews =[];
+
 $.postJSON = function(url, data, callback) {
     return jQuery.ajax({
     'type': 'POST',
@@ -32,7 +35,6 @@ $.deleteJSON = function(url, callback) {
 
 function changeContent(index)
 {
-	
 	$(".ui a.item").removeClass("active");
 	var content="";
 	content += "<div class=\"ui container\">";
@@ -41,13 +43,16 @@ function changeContent(index)
 	{
 		content += "<h4 class=\"ui horizontal divider header\"><i class=\"bar chart icon\" /> 采集状态 </h4>";
 		$("#status").addClass("active");
-		
 	}
 	else if(index == "job")
 	{
 		content += "<h4 class=\"ui horizontal divider header\"><i class=\"bar chart icon\" /> 任务管理 </h4>";
 		$("#job").addClass("active");
-		
+	}
+	else if(index == "newslist")
+	{
+		content += "<h4 class=\"ui horizontal divider header\"><i class=\"bar chart icon\"></i> 新闻标注 </h4>";
+		$("#newslist").addClass("active");
 	}
 	else if(index == "analysor")
 	{
@@ -64,8 +69,9 @@ function changeContent(index)
 		content += "<h4 class=\"ui horizontal divider header\"><i class=\"bar chart icon\" /> 系统管理 </h4>";
 		$("#system").addClass("active");
 	}
-	
+	content += "<div id=\"pretable_content\" class=\"ui container\"></div>";
 	content += "<table class=\"ui celled table\" id=\"content_table\"></table>";
+	content += "<div id=\"latertable_content\"></div>";
 	content += "</div>";
 	
 	$("#mainer").html(content);
@@ -84,6 +90,10 @@ function getContent(index)
 	else if(index == "analysor")
 	{
 		getAnalysorContent(0);
+	}
+	else if(index == "newslist")
+	{
+		getNewsListContent(0);
 	}
 	else if(index == "display")
 	{
@@ -126,6 +136,8 @@ function getStatusContent(index)
 		table += "</tbody>";
 		table += "<tfoot>";
 		table += "<th><span class=\"ui left floated\">"+pagelist+"</span></th>";
+		table += "<th colSpan=\"8\"><span class=\"ui right floated pagination \">";
+		table +="</span></th>";
 		table += "</tfoot>";
 		$("#content_table").html(table);
 	});
@@ -187,6 +199,607 @@ function getJobContent(index)
 	});
 }
 
+function display_page(index,count,size)
+{
+	console.log("index:"+index+",count:"+count+",size:"+size);
+	var top_down = {};
+	if(index<size/2)
+	{
+		if(count<size)
+		{
+			top_down["top"]=0;
+			top_down["down"]=count-1;
+		}
+		else
+		{
+			top_down["top"]=0;
+			top_down["down"]=size-1;
+		}
+	}
+	else
+	{
+		if(count<(size/2)+index)
+		{
+			top_down["top"]=count-size;
+			top_down["down"]=size-1;
+		}
+		else
+		{
+			top_down["top"]=index-Math.floor(size/2);
+			top_down["down"]=index+Math.floor(size/2);
+		}
+	}
+	return top_down;
+}
+
+
+function getNewsListContent(index)
+{
+	var pagesize = 5;
+	$.get("admin/news/list/"+index,function(raw_result){
+		var result = raw_result.data;
+		var count = raw_result.count;
+		var pre = 0;
+		var next = index ;
+		if(index>0)pre=index-1;
+		if(index<count-1)next=index+1;
+		var pagelist = "<a class=\"icon item\" onclick=\"getNewsListContent("+pre+")\"><i class=\"left chevron icon\"></i></a>";
+		
+		var top_down = display_page(index,count,pagesize);
+		
+		for(var c=top_down["top"];c<=top_down["down"];c++)
+		{
+			if(index!=c)
+			{
+				pagelist += "<a class=\"item\" onclick=\"getNewsListContent("+c+");\">"+eval(c+1)+"</a>";
+			}
+			else
+			{
+				pagelist += "<a class=\"active item\" onclick=\"getNewsListContent("+c+");\">"+eval(c+1)+"</a>";
+			}
+		}
+		pagelist += "<a class=\"icon item\" onclick=\"getNewsListContent("+next+");\"><i class=\"right chevron icon\"></i></a>";
+		console.log(pagelist);
+		var table = "<thead><tr>";
+		table += "<th></th><th>新闻ID</th><th>新闻标题</th><th>发布时间</th><th>标签</th><th>操作</th>";
+		table += "</tr></thead>";
+		table += "<tbody>";
+		console.log(result);
+		for(var i=0;i<result.length;i++)
+		{
+			var element = result[i];
+			var labels = [];
+			for(var j=0;j<element.labels.length;j++)
+			{
+				labels.push(element.labels[j].name);
+			}
+			
+			var oplist = "<td > <span class=\"ui small basic icon buttons\"><button class=\"ui button\" onclick=\"getNewsLabels("+index+","+result[i]["id"]+");\"><i class=\"add icon\" /></button><button class=\"ui button\" onclick=\"changeNews("+result[i]["id"]+");\"><i class=\"write icon\" /></button><button class=\"ui button\" onclick=\"infoNews("+result[i]["id"]+");\"><i class=\"info Circle icon\" /></button><button class=\"ui button\" onclick=\"deleteNews("+result[i]["id"]+","+index+");\"><i class=\"remove icon\" /></button></span></td>";
+			
+			table += "<tr>";
+			table += "<td><input type=\"checkbox\" class=\"newscheck\" id=\"news_"+element.id+"\"></td>";
+			table += "<td>"+element.id+"</td>"+"<td>"+(typeof(element.title)=="undefined"?"-":element.title)+"</td>"+"<td>"+(typeof(element.pubtime)=="undefined"?"-":element.pubtime)+"</td>"+"<td>"+labels.join("，")+"</td>";
+			table += oplist;
+			table += "</tr>";
+		}
+		table += "</tbody>";
+		table += "<tfoot>";
+		table += "<th colSpan=\"6\"><span class=\"ui right floated pagination menu\">";
+		table += pagelist;
+		table +="</span></th>";
+		table += "</tfoot>";
+		$("#content_table").html(table);
+		//var precontent = "<span class=\"ui left floated\"><button class=\"ui primary button\" onclick=\"addJob();\">全选</button><button class=\"ui primary button\" onclick=\"addJob();\">添加标签</button></span>";
+		var selector="";
+		selector+="<select class=\"ui search dropdown\" id=\"newssearchselector\" onchange=\"changeNewsContent();\">";
+		selector+="<option value=\"default\">请选择...</option>";
+		selector+="<option value=\"id\">ID</option>";
+		selector+="<option value=\"name\">标题</option>";
+		selector+="<option value=\"resource\">发布机构</option>";
+		selector+="<option value=\"text\">正文</option>";
+		selector+="</select>";
+		
+		
+		
+		var precontent = "<div class=\"ui container\"><button class=\"ui primary button left floated\" onclick=\"selectAllNews();\"><i class=\"checkmark icon\"></i>全选</button><button class=\"ui primary button left floated\" onclick=\"reverseSelectAllNews();\"><i class=\"remove icon\"></i>反选</button><button class=\"ui primary button left floated\" onclick=\"getNewsLabels("+index+");\"><i class=\"plus icon\"></i>标注</button><div class=\"ui search buttons right floated\"><div class=\"ui icon input \">"+selector+"<input class=\"prompt\" type=\"text\" id=\"newssearchcontent\" placeholder=\"查询内容\" onchange=\"changeNewsContent();\"><i class=\"search icon\"></i></div><p></p></div></div>";
+		
+		$("#pretable_content").html(precontent);
+		$("#aftertable_content").html("");
+		
+	});
+
+}
+
+function changeNewsContent(index)
+{
+	var pagesize = 5;
+	if(typeof(index)=="undefined")index=0;
+	var searchstr = $("#newssearchcontent").val();
+	var selector = $("#newssearchselector").val();
+	if(selector!="default"&&searchstr!="")
+	{
+		var data = {};
+		data["name"]=selector;
+		data["value"]=searchstr;
+		console.log(data);
+		$.postJSON("admin/news/list/"+index, data, function(raw_result){
+			var result = raw_result.data;
+			var count = raw_result.count;
+			var pre = 0;
+			var next = index ;
+			if(index>0)pre=index-1;
+			if(index<count-1)next=index+1;
+			var pagelist = "<a class=\"icon item\" onclick=\"changeNewsContent("+pre+")\"><i class=\"left chevron icon\"></i></a>";
+			
+			var top_down = display_page(index,count,pagesize);
+			
+			for(var c=top_down["top"];c<=top_down["down"];c++)
+			{
+				if(index!=c)
+				{
+					pagelist += "<a class=\"item\" onclick=\"changeNewsContent("+c+");\">"+eval(c+1)+"</a>";
+				}
+				else
+				{
+					pagelist += "<a class=\"active item\" onclick=\"changeNewsContent("+c+");\">"+eval(c+1)+"</a>";
+				}
+			}
+			pagelist += "<a class=\"icon item\" onclick=\"changeNewsContent("+next+");\"><i class=\"right chevron icon\"></i></a>";
+			console.log(pagelist);
+			var table = "<thead><tr>";
+			table += "<th></th><th>新闻ID</th><th>新闻标题</th><th>发布时间</th><th>标签</th><th>操作</th>";
+			table += "</tr></thead>";
+			table += "<tbody>";
+			console.log(result);
+			for(var i=0;i<result.length;i++)
+			{
+				var element = result[i];
+				var labels = [];
+				for(var j=0;j<element.labels.length;j++)
+				{
+					labels.push(element.labels[j].name);
+				}
+				
+				var oplist = "<td > <span class=\"ui small basic icon buttons\"><button class=\"ui button\" onclick=\"getNewsLabels("+index+","+result[i]["id"]+");\"><i class=\"add icon\" /></button><button class=\"ui button\" onclick=\"changeNews("+result[i]["id"]+");\"><i class=\"write icon\" /></button><button class=\"ui button\" onclick=\"infoNews("+result[i]["id"]+");\"><i class=\"info Circle icon\" /></button><button class=\"ui button\" onclick=\"deleteNews("+result[i]["id"]+","+index+");\"><i class=\"remove icon\" /></button></span></td>";
+				
+				table += "<tr>";
+				table += "<td><input type=\"checkbox\" class=\"newscheck\" id=\"news_"+element.id+"\"></td>";
+				table += "<td>"+element.id+"</td>"+"<td>"+(typeof(element.title)=="undefined"?"-":element.title)+"</td>"+"<td>"+(typeof(element.pubtime)=="undefined"?"-":element.pubtime)+"</td>"+"<td>"+labels.join("，")+"</td>";
+				table += oplist;
+				table += "</tr>";
+			}
+			table += "</tbody>";
+			table += "<tfoot>";
+			table += "<th colSpan=\"6\"><span class=\"ui right floated pagination menu\">";
+			table += pagelist;
+			table +="</span></th>";
+			table += "</tfoot>";
+			$("#content_table").html(table);
+		});
+	}
+	else
+	{
+		return ;
+	}
+}
+
+
+
+function removeNewsLabels(index,id)
+{
+	$.get("admin/news/"+id,function(raw_result){
+		var labels = result.labels;
+		for(var i=0;i<labels.length;i++)
+		{
+			labellist += "<a class=\"ui blue tag label\">"+labels[i].name+"</a>";
+		}
+		var form = "<form class=\"ui form\">"
+			+"<div class=\"field disabled\">"
+			+"<label>标签 </label>"
+			+"<div class=\"ui container\" id=\"labellist\">"+labellist+"</div>"
+			+"</div>"
+			+"</form>";
+		$("#content_modal_description").html(form);
+		var actions = "";
+		actions += "<div class=\"ui primary button\" onclick=\"modalfade();\">确定</div>";
+		$("#content_modal_actions").html(actions);
+		$("#content_modal").modal("show");
+		$("#content_modal_header").html("标签删除");
+		
+	});
+
+
+}
+function infoNews(id)
+{
+	$.get("admin/news/"+id,function(raw_result){
+		var result = raw_result.data;
+		var labels = result.labels;
+		
+		var labellist = "";
+		for(var i=0;i<labels.length;i++)
+		{
+			labellist += "<a class=\"ui blue tag label\">"+labels[i].name+"</a>";
+		}
+		
+		var form = "<form class=\"ui form\">"
+			  +"<div class=\"two fields\">"
+			  +"<div class=\"field disabled\">"
+		      +"<label>ID</label>"
+			  +"<input type=\"text\" id=\"info_news_id\" value=\""+result.id+"\" placeholder=\"ID\">"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>编号</label>"
+			  +"<input type=\"text\" id=\"info_news_sno\" value=\""+result.newsid+"\" placeholder=\"编号\">"
+			  +"</div>"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>URL</label>"
+			  +"<input type=\"text\" id=\"info_news_url\" value=\""+result.url+"\" placeholder=\"URL\">"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>标题</label>"
+			  +"<input type=\"text\" id=\"info_news_title\" value=\""+result.title+"\" placeholder=\"标题\">"
+			  +"</div>"
+			  +"<div class=\"two fields\">"
+			  +"<div class=\"field disabled\">"
+			  +"<label>来源</label>"
+			  +"<input type=\"text\" id=\"info_news_source\" value=\""+result.resource+"\" placeholder=\"来源\">"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>发布时间</label>"
+			  +"<input type=\"text\" id=\"info_news_pubtime\" value=\""+result.pubtime+"\" placeholder=\"发布时间\">"
+			  +"</div>"
+			  +"</div>"
+			  +"<div class=\"two fields\">"
+			  +"<div class=\"field disabled\">"
+		      +"<label>采集时间</label>"
+			  +"<input type=\"text\" id=\"info_news_collecttime\" value=\""+result.createtime+"\" placeholder=\"采集时间\">"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>最后修改时间</label>"
+			  +"<input type=\"text\" id=\"info_news_lastmodifytime\" value=\""+result.lastmodifytime+"\" placeholder=\"最后修改时间\">"
+			  +"</div>"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>标签列表</label>"
+			  +labellist
+			  +"</div>"
+			  +"<div class=\"field\">"
+		 	  +"<label>描述</label>"
+		 	  +"<div class=\"ui text container\" id=\"info_news_description\">"+"<p>"+(result.text.replace(/\r\n/g,"</p><p>"))+"</p>"+"</div>"
+		 	  +"</div>"
+		 	  +"</form>";
+		console.log((result.text.replace(/\r\n/,"</p><p>")));
+		$("#content_modal_description").html(form);
+		var actions = "";
+		actions += "<div class=\"ui primary button\" onclick=\"modalfade();\">确定</div>";
+		$("#content_modal_actions").html(actions);
+		$("#content_modal").modal("show");
+		$("#content_modal_header").html("新闻详情");
+		
+	});
+
+}
+
+function changeNews(id)
+{
+	$.get("admin/news/"+id,function(raw_result){
+		var result = raw_result.data;
+		var labels = result.labels;
+		
+		var labellist = "";
+		for(var i=0;i<labels.length;i++)
+		{
+			labellist += "<a class=\"ui blue tag label\">"+labels[i].name+"</a>";
+		}
+		
+		var form = "<form class=\"ui form\">"
+			  +"<div class=\"two fields\">"
+			  +"<div class=\"field disabled\">"
+		      +"<label>ID</label>"
+			  +"<input type=\"text\" id=\"change_news_id\" value=\""+result.id+"\" placeholder=\"ID\">"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>编号</label>"
+			  +"<input type=\"text\" id=\"change_news_sno\" value=\""+result.newsid+"\" placeholder=\"编号\">"
+			  +"</div>"
+			  +"</div>"
+			  +"<div class=\"field\">"
+		      +"<label>URL</label>"
+			  +"<input type=\"text\" id=\"change_news_url\" value=\""+result.url+"\" placeholder=\"URL\">"
+			  +"</div>"
+			  +"<div class=\"field\">"
+		      +"<label>标题</label>"
+			  +"<input type=\"text\" id=\"change_news_title\" value=\""+result.title+"\" placeholder=\"标题\">"
+			  +"</div>"
+			  +"<div class=\"two fields\">"
+			  +"<div class=\"field\">"
+			  +"<label>来源</label>"
+			  +"<input type=\"text\" id=\"change_news_source\" value=\""+result.resource+"\" placeholder=\"来源\">"
+			  +"</div>"
+			  +"<div class=\"field \">"
+		      +"<label>发布时间</label>"
+			  +"<input type=\"text\" id=\"change_news_pubtime\" value=\""+result.pubtime+"\" placeholder=\"YYYY-MM-DD hh:mm:ss\">"
+			  +"</div>"
+			  +"</div>"
+			  +"<div class=\"two fields\">"
+			  +"<div class=\"field disabled\">"
+		      +"<label>采集时间</label>"
+			  +"<input type=\"text\" id=\"change_news_collecttime\" value=\""+result.createtime+"\" placeholder=\"采集时间\">"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>最后修改时间</label>"
+			  +"<input type=\"text\" id=\"change_news_lastmodifytime\" value=\""+result.lastmodifytime+"\" placeholder=\"最后修改时间\">"
+			  +"</div>"
+			  +"</div>"
+			  +"<div class=\"field disabled\">"
+		      +"<label>标签列表</label>"
+			  +labellist
+			  +"</div>"
+			  +"<div class=\"field\">"
+		 	  +"<label>正文</label>"
+		 	  +"<textarea class=\"ui text container\" id=\"change_news_text\">"+(result.text)+"</textarea>"
+		 	  +"</div>"
+		 	  +"</form>";
+		$("#content_modal_description").html(form);
+		var actions = "<div class=\"ui primary button\" onclick=\"submitModifyNews("+id+");\">修改</div>";
+		actions += "<div class=\"ui red button\" onclick=\"modalfade();\">取消</div>";
+		$("#content_modal_actions").html(actions);
+		$("#content_modal").modal("show");
+		$("#content_modal_header").html("新闻详情");
+		
+	});
+
+}
+
+function submitModifyNews(id)
+{
+	var url = $("#change_news_url").val();
+	var resource = $("#change_news_source").val();
+	var title = $("#change_news_title").val();
+	var pubtime = $("#change_news_pubtime").val();
+	var text = $("#change_news_text").val();
+	
+	var data={};
+	data["url"]=url;
+	data["resource"]=resource;
+	data["title"]=title;
+	data["pubtime"]=pubtime;
+	data["text"]=text;
+	console.log(data);
+	$.putJSON("admin/news/"+id, data, function(raw_result){
+		alert("修改成功！");
+		modalfade();
+	});
+
+}
+
+
+function deleteNews(id,index)
+{
+	$.deleteJSON("admin/news/"+id,function(raw_result){
+		var result = raw_result;
+		if(result.code==200)
+		{
+			alert("删除成功!");
+			
+		}
+		else
+		{
+			alert("删除失败!");
+		}
+		getNewsListContent(index);
+		
+	});
+	
+	
+}
+
+
+function selectAllNews()
+{
+	//$(".newscheck").attr("checked",true);
+	var checklist = $(".newscheck").get();
+	for(var i=0;i<checklist.length;i++)
+	{
+		checklist[i].checked=true;
+	}
+}
+
+function reverseSelectAllNews()
+{
+	var checklist = $(".newscheck").get();
+	for(var i=0;i<checklist.length;i++)
+	{
+		if(checklist[i].checked)
+		{
+			checklist[i].checked=false;	
+		}
+		else
+		{
+			checklist[i].checked=true;
+		}
+	}
+}
+
+function getNewsLabels(index,id)
+{
+	var checklist = $(".newscheck").get();
+	choosenews=[];
+	
+	console.log(choosenews);
+	var color_size = 4;
+	var colors=["blue","orange","teal","red"];
+	$.get("admin/labels/list",function(raw_result){
+		console.log(raw_result);
+		var result = raw_result.data;
+		var level =0;
+		
+		
+		var form = "<form class=\"ui form\">";
+		form += "<p><h4>选择标签</h4></p>";
+		chooselabels=[];
+		form += "<div id=\"chooseNewsLables\"></div>";
+		
+		form += "<h4 class=\" divider header\"><i class=\"bar chart icon\" /> 标签列表 </h4>";
+		form +="<p></p><p>";
+		form+=" <div id=\"label_tree\"></div>";
+		
+		form +="</p>";
+		form += "</form>";
+		$("#content_modal_description").html(form);
+		
+		
+		
+		
+		initLabelTree();
+		
+		if(typeof(id)=="undefined")
+		{
+			for(var i=0;i<checklist.length;i++)
+			{
+				if(checklist[i].checked)
+				{
+					choosenews.push(checklist[i].id.substr(5));	
+				}
+			}
+			var actions = "<div class=\"ui primary button close\" onclick=\"submitNewsLabels("+index+");\">提交</div>";
+			actions += "<div class=\"ui button\" onclick=\"modalfade();\">取消</div>";
+			$("#content_modal_actions").html(actions);
+			$("#content_modal_header").html("添加标签");
+			$("#content_modal").modal("show");
+		}
+		else
+		{
+			choosenews.push(id);
+			$.get("admin/news/"+id,function(raw_result){
+				var result = raw_result.data;
+				var labels = result.labels;
+				
+				var labellist = "";
+				
+				$("#chooseNewsLables").html(labellist);
+				var actions = "<div class=\"ui primary button close\" onclick=\"submitNewsLabels("+index+","+id+");\">提交</div>";
+				actions += "<div class=\"ui button\" onclick=\"modalfade();\">取消</div>";
+				$("#content_modal_actions").html(actions);
+				$("#content_modal_header").html("添加标签");
+				for(var i=0;i<labels.length;i++)
+				{
+					chooseNewsLabels(labels[i].id,labels[i].name);
+				}
+				
+				
+				
+				$("#content_modal").modal("show");
+			});
+			
+		}
+		
+	});
+}
+
+function initLabelTree()
+{
+	$('#label_tree').jstree({
+		'core':{
+			'data':{
+				"url":"admin/system/statcategory/tree",
+				"dataType":"json"
+			}
+		}
+	}); 
+	
+		$('#label_tree').on('changed.jstree',function(e,data){
+			var i, j;
+			//chooselabels = [];
+		    for(i = 0, j = data.selected.length; i < j; i++) {
+		    	//r.push({"id":data.instance.get_node(data.selected[i]).id,"text":data.instance.get_node(data.selected[i]).text});
+		    	chooseNewsLabels(data.instance.get_node(data.selected[i]).id,data.instance.get_node(data.selected[i]).text);
+		    }
+		    //console.log('Selected: ' + r.join(', '));
+		    //displayChooseLabels();
+		});
+
+}
+
+
+function chooseNewsLabels(id,text)
+{
+	for(var i=0;i<chooselabels.length;i++)
+	{
+		if(chooselabels[i].id==id)
+		{
+			return;
+		}
+	}
+	var element = {};
+	element["id"]=id;
+	element["text"]=text;
+	chooselabels.push(element);
+	displayChooseLabels();
+}
+
+function displayChooseLabels()
+{
+	var display = "<p>";
+	for(var i=0;i<chooselabels.length;i++)
+	{
+		display +="<a class=\"ui blue tag label\" class=\"chooseLabels\" onclick=\"removeChooseLabels("+chooselabels[i].id+");\" value=\""+chooselabels[i].id+"\">"+chooselabels[i].text+"</a>";
+	}
+	display += "</p>";
+	$("#chooseNewsLables").html(display);
+}
+
+function removeChooseLabels(id)
+{
+	var tempchoose = [];
+	for(var i=0;i<chooselabels.length;i++)
+	{
+		if(chooselabels[i].id!=id)
+		{
+			tempchoose.push(chooselabels[i]);
+		}
+	}
+	chooselabels = tempchoose;
+	displayChooseLabels();
+}
+
+function submitNewsLabels(index,id)
+{
+	var labels = [];
+	for(var i=0;i<chooselabels.length;i++)
+	{
+		labels.push(chooselabels[i].id);
+	}
+	var data = {};
+	data["news"]=choosenews;
+	data["labels"]=labels;
+	console.log(data);
+	
+	if(typeof(id)=="undefined")
+	{
+		$.postJSON("admin/news/labels",data,function(result){
+			console.log(result);
+			if(typeof(result["createtime"])!=undefined)
+			{
+				alert("添加标签成功");
+				$("#content_modal").modal("hide");
+				getNewsListContent(index);
+			}
+		});
+	}
+	else
+	{
+		$.putJSON("admin/news/labels/"+id, data, function(raw_result){
+			alert("修改标签成功");
+			$("#content_modal").modal("hide");
+			getNewsListContent(index);
+		});
+	}
+}
+
+
 function getAnalysorContent(index)
 {
 	$.get("admin/analysor/list/"+index,function(raw_result){
@@ -246,8 +859,229 @@ function getDisplayContent()
 
 function getSystemContent()
 {
-	
+	$.get("admin/system/statcategory/tree",function(raw_result){
+		
+		var result = raw_result;
+		var content ="<tbody><tr><td><div id=\"label_tree\"></div></td><td><div id=\"label_detail\"></div></td></tr></tbody>";
+		$("#content_table").html(content);
+		$('#label_tree').jstree({
+			"animation" : 0,
+		    "check_callback" : true,
+		    "themes" : { "stripes" : true },
+			'core':{
+				'data':result
+			},
+			"plugins" : [
+			             "contextmenu", "dnd", "search",
+			             "state", "types", "wholerow"
+			           ]
+		}); 
+		
+			$('#label_tree').on('changed.jstree',function(e,data){
+				var i, j;
+				//chooselabels = [];
+			    for(i = 0, j = data.selected.length; i < j; i++) {
+			    	//r.push({"id":data.instance.get_node(data.selected[i]).id,"text":data.instance.get_node(data.selected[i]).text});
+			    	getLabeDetail(data.instance.get_node(data.selected[i]).id);
+			    }
+			    //console.log('Selected: ' + r.join(', '));
+			    //displayChooseLabels();
+			});
+			
+			var precontent = "<div class=\"ui container\"><div class=\"ui teal buttons left floated\"><div class=\"ui primary button \" onclick=\"addLabel();\"><i class=\"checkmark icon\"></i>增加</div><div class=\"ui floating dropdown icon button\"><i class=\"dropdown icon\"></i><div class=\"menu\"><div class=\"item\" onclick=\"addLabel(true);\">增加根节点</div></div></div></div><button class=\"ui red button left floated\" onclick=\"deleteNewLabel();\"><i class=\"remove icon\"></i>删除</button><button class=\"ui green button left floated\" onclick=\"modifyLabel();\"><i class=\"plus icon\"></i>修改</button><p></p></div>";
+			
+			$("#pretable_content").html(precontent);
+			
+			$('.ui.dropdown')
+			  .dropdown()
+			;
+			$('#label_tree').jstree(true)
+			  .select_node('1');
+			console.log($('#label_tree').jstree(true));
+			getLabeDetail("1");
+	});
 }
+
+function addLabel(isroot)
+{
+	var form = "<form class=\"ui form\">"
+		  +"<div class=\"field\">"
+	      +"<label>名称</label>"
+		  +"<input type=\"text\" id=\"add_label_name\" name=\"nameparser\" value=\"\" placeholder=\"名称\">"
+		  +"</div>"
+	 	  +"<div class=\"field\">"
+	 	  +"<label>描述</label>"
+	 	  +"<textarea type=\"text\" rows=\"3\"  placeholder=\"标签描述\" id=\"add_label_description\"></textarea>"
+	 	  +"</div>"
+	 	  +"</form>";
+	
+	$("#content_modal_description").html(form);
+	var actions = "<div class=\"ui primary button close\" onclick=\"submitNewLabel("+isroot+");\">提交</div>";
+	actions += "<div class=\"ui button\" onclick=\"modalfade();\">取消</div>";
+	$("#content_modal_actions").html(actions);
+	$("#content_modal").modal("show");
+	$("#content_modal_header").html("添加标签");
+	/*var ref = $('#label_tree').jstree(true), sel = ref.get_selected();
+	if (!sel.length) {
+		return false;
+	}
+	sel = sel[0];
+	sel = ref.create_node(sel);
+	if (sel) {
+		ref.edit(sel);
+	}*/
+}
+
+
+function modifyLabel()
+{
+	var ref = $('#label_tree').jstree(true), sel = ref.get_selected();
+	if (!sel.length) {
+		return false;
+	}
+	sel = sel[0];
+	
+	$.get("admin/system/statcategory/"+sel,function(raw_result){
+		var result = raw_result.data;
+		var code = raw_result.code;
+		if(code==200)
+		{
+			var form = "<form class=\"ui form\">"
+				  +"<div class=\"field\">"
+			      +"<label>名称</label>"
+				  +"<input type=\"text\" id=\"update_label_name\" name=\"nameparser\" value=\""+result.name+"\" placeholder=\"名称\">"
+				  +"</div>"
+			 	  +"<div class=\"field\">"
+			 	  +"<label>描述</label>"
+			 	  +"<textarea type=\"text\" rows=\"3\"  placeholder=\"标签描述\" id=\"update_label_description\">"+result.name+"</textarea>"
+			 	  +"</div>"
+			 	  +"</form>";
+			
+			$("#content_modal_description").html(form);
+			var actions = "<div class=\"ui primary button close\" onclick=\"updateLabel("+sel+");\">提交</div>";
+			actions += "<div class=\"ui button\" onclick=\"modalfade();\">取消</div>";
+			$("#content_modal_actions").html(actions);
+			$("#content_modal").modal("show");
+			$("#content_modal_header").html("修改标签");
+		
+		}
+	});
+	
+	
+	/*var ref = $('#label_tree').jstree(true), sel = ref.get_selected();
+	if (!sel.length) {
+		return false;
+	}
+	sel = sel[0];
+	sel = ref.create_node(sel);
+	if (sel) {
+		ref.edit(sel);
+	}*/
+}
+
+function updateLabel(sel)
+{
+	
+	var params = {};
+	params["parent"]=sel;
+	params["name"]=$("#update_label_name").val();
+	params["description"]=$("#update_label_description").val();
+	
+	console.log(params);
+	$.putJSON("admin/system/statcategory/"+sel,params,function(raw_data){
+		alert("标签修改成功！");
+		modalfade();
+		getSystemContent();
+	});
+}
+
+
+
+function submitNewLabel(isroot)
+{
+	var ref = $('#label_tree').jstree(true), sel = ref.get_selected();
+	if(typeof(isroot)=="undefined")
+	{
+	
+		if (!sel.length) {
+			return false;
+		}
+		sel = sel[0];
+	}
+	else
+	{
+		sel=-1;
+	}
+	var params = {};
+	params["parent"]=sel;
+	params["name"]=$("#add_label_name").val();
+	params["description"]=$("#add_label_description").val();
+	
+	console.log(params);
+	$.postJSON("admin/system/statcategory",params,function(raw_data){
+		alert("标签添加成功！");
+		modalfade();
+		getSystemContent();
+	});
+}
+
+function deleteNewLabel()
+{
+	var ref = $('#label_tree').jstree(true), sel = ref.get_selected();
+	if (!sel.length) {
+		return false;
+	}
+	sel = sel[0];
+	
+	$.deleteJSON("admin/system/statcategory/"+sel,function(raw_data){
+		alert("标签删除成功");
+		getSystemContent();
+	});
+
+}
+
+
+
+function getLabeDetail(id)
+{
+	console.log($('#label_tree').jstree(true).get_selected());
+	$.get("admin/system/statcategory/"+id,function(raw_result){
+		var result = raw_result.data;
+		var code = raw_result.code;
+		if(code==200)
+		{
+			var form = "<form class=\"ui form\">"
+			      +"<div class=\"field disabled\">"
+			      +"<label>ID</label>"
+			      +"<input type=\"text\" id=\"label_id\" name=\"nameparser\" value=\""+result.id+"\" placeholder=\"ID\">"
+			  	  +"</div>"
+			  	  +"<div class=\"field disabled\">"
+			      +"<label>编码</label>"
+				  +"<input type=\"text\" id=\"label_code\" name=\"nameparser\" value=\""+result.code+"\" placeholder=\"编码\">"
+				  +"</div>"
+				  +"<div class=\"field disabled\">"
+			      +"<label>名称</label>"
+				  +"<input type=\"text\" id=\"label_name\" name=\"nameparser\" value=\""+result.name+"\" placeholder=\"名称\">"
+				  +"</div>"
+				  +"<div class=\"field disabled\">"
+			      +"<label>创建时间</label>"
+				  +"<input type=\"text\" id=\"label_name\" name=\"nameparser\" value=\""+result.createtime+"\" placeholder=\"创建时间\">"
+				  +"</div>"
+				  +"<div class=\"field disabled\">"
+				  +"<label>最后修改时间</label>"
+				  +"<input type=\"text\" id=\"label_name\" name=\"nameparser\" value=\""+(typeof(result.lastmodifytime)=="undefined"?"":result.lastmodifytime)+"\" placeholder=\"最后修改时间\">"
+				  +"</div>"
+			 	  +"<div class=\"field disabled\">"
+			 	  +"<label>描述</label>"
+			 	  +"<textarea type=\"text\" rows=\"3\"  placeholder=\"任务描述\" id=\"job_description\">"+result.description+"</textarea>"
+			 	  +"</div>";
+			 	  
+			 	  $("#label_detail").html(form);
+		
+		}
+	});
+}
+
 
 function modalfade()
 {

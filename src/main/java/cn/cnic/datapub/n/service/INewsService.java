@@ -14,4 +14,7 @@ public interface INewsService
 	News getNewsByNewsId(String newsid);
 	int countAll();
 	List<News> findAll();
+	List<News> list(int pid, int size);
+	int countAll(String name, String value);
+	List<News> list(String name, String value, int pid, int size);
 }

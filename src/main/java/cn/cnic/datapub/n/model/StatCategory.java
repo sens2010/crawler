@@ -12,11 +12,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name="stat_category")
 @PrimaryKeyJoinColumn( name = "id" ) 
-public class StatCategory
+public class StatCategory  extends Model
 {
 	private static final long serialVersionUID = 1L;
 	@Id
 	private int id;
+	@Column(name="code")
+	private String code;
 	@Column(name="name")
 	private String name;
 	@Column(name="description")
@@ -36,6 +38,16 @@ public class StatCategory
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public String getCode()
+	{
+		return code;
+	}
+
+	public void setCode(String code)
+	{
+		this.code = code;
 	}
 
 	public String getName()

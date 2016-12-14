@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 
 import cn.cnic.datapub.n.model.Batch;
+import cn.cnic.datapub.n.model.Parser;
 import cn.cnic.datapub.n.serviceimpl.BatchServiceImpl;
 import cn.cnic.datapub.n.utils.SpringUtils;
 
@@ -41,11 +42,23 @@ public class ListParseJob extends ParseJob
 	private int subjobid;
 	private int batchid;
 	private String parser;
+	private Set<String> stops;
+	
 	public int getBatchid()
 	{
 		return batchid;
 	}
 
+	public void setStops(Set<String> stops)
+	{
+		this.stops = stops;
+	}
+
+	public Set<String> getStops()
+	{
+		return this.stops;
+	}
+	
 	public void setBatchid(int batchid)
 	{
 		this.batchid = batchid;
@@ -202,6 +215,14 @@ public class ListParseJob extends ParseJob
 	
 	public void initBatch()
 	{
+		
+		Parser eparser = JSONObject.parseObject(this.parser, Parser.class);
+		this.setListcss(eparser.isListcss());
+		this.setListscript(eparser.isListjs());
+		this.setRelative(eparser.isUrlrelativer());
+		this.setListmatch(eparser.getListparser());
+		this.setNextmatch(eparser.getNextparser());
+		
 		logger.info("init batch:"+this.getJobid()+"/"+this.getSubjobid());
 		if(this.batchServiceImpl==null)
 		{
@@ -209,6 +230,7 @@ public class ListParseJob extends ParseJob
 		}
 		if(this.batchServiceImpl!=null)
 		{
+			
 			Batch batch = new Batch();
 			batch.setJobid(this.getJobid());
 			batch.setSubjobid(this.getSubjobid());
@@ -222,7 +244,11 @@ public class ListParseJob extends ParseJob
 			batch = this.batchServiceImpl.addBatch(batch);
 			
 			this.setBatchid(batch.getId());
-			
+			List<Batch> lastbatches = this.batchServiceImpl.findLastBatches(subjobid, batch.getId(), 3);
+			for(Batch bth:lastbatches)
+			{
+				this.getStops().add(bth.getFlag());
+			}
 		}
 	}
 	
@@ -234,7 +260,6 @@ public class ListParseJob extends ParseJob
 		initBatch();
 		try (final WebClient webClient = new WebClient(BrowserVersion.CHROME))
 		{
-			
 			Set<String> previousone = Sets.newHashSet();
 			Set<String> foreone = Sets.newHashSet();
 			int page_count=1;
@@ -265,18 +290,24 @@ public class ListParseJob extends ParseJob
 				List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(this.getListmatch());
 				if(!isflag)
 				{
-					String flagstr = "";
+					List<String> flagstr = new ArrayList<String>();
 					if(list.size()>=3)
 					{
-						flagstr = list.get(0).getHrefAttribute()+"|"+list.get(1).getHrefAttribute()+"|"+list.get(2);
+						flagstr.add(list.get(0).getHrefAttribute());
+						stops.add(list.get(0).getHrefAttribute());
+						stops.add(list.get(1).getHrefAttribute());
+						stops.add(list.get(2).getHrefAttribute());
 					}
 					else if(list.size()==1)
 					{
-						flagstr = list.get(0).getHrefAttribute();
+						flagstr.add(list.get(0).getHrefAttribute());
+						stops.add(list.get(0).getHrefAttribute());
 					}
 					else if(list.size()==2)
 					{
-						flagstr = list.get(0).getHrefAttribute()+"|"+list.get(1).getHrefAttribute();
+						flagstr.add(list.get(0).getHrefAttribute());
+						stops.add(list.get(0).getHrefAttribute());
+						stops.add(list.get(1).getHrefAttribute());
 					}
 					if(this.batchServiceImpl==null)
 					{
@@ -285,7 +316,7 @@ public class ListParseJob extends ParseJob
 					if(this.batchServiceImpl!=null)
 					{
 						Batch batch = this.batchServiceImpl.getBatchById(this.getBatchid());
-						batch.setFlag(flagstr);
+						batch.setFlag(flagstr.get(0));
 						this.batchServiceImpl.updateBatch(batch);
 						String lastflagstr = this.batchServiceImpl.findLastBatch(batch.getSubjobid(), batch.getId()).getFlag();
 						String[] strarr = lastflagstr.split("|");

@@ -71,6 +71,12 @@ public class BatchServiceImpl implements IBatchService
 		return batchDao.findLastBatch(subjobid,batchnow);
 	}
 	
+	@Override
+	public List<Batch> findLastBatches(int subjobid,int batchnow,int number)
+	{
+		return batchDao.findLastBatches(subjobid,batchnow,number);
+	}
+	
 	
 	@Override
 	public List<Batch>  list(int pid, int size)

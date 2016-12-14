@@ -24,11 +24,8 @@ import cn.cnic.datapub.n.serviceimpl.SubJobServiceImpl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-
 @RestController
 @RequestMapping("/admin/analysor")
-
-
 
 public class AnalysorController
 {

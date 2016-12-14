@@ -418,6 +418,8 @@ public class SchedulerUtils
 								.withIdentity(job.getId() + "", subjob.getId() + "")
 								.usingJobData("jobid", job.getId())
 								.usingJobData("parserid", parser.getId())
+								.usingJobData("parser", parser.toJSONString())
+								.usingJobData("url", subjob.getUrl())
 								.usingJobData("subjobid", subjob.getId()).build();
 						TriggerKey tk = new TriggerKey(job.getId() + "",
 								subjob.getId() + "");
@@ -426,7 +428,7 @@ public class SchedulerUtils
 									.withIdentity(
 											triggerKey(job.getId() + "",
 													subjob.getId() + ""))
-									.withSchedule(PlanUtils.parse("intv:5s"))
+									.withSchedule(PlanUtils.parse(job.getPlan()))
 									.startAt(futureDate(10, SECOND)).build();
 							scheduler.scheduleJob(jobdetail, trigger);
 						subjobdetail[1]="R";
@@ -539,6 +541,8 @@ public class SchedulerUtils
 								.withIdentity(job.getId() + "", subjob.getId() + "")
 								.usingJobData("jobid", job.getId())
 								.usingJobData("parserid", parser.getId())
+								.usingJobData("parser", parser.toJSONString())
+								.usingJobData("url", subjob.getUrl())
 								.usingJobData("subjobid", subjob.getId()).build();
 						TriggerKey tk = new TriggerKey(job.getId() + "",
 								subjob.getId() + "");
@@ -547,7 +551,7 @@ public class SchedulerUtils
 									.withIdentity(
 											triggerKey(job.getId() + "",
 													subjob.getId() + ""))
-									.withSchedule(PlanUtils.parse("intv:5s"))
+									.withSchedule(PlanUtils.parse(job.getPlan()))
 									.startAt(futureDate(10, SECOND)).build();
 							scheduler.scheduleJob(jobdetail, trigger);
 						
