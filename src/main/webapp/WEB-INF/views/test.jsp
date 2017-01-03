@@ -10,7 +10,7 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <!-- Site Properties -->
-<title>基于多任务的海量数据采集平台</title>
+<title>金融大数据采集平台</title>
 
 
 <link rel="stylesheet" type="text/css"
@@ -18,15 +18,15 @@
 
 <script src="resources/jquery/jquery.min.js"></script>
 <script src="resources/semanticui/semantic.min.js"></script>
-<script src="resources/app/admin.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="resources/jstree/themes/default/style.css">
 <script src="resources/jstree/jstree.min.js"></script>
+<script src="resources/app/test.js"></script>
+
 </head>
 <body>
 	<div class="ui container basic segment">
-		<!-- <h2 class="ui center aligned header">金融大数据采集平台</h2> -->
-		<h2 class="ui center aligned header">基于多任务的海量数据采集平台</h2>
+		<h2 class="ui center aligned header">金融大数据采集平台</h2>
 		<div id="mained" class="ui center aligned basic segment">
 			<div class="ui stackable container menu">
 				  	<a class="item active" id="status" onclick="changeContent('status');"><i class="alarm outline icon"></i>采集状态</a>
@@ -37,7 +37,10 @@
 				  	<a class="item" id="system" onclick="changeContent('system');"><i class="setting icon"></i>系统管理</a>
 			</div>
 			<div id="mainer">
+				  <div id="jstree_demo_div">
 				  
+				  
+				  </div>
 			
 			</div>
 		</div>
@@ -45,18 +48,35 @@
 		<div id="footer">
 			<div>
         <p class="ui center aligned header">最新修改日期: 2016年11月30日</p>
-        <!-- <p class="ui center aligned header">中国科学院管理、决策与信息系统重点实验室 版权所有 Copyright &copy;2016</p>
-        <p class="ui center aligned header"> 电话:010-62565817 电子邮件:master@mdis.amss.ac.cn</p> -->
+        <p class="ui center aligned header">中国科学院管理、决策与信息系统重点实验室 版权所有 Copyright &copy;2016</p>
+        <p class="ui center aligned header"> 电话:010-62565817 电子邮件:master@mdis.amss.ac.cn</p>
       </div>
 		
 		</div>
 
 	</div>
 <script type="text/javascript">
-	changeContent("status");
+	
 	$("#content_modal").modal({allowMultiple: true});
 	$("#second_content_modal").modal({allowMultiple: true});
+	$(function () { 
+		$('#jstree_demo_div').jstree({
+		'core':{
+			'data':{
+				"url":"admin/system/statcategory/tree",
+				"dataType":"json"
+			}
+		}
+	}); 
 	
+		$('#jstree_demo_div').on('changed.jstree',function(e,data){
+			var i, j, r = [];
+		    for(i = 0, j = data.selected.length; i < j; i++) {
+		      r.push({"id":data.instance.get_node(data.selected[i]).id,"text":data.instance.get_node(data.selected[i]).text});
+		    }
+		    console.log('Selected: ' + r.join(', '));
+		});
+	});
 	
 </script>
 
