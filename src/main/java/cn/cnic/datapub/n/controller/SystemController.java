@@ -8,18 +8,19 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.cnic.datapub.n.model.News;
 import cn.cnic.datapub.n.model.StatCategory;
 import cn.cnic.datapub.n.serviceimpl.StatCategoryServiceImpl;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 @RestController
 @RequestMapping("/admin/system")
@@ -27,6 +28,8 @@ public class SystemController
 {
 	@Resource
 	StatCategoryServiceImpl statCategoryServiceImpl;
+	@Resource 
+	JdbcTemplate jdbcTemplate;
 	
 	@RequestMapping(value = "/statcategory",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getCategory()
@@ -52,6 +55,20 @@ public class SystemController
 		
 		result.put("code", 200);
 		result.put("data",data);
+		return result.toJSONString();
+	}
+	
+	
+	@RequestMapping(value = "/statcategorytest",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
+	public String getCategoryTest()
+	{
+		String sql = "insert into test values('时间','shijian')";
+		
+		jdbcTemplate.execute(sql);
+		
+		JSONObject result = new JSONObject();
+		result.put("code", 200);
+		result.put("msg", "success");
 		return result.toJSONString();
 	}
 	
@@ -91,6 +108,7 @@ public class SystemController
 		newsc.setDescription(description);
 		newsc.setCreatetime(new Date());
 		newsc.setStatus(1);
+		System.err.println("!!!:"+newsc.toJSONString()+":!!!");
 		newsc = statCategoryServiceImpl.addStatCategory(newsc);
 		return newsc.toJSONString();
 	}
@@ -176,6 +194,7 @@ public class SystemController
 		for(int i=0;i<array.size();i++)
 		{
 			JSONObject element = array.getJSONObject(i);
+			System.err.println(element.toJSONString());
 			JSONObject e = new JSONObject();
 			String code = element.getString("code");
 			while(code.endsWith("00"))
@@ -193,8 +212,8 @@ public class SystemController
 				e.put("parent", "#");
 				e.put("id", element.get("id")+"");
 				e.put("text", element.get("name"));
-				ancestors.put(code, element.get("id")+"");
 			}
+			ancestors.put(code, element.get("id")+"");
 			tree.add(e);
 		}
 		return tree.toJSONString();

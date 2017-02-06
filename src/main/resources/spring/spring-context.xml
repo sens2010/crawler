@@ -23,8 +23,8 @@
 	<import resource="classpath:spring/spring-jdbc.xml"/>
 	<!-- <import resource="classpath:spring/spring-solr.xml"/> -->
 	<import resource="classpath:spring/spring-rabbitmq.xml"/>
-	<import resource="classpath:spring/spring-integration.xml"/>
-	<import resource="classpath:spring/spring-scheduler.xml"/>
+	<!-- <import resource="classpath:spring/spring-integration.xml"/> -->
+	<import resource="classpath:spring/spring-scheduler.xml"/> 
 	<import resource="classpath:spring/spring-aop.xml"/>
-	<import resource="classpath:spring/spring-utils.xml"/>
+	<!-- <import resource="classpath:spring/spring-utils.xml"/> -->
 </beans>

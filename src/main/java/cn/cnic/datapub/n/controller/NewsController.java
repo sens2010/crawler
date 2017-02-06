@@ -12,11 +12,17 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import cn.cnic.datapub.n.model.News;
 import cn.cnic.datapub.n.model.StatCategory;
@@ -24,11 +30,6 @@ import cn.cnic.datapub.n.model.StatLabel;
 import cn.cnic.datapub.n.serviceimpl.NewsServiceImpl;
 import cn.cnic.datapub.n.serviceimpl.StatCategoryServiceImpl;
 import cn.cnic.datapub.n.serviceimpl.StatLabelServiceImpl;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 
 @RestController
 @RequestMapping("/admin/news")
@@ -43,6 +44,8 @@ public class NewsController
 	@Resource
 	StatCategoryServiceImpl statCategoryServiceImpl; 
 	
+	@Resource
+	JdbcTemplate jdbcTemplate;
 	
 	@RequestMapping(value="/labels",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getLabels()
@@ -260,11 +263,21 @@ public class NewsController
 		String name = jelement.getString("name");
 		String value = jelement.getString("value");
 		
+		long start = System.currentTimeMillis();
+		
+		if(value==null||value.equals(""))
+		{
+			return getNewsList();
+		}
+		
 		int pagesize = 10;
 		int sum = newsServiceImpl.countAll(name,value);
 		int page_count=sum/pagesize+(sum%pagesize==0?0:1);
 		int courrent_index = pid;
 		List<News> newslist = newsServiceImpl.list(name,value,pid, pagesize);
+		long end = System.currentTimeMillis();
+		System.out.println("1:"+(start-end));
+		
 		
 		JSONArray data = new JSONArray();
 		
@@ -278,7 +291,12 @@ public class NewsController
 			newsmapper.add(news);
 		}
 		
-		List<StatLabel> statlabels = statLabelServiceImpl.findStatLabelByNewsIds(newsids);
+		List<StatLabel> statlabels = new ArrayList<StatLabel>();
+		if(newsids.size()>0)
+		statlabels =statLabelServiceImpl.findStatLabelByNewsIds(newsids);
+		end = System.currentTimeMillis();
+		System.out.println("2:"+(start-end));
+		
 		Set<Integer> categoryids = new HashSet<Integer>();
 		
 		Map<Integer,List<Integer>> labels = new LinkedHashMap <Integer,List<Integer>>();
@@ -302,6 +320,8 @@ public class NewsController
 		List<StatCategory> categories = new ArrayList<StatCategory>();
 		if(categoryids.size()>0)
 			categories = statCategoryServiceImpl.findCategories(categoryids);
+		end = System.currentTimeMillis();
+		System.out.println("3:"+(start-end));
 		Map<Integer,StatCategory> categorymapper = new HashMap<Integer,StatCategory>();
 		for(StatCategory sc :categories)
 		{
@@ -335,7 +355,8 @@ public class NewsController
 			object.put("labels", ls);
 			data.add(object);
 		}
-		
+		end = System.currentTimeMillis();
+		System.out.println("4:"+(start-end));
 		result.put("data", data);
 		
 		result.put("count", page_count);
@@ -352,8 +373,11 @@ public class NewsController
 		int sum = newsServiceImpl.countAll();
 		int page_count=sum/pagesize+(sum%pagesize==0?0:1);
 		int courrent_index = pid;
+		long start = System.currentTimeMillis();
 		List<News> newslist = newsServiceImpl.list(pid, pagesize);
-		
+		long end = System.currentTimeMillis();
+		System.out.println("1:"+(start-end));
+		start = end;
 		JSONObject result = new JSONObject();
 		
 		JSONArray data = new JSONArray();
@@ -369,6 +393,9 @@ public class NewsController
 		}
 		
 		List<StatLabel> statlabels = statLabelServiceImpl.findStatLabelByNewsIds(newsids);
+		end = System.currentTimeMillis();
+		System.out.println("2:"+(start-end));
+		start = end;
 		Set<Integer> categoryids = new HashSet<Integer>();
 		
 		Map<Integer,List<Integer>> labels = new LinkedHashMap <Integer,List<Integer>>();
@@ -392,6 +419,9 @@ public class NewsController
 		List<StatCategory> categories = new ArrayList<StatCategory>();
 		if(categoryids.size()>0)
 			categories = statCategoryServiceImpl.findCategories(categoryids);
+		end = System.currentTimeMillis();
+		System.out.println("3:"+(start-end));
+		start = end;
 		Map<Integer,StatCategory> categorymapper = new HashMap<Integer,StatCategory>();
 		for(StatCategory sc :categories)
 		{
@@ -425,6 +455,10 @@ public class NewsController
 			object.put("labels", ls);
 			data.add(object);
 		}
+		
+		end = System.currentTimeMillis();
+		System.out.println("4:"+(start-end));
+		start = end;
 		
 		result.put("data", data);
 		

@@ -71,6 +71,7 @@ public class NewsServiceImpl implements INewsService
 	@Override
 	public int countAll(String name,String value)
 	{
+		System.err.println(value);
 		if(name.equals("id"))
 			return (newsDao.findById(Integer.parseInt(value))==null?0:1);
 		else if(name.equals("name"))

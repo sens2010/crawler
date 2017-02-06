@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="false" contentType="text/html; charset=UTF-8"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +10,7 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <!-- Site Properties -->
-<title>基于多任务的海量数据采集平台</title>
+<title>金融大数据平台</title>
 
 
 <link rel="stylesheet" type="text/css"
@@ -22,11 +22,12 @@
 <link rel="stylesheet" type="text/css"
 	href="resources/jstree/themes/default/style.css">
 <script src="resources/jstree/jstree.min.js"></script>
+<script src="resources/echarts2/echarts-all.js"></script>
 </head>
 <body>
 	<div class="ui container basic segment">
 		<!-- <h2 class="ui center aligned header">金融大数据采集平台</h2> -->
-		<h2 class="ui center aligned header">基于多任务的海量数据采集平台</h2>
+		<h2 class="ui center aligned header">金融大数据平台</h2>
 		<div id="mained" class="ui center aligned basic segment">
 			<div class="ui stackable container menu">
 				  	<a class="item active" id="status" onclick="changeContent('status');"><i class="alarm outline icon"></i>采集状态</a>
@@ -44,7 +45,7 @@
 		<p></p>
 		<div id="footer">
 			<div>
-        <p class="ui center aligned header">最新修改日期: 2016年11月30日</p>
+        <p class="ui center aligned header">最新修改日期: 2017年01月19日</p>
         <!-- <p class="ui center aligned header">中国科学院管理、决策与信息系统重点实验室 版权所有 Copyright &copy;2016</p>
         <p class="ui center aligned header"> 电话:010-62565817 电子邮件:master@mdis.amss.ac.cn</p> -->
       </div>

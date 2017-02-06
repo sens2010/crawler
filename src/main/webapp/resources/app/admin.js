@@ -1,5 +1,6 @@
 var chooselabels = [];
 var choosenews =[];
+var timerangetype = 0;
 
 $.postJSON = function(url, data, callback) {
     return jQuery.ajax({
@@ -854,15 +855,545 @@ function getAnalysorContent(index)
 
 function getDisplayContent()
 {
-	
+	$.get("admin/system/statcategory/tree",function(raw_result){
+		
+		var result = raw_result;
+		var content ="<tbody><tr><td><div id=\"label_tree\" style=\"height:600px;width:400px;\"></div></td><td style=\"vertical-align:top;padding:0\"><p><h4>选择标签</h4></p><div id=\"chooseNewsLables\"></div><div id=\"chooseTimeRange\"></div><div id=\"display_area\" style=\"height:400px;width:600px;margn:0;padding:0\"></div></td></tr></tbody>";
+		console.log(content);
+		$("#content_table").html(content);
+		$('#label_tree').jstree({
+			"animation" : 0,
+		    "check_callback" : true,
+		    "themes" : { "stripes" : true },
+			'core':{
+				'data':result
+			},
+			"plugins" : [
+			             "contextmenu", "dnd", "search",
+			             "state", "types", "wholerow"
+			           ]
+		}); 
+		
+			$('#label_tree').on('changed.jstree',function(e,data){
+				var i, j;
+				//chooselabels = [];
+			    for(i = 0, j = data.selected.length; i < j; i++) {
+			    	//r.push({"id":data.instance.get_node(data.selected[i]).id,"text":data.instance.get_node(data.selected[i]).text});
+			    	chooseNewsLabels(data.instance.get_node(data.selected[i]).id,data.instance.get_node(data.selected[i]).text);
+			    	//getLabeDetail(data.instance.get_node(data.selected[i]).id);
+			    }
+			    //console.log('Selected: ' + r.join(', '));
+			    //displayChooseLabels();
+			});
+			
+			
+			
+			var timeserial = "<button class=\"ui button right floated green\" onclick=\"generateGraph();\">生成图标</button><div class=\"blue ui right floated buttons\"><button class=\"ui button time\" onclick=\"setTimeRange('tyear');\"  id=\"tyear\">年</button><button class=\"ui button time\" onclick=\"setTimeRange('tseason');\" id=\"tseason\">季</button><button class=\"ui button time\" onclick=\"setTimeRange('tmonth');\" id=\"tmonth\">月</button><button class=\"ui button time\" onclick=\"setTimeRange('tweek');\" id=\"tweek\">周</button><button class=\"ui button time\" onclick=\"setTimeRange('tday');\" id=\"tday\">日</button></div><button class=\"ui button right floated white\">时间区间</button>";
+			//$("#chooseTimeRange").html(timeserial);
+			var graphserial = "<div class=\"blue ui left floated buttons\"><button class=\"ui button graph\" onclick=\"setGraph('gline');\"  id=\"gline\">折线图</button><button class=\"ui button graph\" onclick=\"setGraph('gbarline');\" id=\"gbarline\">折线柱状图</button><button class=\"ui button graph\" onclick=\"setGraph('gstack');\" id=\"gstack\">堆积图</button><button class=\"ui button graph\" onclick=\"setGraph('glines');\" id=\"glines\">多折线图</button><button class=\"ui button graph\" onclick=\"setGraph('gcloud');\" id=\"gcloud\">词云</button></div>";
+			
+			var precontent = "<div class=\"ui container\"><div class=\"ui teal buttons left floated\"><div class=\"ui primary button \" onclick=\"addLabel();\"><i class=\"checkmark icon\"></i>增加</div><div class=\"ui floating dropdown icon button\"><i class=\"dropdown icon\"></i><div class=\"menu\"><div class=\"item\" onclick=\"addLabel(true);\">增加根节点</div></div></div></div><button class=\"ui red button left floated\" onclick=\"deleteNewLabel();\"><i class=\"remove icon\"></i>删除</button><button class=\"ui green button left floated\" onclick=\"modifyLabel();\"><i class=\"plus icon\"></i>修改</button><p></p></div>";
+			
+			$("#pretable_content").html(timeserial+graphserial);
+			
+			$('.ui.dropdown')
+			  .dropdown()
+			;
+			$('#label_tree').jstree(true)
+			  .select_node('1');
+			console.log($('#label_tree').jstree(true));
+			getLabeDetail("1");
+			
+			var myChart = echarts.init(document.getElementById('display_area')); 
+            var option = {
+                    tooltip: {
+                        show: true
+                    },
+                    legend: {
+                        data:['数据量1','数据量2']
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ["1月","2月","3月","4月","5月","6月"]
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            "name":"数据量1",
+                            "type":"bar",
+                            "data":[5, 20, 40, 10, 10, 20]
+                        },
+                        {
+                            "name":"数据量2",
+                            "type":"bar",
+                            "data":[20, 40, 80, 20, 20, 30]
+                        }
+                    ]
+                };
+            
+            	myChart.setOption(option); 
+			
+			
+			
+			
+			
+	});
 }
+
+
+function createRandomItemStyle() {
+    return {
+        normal: {
+            color: 'rgb(' + [
+                Math.round(Math.random() * 160),
+                Math.round(Math.random() * 160),
+                Math.round(Math.random() * 160)
+            ].join(',') + ')'
+        }
+    };
+}
+
+
+function generateGraph()
+{
+	
+	var activebutton = $(".button.time.active").get(0);
+	var graphactivebutton = $(".button.graph.active").get(0);
+
+	if(typeof(activebutton)!="undefined")
+	{
+		if(chooselabels.length==0)
+		{
+			alert("请选择标签！");
+		}
+		else
+		{
+			console.log(chooselabels);
+			var chooseid = new Array();
+			for(var i=0;i<chooselabels.length;i++)
+			{
+				chooseid.push(chooselabels[i].id);	
+				console.log(i);
+			}
+			console.log("choose:"+chooseid);
+			var data={};
+			data["ids"]=chooseid;
+			data["time"]=activebutton.id;
+			console.log("data:"+data);
+			$.postJSON("admin/display/getdata",data,function(raw_data){
+				var data = raw_data.data;
+				var code = raw_data.code;
+				var msg = raw_data.msg;
+				if(code==200)
+				{
+					console.log(data);
+				}
+				else if(code == 400)
+				{
+					console.log(raw_data);
+				}
+				else if(code == 500)
+				{
+					console.log(raw_data);
+				}
+				else
+				{
+					
+				}
+				
+			});
+			
+			
+		}
+		console.log("gab:"+graphactivebutton.id);
+		
+		if(graphactivebutton.id=="gline")
+		{
+			var myChart = echarts.init(document.getElementById('display_area')); 
+			option = {
+				    title : {
+				        text: '投资和消费',
+				        subtext: '模拟数据'
+				    },
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:['投资','消费']
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'bar']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				        {
+				            name:'投资',
+				            type:'bar',
+				            data:[2, 4, 7, 23, 25, 76, 135, 162, 32, 20, 6, 3],
+				            markPoint : {
+				                data : [
+				                    {type : 'max', name: '最大值'},
+				                    {type : 'min', name: '最小值'}
+				                ]
+				            },
+				            markLine : {
+				                data : [
+				                    {type : 'average', name: '平均值'}
+				                ]
+				            }
+				        },
+				        {
+				            name:'消费',
+				            type:'bar',
+				            data:[2, 5, 9, 26, 28, 70, 175, 182, 48, 18, 6, 2],
+				            markPoint : {
+				                data : [
+				                    {name : '年最高', value : 182, xAxis: 7, yAxis: 183, symbolSize:18},
+				                    {name : '年最低', value : 2, xAxis: 11, yAxis: 3}
+				                ]
+				            },
+				            markLine : {
+				                data : [
+				                    {type : 'average', name : '平均值'}
+				                ]
+				            }
+				        }
+				    ]
+				};
+            
+            	myChart.setOption(option); 
+		}
+		else if(graphactivebutton.id=="gbarline")
+		{
+			var myChart = echarts.init(document.getElementById('display_area')); 
+			option = {
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType: {show: true, type: ['line', 'bar']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    legend: {
+				        data:['经济增长','GDP','消费']
+				    },
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value',
+				            name : '指数',
+				            axisLabel : {
+				                formatter: '{value}'
+				            }
+				        },
+				        {
+				            type : 'value',
+				            name : '经济增长',
+				            axisLabel : {
+				                formatter: '{value}'
+				            }
+				        }
+				    ],
+				    series : [
+
+				        {
+				            name:'GDP',
+				            type:'bar',
+				            data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+				        },
+				        {
+				            name:'消费',
+				            type:'bar',
+				            data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+				        },
+				        {
+				            name:'经济增长',
+				            type:'line',
+				            yAxisIndex: 1,
+				            data:[2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+				        }
+				    ]
+				};
+            
+            	myChart.setOption(option); 
+		}
+		
+		else if(graphactivebutton.id=="gstack")
+		{
+			var myChart = echarts.init(document.getElementById('display_area')); 
+			option = {
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:['GDP','消费','投资']
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            boundaryGap : false,
+				            data : ['6月','7月','8月','9月','10月','11月','12月']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value'
+				        }
+				    ],
+				    series : [
+				        {
+				            name:'GDP',
+				            type:'line',
+				            stack: '总量',
+				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				            data:[120, 132, 101, 134, 90, 230, 210]
+				        },
+				        {
+				            name:'消费',
+				            type:'line',
+				            stack: '总量',
+				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				            data:[220, 182, 191, 234, 290, 330, 310]
+				        },
+				       
+				        {
+				            name:'投资',
+				            type:'line',
+				            stack: '总量',
+				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				            data:[320, 332, 301, 334, 390, 330, 320]
+				        }
+				    ]
+				};
+            
+            	myChart.setOption(option); 
+		}
+		
+		else if(graphactivebutton.id=="glines")
+		{
+			var myChart = echarts.init(document.getElementById('display_area')); 
+			option = {
+				    title : {
+				        text: '经济相关指标',
+				        subtext: '虚拟数据'
+				    },
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:['经济增长','通货膨胀']
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'bar']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            boundaryGap : false,
+				            data : ['6月','7月','8月','9月','10月','11月','12月']
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value',
+				            axisLabel : {
+				                formatter: '{value}'
+				            }
+				        }
+				    ],
+				    series : [
+				        {
+				            name:'经济增长',
+				            type:'line',
+				            data:[11, 11, 15, 13, 12, 13, 10],
+				            markPoint : {
+				                data : [
+				                    {type : 'max', name: '最大值'},
+				                    {type : 'min', name: '最小值'}
+				                ]
+				            },
+				            markLine : {
+				                data : [
+				                    {type : 'average', name: '平均值'}
+				                ]
+				            }
+				        },
+				        {
+				            name:'通货膨胀',
+				            type:'line',
+				            data:[1, 12, 30, 50, 10, 2, 0],
+				            markPoint : {
+				                data : [
+				                    {name : '最低值', value : 4, xAxis: 1, yAxis: 2}
+				                ]
+				            },
+				            markLine : {
+				                data : [
+				                    {type : 'average', name : '平均值'}
+				                ]
+				            }
+				        }
+				    ]
+				};
+			myChart.setOption(option); 
+		}
+		
+		
+		else if(graphactivebutton.id=="gcloud")
+		{
+			var myChart = echarts.init(document.getElementById('display_area')); 
+			option = {
+				    title: {
+				        text: '金融大数据平台统计',
+				        link: 'www.cnic.cn'
+				    },
+				    tooltip: {
+				        show: true
+				    },
+				    series: [{
+				        name: '金融大数据平台统计',
+				        type: 'wordCloud',
+				        size: ['80%', '80%'],
+				        textRotation : [0, 45, 90, -45],
+				        textPadding: 0,
+				        autoSize: {
+				            enable: true,
+				            minSize: 14
+				        },
+				        data: [
+				            {
+				                name: "经济增长",
+				                value: 10000,
+				                itemStyle: {
+				                    normal: {
+				                        color: 'black'
+				                    }
+				                }
+				            },
+				            {
+				                name: "GDP",
+				                value: 6181,
+				                itemStyle: createRandomItemStyle()
+				            },
+				            {
+				                name: "消费",
+				                value: 4386,
+				                itemStyle: createRandomItemStyle()
+				            },
+				            {
+				                name: "投资",
+				                value: 4055,
+				                itemStyle: createRandomItemStyle()
+				            },
+				            {
+				                name: "通货膨胀",
+				                value: 2467,
+				                itemStyle: createRandomItemStyle()
+				            },
+				            {
+				                name: "物价",
+				                value: 2244,
+				                itemStyle: createRandomItemStyle()
+				            },
+				            {
+				                name: "量化宽松",
+				                value: 1898,
+				                itemStyle: createRandomItemStyle()
+				            },
+				            {
+				                name: "CPI",
+				                value: 1484,
+				                itemStyle: createRandomItemStyle()
+				            }
+				        ]
+				    }]
+				};
+			myChart.setOption(option); 
+		}
+	}
+	else
+	{
+		alert("请选择区间！");
+	}
+}
+
+
+function setTimeRange(type)
+{
+	$(".time").removeClass("active");
+	$("#"+type).addClass("active");
+	console.log(type);
+}
+
+function setGraph(type)
+{
+	$(".graph").removeClass("active");
+	$("#"+type).addClass("active");
+	console.log(type);
+}
+
 
 function getSystemContent()
 {
 	$.get("admin/system/statcategory/tree",function(raw_result){
 		
 		var result = raw_result;
-		var content ="<tbody><tr><td><div id=\"label_tree\"></div></td><td><div id=\"label_detail\"></div></td></tr></tbody>";
+		var content ="<tbody><tr><td><div id=\"label_tree\" style=\"height:600px;width:400px;\"></div></td><td><div id=\"label_detail\"></div></td></tr></tbody>";
 		$("#content_table").html(content);
 		$('#label_tree').jstree({
 			"animation" : 0,
