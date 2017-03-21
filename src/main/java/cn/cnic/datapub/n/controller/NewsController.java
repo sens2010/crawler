@@ -47,6 +47,8 @@ public class NewsController
 	@Resource
 	JdbcTemplate jdbcTemplate;
 	
+	
+	
 	@RequestMapping(value="/labels",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getLabels()
 	{
@@ -277,7 +279,7 @@ public class NewsController
 		List<News> newslist = newsServiceImpl.list(name,value,pid, pagesize);
 		long end = System.currentTimeMillis();
 		System.out.println("1:"+(start-end));
-		
+		start=end;
 		
 		JSONArray data = new JSONArray();
 		
@@ -296,7 +298,7 @@ public class NewsController
 		statlabels =statLabelServiceImpl.findStatLabelByNewsIds(newsids);
 		end = System.currentTimeMillis();
 		System.out.println("2:"+(start-end));
-		
+		start=end;
 		Set<Integer> categoryids = new HashSet<Integer>();
 		
 		Map<Integer,List<Integer>> labels = new LinkedHashMap <Integer,List<Integer>>();
@@ -322,6 +324,7 @@ public class NewsController
 			categories = statCategoryServiceImpl.findCategories(categoryids);
 		end = System.currentTimeMillis();
 		System.out.println("3:"+(start-end));
+		start=end;
 		Map<Integer,StatCategory> categorymapper = new HashMap<Integer,StatCategory>();
 		for(StatCategory sc :categories)
 		{

@@ -1,6 +1,9 @@
 var chooselabels = [];
 var choosenews =[];
 var timerangetype = 0;
+var datalist=[];
+var timelabels=[];
+var timeindexes={};
 
 $.postJSON = function(url, data, callback) {
     return jQuery.ajax({
@@ -777,6 +780,7 @@ function submitNewsLabels(index,id)
 	data["news"]=choosenews;
 	data["labels"]=labels;
 	console.log(data);
+	chooselabels
 	
 	if(typeof(id)=="undefined")
 	{
@@ -888,7 +892,7 @@ function getDisplayContent()
 			
 			
 			
-			var timeserial = "<button class=\"ui button right floated green\" onclick=\"generateGraph();\">生成图标</button><div class=\"blue ui right floated buttons\"><button class=\"ui button time\" onclick=\"setTimeRange('tyear');\"  id=\"tyear\">年</button><button class=\"ui button time\" onclick=\"setTimeRange('tseason');\" id=\"tseason\">季</button><button class=\"ui button time\" onclick=\"setTimeRange('tmonth');\" id=\"tmonth\">月</button><button class=\"ui button time\" onclick=\"setTimeRange('tweek');\" id=\"tweek\">周</button><button class=\"ui button time\" onclick=\"setTimeRange('tday');\" id=\"tday\">日</button></div><button class=\"ui button right floated white\">时间区间</button>";
+			var timeserial = "<button class=\"ui button right floated green\" onclick=\"generateGraph();\">生成图表</button><div class=\"blue ui right floated buttons\"><button class=\"ui button time\" onclick=\"setTimeRange('tyear');\"  id=\"tyear\">年</button><button class=\"ui button time\" onclick=\"setTimeRange('tseason');\" id=\"tseason\">季</button><button class=\"ui button time\" onclick=\"setTimeRange('tmonth');\" id=\"tmonth\">月</button><button class=\"ui button time\" onclick=\"setTimeRange('tweek');\" id=\"tweek\">周</button><button class=\"ui button time\" onclick=\"setTimeRange('tday');\" id=\"tday\">日</button></div><button class=\"ui button right floated white\">时间区间</button>";
 			//$("#chooseTimeRange").html(timeserial);
 			var graphserial = "<div class=\"blue ui left floated buttons\"><button class=\"ui button graph\" onclick=\"setGraph('gline');\"  id=\"gline\">折线图</button><button class=\"ui button graph\" onclick=\"setGraph('gbarline');\" id=\"gbarline\">折线柱状图</button><button class=\"ui button graph\" onclick=\"setGraph('gstack');\" id=\"gstack\">堆积图</button><button class=\"ui button graph\" onclick=\"setGraph('glines');\" id=\"glines\">多折线图</button><button class=\"ui button graph\" onclick=\"setGraph('gcloud');\" id=\"gcloud\">词云</button></div>";
 			
@@ -939,13 +943,419 @@ function getDisplayContent()
             
             	myChart.setOption(option); 
 			
+            	var rangepicker = "<label class=\"ui label\">时间周期</label><select class=\"ui dropdown\" id=\"rpicker\">"+
+          	  	"<option value=\"\">时间周期</option>"+
+          	  	"<option value=\"tyear\">年</option>"+
+          	  	"<option value=\"tseason\">季</option>"+
+          	  	"<option value=\"tmonth\">月</option>"+
+          	  	"<option value=\"tweek\">周</option>"+
+          	  	"<option value=\"tday\">日</option>"+
+          	  	"</select>";
+            	
+            	var graphpicker = "<label class=\"ui label\">图表类型</label><select class=\"ui dropdown\" id=\"gpicker\">"+
+          	  	"<option value=\"\">图表类型</option>"+
+          	  	"<option value=\"gline\">折线图</option>"+
+          	  	"<option value=\"gbar\">柱状图</option>"+
+          	  	"<option value=\"gstack\">堆积图</option>"+
+          	  	"<option value=\"gcloud\">词云</option>"+
+          	  	"</select>";
+            	
+            	var picker = "<div>"+rangepicker+graphpicker+"</div>";
+            	
+            	//var start_end ="<div class=\"blue ui buttons\"><button class=\"ui button time\" onclick=\"setTimeRange('tyear');\"  id=\"tyear\">年</button><button class=\"ui button time\" onclick=\"setTimeRange('tseason');\" id=\"tseason\">季</button><button class=\"ui button time\" onclick=\"setTimeRange('tmonth');\" id=\"tmonth\">月</button><button class=\"ui button time\" onclick=\"setTimeRange('tweek');\" id=\"tweek\">周</button><button class=\"ui button time\" onclick=\"setTimeRange('tday');\" id=\"tday\">日</button></div>"
+                
+            	var generate_button = "<div><button id=\"generate\" class=\"ui button green\" onclick=\"dataGenerate()\">生成</button><button id=\"generate\" class=\"ui button red\" onclick=\"dataClear()\">清除全部</button></div>";
+            	
+            	var latertable_content =  "<div class=\"ui input\"><label class=\"ui label\">开始时间</label>" +
+            			"<input type=\"text\" id=\"starttime\" placeholder=\"开始时间\">" +
+            			"<label class=\"ui label\">结束时间</label><input type=\"text\" id=\"endtime\" placeholder=\"结束时间\"></div>" ;
+            			
+            	var tablelist="<table class=\"ui celled table\" id=\"generate_graph_table\"></table>";
+            	var graphgenerator="<div id=\"graph_area\" style=\"height:400px;width:600px;margn:0;padding:0\"></div>";
+            	latertable_content += picker;
+            	//latertable_content += start_end;
+            	
+            	latertable_content += generate_button;
+        
+            	
+            	latertable_content += tablelist;
+            	latertable_content += graphgenerator;
+            	console.log(latertable_content);
+            	$("#latertable_content").html(latertable_content);
 			
-			
-			
+            	
+            	$("#starttime").prop("readonly", true).datepicker({
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    onClose: function(selectedDate) {
+                        $("#date_end").datepicker("option", "minDate", selectedDate);
+                    }
+                });
+            	
+            	$("#endtime").prop("readonly", true).datepicker({
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    onClose: function(selectedDate) {
+                        $("#date_end").datepicker("option", "minDate", selectedDate);
+                    }
+                });
+            	
+            	
+            	
 			
 	});
 }
 
+function timepartition(start,end,range)
+{
+	if(range=="tyear")
+	{
+		
+	}
+	else if(range=="tmonth")
+	{
+		
+	}
+	else if(range=="tseason")
+	{
+		
+	}
+	else if(range =="tweek")
+	{
+		
+	}
+	else if(range =="tday")
+	{
+		
+	}
+
+}
+
+
+
+
+function datacomposer(params)
+{
+	$.postJSON("admin/display/dataserial",params,function(raw_data){
+		
+		console.log("?????");
+		console.log(timeindexes);
+		
+		for(var i=0;i<chooselabels.length;i++)
+		{
+			
+			
+			console.log(raw_data);
+			var text = chooselabels[i].text;
+			var id = chooselabels[i].id;
+			var serialdata = raw_data.data[""+id+""]
+			
+			var dataelement = {};
+			
+			var dataserial = [];
+			for(j=0;j<timelabels.length;j++)
+			{
+				dataserial.push(0);
+			}
+			
+			if(params["rangepicker"]=="tyear")
+			{
+				for(var j=0;j<serialdata.length;j++)
+				{
+					var datapair = serialdata[j];
+					dataserial[timeindexes[datapair["YEAR"]]]=datapair["count"];
+				}
+			}
+			else if(params["rangepicker"]=="tseason")
+			{
+				for(var j=0;j<serialdata.length;j++)
+				{
+					var datapair = serialdata[j];
+					dataserial[timeindexes[datapair["YEAR"]+"_"+datapair["SEASON"]]]=datapair["count"];
+				}
+			}
+			else if(params["rangepicker"]=="tmonth")
+			{
+				
+				for(var j=0;j<serialdata.length;j++)
+				{
+					var datapair = serialdata[j];
+					console.log("*****"+datapair["YEAR"]+"_"+datapair["MONTH"]);
+					console.log(timeindexes[datapair["YEAR"]+"_"+datapair["MONTH"]]);
+					dataserial[timeindexes[datapair["YEAR"]+"_"+datapair["MONTH"]]]=datapair["count"];
+				}
+			}
+			else if(params["rangepicker"]=="tweek")
+			{
+				for(var j=0;j<serialdata.length;j++)
+				{
+					var datapair = serialdata[j];
+					dataserial[timeindexes[datapair["YEAR"]+"_"+datapair["WEEK"]]]=datapair["count"];
+				}
+			}
+			else if(params["rangepicker"]=="tday")
+			{
+				for(var j=0;j<serialdata.length;j++)
+				{
+					var datapair = serialdata[j];
+					dataserial[timeindexes[datapair["YEAR"]+"_"+datapair["MONTH"]+"_"+datapair["DAY"]]]=datapair["count"];
+				}
+			}
+			dataelement["name"]=text;
+			dataelement["id"]=id;
+			dataelement["data"]=dataserial;
+			dataelement["range"]=params["rangepicker"];
+			dataelement["graph"]=params["graphpicker"];
+			dataelement["start"]=params["starttime"];
+			dataelement["end"]=params["endtime"];
+			console.log("******");
+			console.log(params);
+			console.log(dataelement);
+			var list_id = "datalist_"+id;
+			datalist.push(dataelement);
+		}
+		
+		$("#rpicker").removeClass("disabled");
+		$("#rpicker").addClass("disabled");
+		
+/*		$("#gpicker").removeClass("disabled");
+		$("#gpicker").addClass("disabled");*/
+		
+		$("#starttime").datepicker("disable");
+		$("#endtime").datepicker("disable");
+		//$("#starttime").addClass("disabled");
+		
+		
+		generateDataTable();
+		generateNewGraph();
+	});
+
+
+}
+
+function removeGenerateDataTable(id)
+{
+	var index = -1;
+	var templist=[];
+	for(var i=0;i<datalist.length;i++)
+	{
+		if(datalist[i].id!=id)
+		templist.push(datalist[i]);
+	}
+	datalist={};
+	datalist=templist;
+	generateDataTable();
+	generateNewGraph();
+}
+
+
+function generateNewGraph()
+{
+	
+	
+	var gdata =[];
+	var gseries =[];
+	for(var i=0;i<datalist.length;i++)
+	{
+		var n = datalist[i].name;
+		
+		var t = "";
+		if(datalist[i].graph=="gline")
+		{
+			t="line";
+		}
+		else if(datalist[i].graph=="gbar")
+		{
+			t="bar";
+		}
+		else if(datalist[i].graph=="gstack")
+		{
+			t="stack";
+		}
+		else if(datalist[i].graph=="gcloud")
+		{
+			t="wordCloud";
+		}
+		
+		
+		var d = datalist[i].data;
+		gdata.push(n);
+		var e = {};
+		e["name"]=n;
+		e["type"]=t;
+		e["data"]=d;
+		console.log("^^^^^^");
+		console.log(d);
+		gseries.push(e);
+	}
+	
+	console.log("&&&&&&&&");
+	console.log(timelabels);
+	console.log(gdata);
+	console.log(gseries);
+	
+	var myChart = echarts.init(document.getElementById('graph_area')); 
+	option = {
+		    tooltip : {
+		        trigger: 'axis'
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType: {show: true, type: ['line', 'bar']},
+		            restore : {show: true},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    legend: {
+		        data:gdata
+		    },
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : timelabels
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value',
+		            name : '指数',
+		            axisLabel : {
+		                formatter: '{value}'
+		            }
+		        },
+		        {
+		            type : 'value',
+		            name : '经济增长',
+		            axisLabel : {
+		                formatter: '{value}'
+		            }
+		        }
+		    ],
+		    series : gseries
+		};
+    
+    	myChart.setOption(option); 
+
+}
+
+
+
+function generateDataTable()
+{
+	var graph_table = "<thead><tr><th>名称</th><th>起始时间</th><th>终止时间</th><th>周期</th><th>类型</th><th>操作</th></tr></thead>";
+	graph_table+="<tbody>";
+	
+	var graphtype={};
+	graphtype["gline"]="折线图";
+	graphtype["gbar"]="柱状图";
+	graphtype["gstack"]="堆积图";
+	graphtype["gcloud"]="词云";
+	
+	var timerange={};
+	timerange["tyear"]="年";
+	timerange["tseason"]="季";
+	timerange["tmonth"]="月";
+	timerange["tweek"]="周";
+	timerange["tday"]="日";
+	
+	
+	for(var i=0;i<datalist.length;i++)
+	{
+		console.log(datalist[i]);
+		
+		graph_table+="<tr><td>"+datalist[i].name+"</td><td>"+datalist[i].start+"</td><td>"+datalist[i].end+"</td><td>"+timerange[datalist[i].range]+"</td><td>"+graphtype[datalist[i].graph]+"</td><td><button class=\"ui red button\" onclick=\"removeGenerateDataTable("+datalist[i].id+");\"><i class=\"remove icon\"></i>删除</button></td></tr>";
+	}
+	graph_table+="</tbody>";
+	$("#generate_graph_table").html(graph_table);
+
+}
+
+
+function dataGenerate()
+{
+	var pstart = $("#starttime").val();
+	var pend = $("#endtime").val();
+	var rangepicker = $("#rpicker").val();
+	var garphpicker = $("#gpicker").val();
+	if(pstart==""||pend=="")
+	{
+		alert("起始日期和终止日期不得为空！");
+		return;
+	}
+	else if(rangepicker=="")
+	{
+		alert("时间周期不得为空！");
+		return;
+	}
+	else if(garphpicker=="")
+	{
+		alert("图表类型不得为空！");
+		return;
+	}
+	else if(pstart>pend)
+	{
+		alert("起始日期大于终止日期！");
+		return;
+	}
+	else
+	{
+		var params ={};
+		
+		params["rangepicker"]=rangepicker;
+		params["graphpicker"]=garphpicker;
+		params["starttime"]=pstart;
+		params["endtime"]=pend;
+		
+		console.log(params);
+		
+		var picklabels = [];
+		
+		
+		for(var i=0;i<chooselabels.length;i++)
+		{
+			picklabels.push(chooselabels[i].id);
+		}
+		
+		params["picklabels"]=picklabels;
+		
+		if(timelabels.length==0)
+		{
+			$.postJSON("admin/display/timeserial",params,function(time_data){
+				timelabels=time_data["labels"];
+				timeindexes = time_data["indexes"];
+				console.log(time_data);
+				datacomposer(params);
+			});
+		}
+		else
+		{
+			datacomposer(params);
+		}
+		
+		
+
+		
+		
+
+	}
+	
+}
+
+function dataClear()
+{
+	$("#rpicker").removeClass("disabled");
+	$("#starttime").datepicker("enable");
+	$("#endtime").datepicker("enable");
+	datalist=[];
+	timelabels=[];
+	timeindexes={};
+	generateDataTable();
+	generateNewGraph();
+}
 
 function createRandomItemStyle() {
     return {
@@ -958,6 +1368,38 @@ function createRandomItemStyle() {
         }
     };
 }
+
+function addGraphSerial()
+{
+	var parameter = {};
+	var prange = "";
+	var ptype = "";
+	var pstart = $("#starttime").val();
+	var pend = $("#endtime").val();
+	
+	console.log(pstart);
+	console.log(pend);
+	
+	$.postJSON("",parameter,function(raw_data){
+		
+		var elementlist = {};
+		
+		var data = raw_data.data;
+		
+	
+		
+		
+		
+	});
+
+}
+
+
+function generateAutoGraph()
+{ 
+
+}
+
 
 
 function generateGraph()
@@ -1190,14 +1632,14 @@ function generateGraph()
 				    series : [
 				        {
 				            name:'GDP',
-				            type:'line',
+				            type:'bar',
 				            stack: '总量',
 				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
 				            data:[120, 132, 101, 134, 90, 230, 210]
 				        },
 				        {
 				            name:'消费',
-				            type:'line',
+				            type:'bar',
 				            stack: '总量',
 				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
 				            data:[220, 182, 191, 234, 290, 330, 310]
@@ -1206,9 +1648,18 @@ function generateGraph()
 				        {
 				            name:'投资',
 				            type:'line',
-				            stack: '总量',
+				            stack: '总量2',
 				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
 				            data:[320, 332, 301, 334, 390, 330, 320]
+				        }
+				        ,
+					       
+				        {
+				            name:'投资2',
+				            type:'line',
+				            stack: '总量2',
+				            itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				            data:[100, 150, 110, 160, 120, 130, 120]
 				        }
 				    ]
 				};

@@ -11,7 +11,7 @@
 
 
 	<properties>
-		<java-version>1.6</java-version>
+		<java-version>1.7</java-version>
 		<org.springframework-version>4.3.1.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
@@ -262,6 +262,14 @@
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
+	<dependency>
+    	<groupId>org.springframework.data</groupId>
+    	<artifactId>spring-data-elasticsearch</artifactId>
+    	<version>2.1.0.RELEASE</version>
+	</dependency>
+		
 
 	</dependencies>
 	<build>
@@ -285,8 +293,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					  <skip>true</skip>

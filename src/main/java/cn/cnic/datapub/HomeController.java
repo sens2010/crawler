@@ -4,22 +4,35 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
 
 import cn.cnic.datapub.schedule.SchedulePool;
 
 /**
  * Handles requests for the application home page.
  */
+
+
+
 @SuppressWarnings("deprecation")
 @Controller
 public class HomeController
 {
+	
+	@Resource
+	ElasticsearchTemplate elasticsearchTemplate;
+	
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(HomeController.class);
@@ -40,6 +53,19 @@ public class HomeController
 	public String admin()
 	{
 		return "admin";
+	}
+	
+	
+	@RequestMapping(value="/testes",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
+	@ResponseBody
+	public String testES()
+	{
+		JSONObject result = new JSONObject();
+		result.put("test", "testes");
+		
+		result.put("test", elasticsearchTemplate);
+		
+		return result.toJSONString();
 	}
 	
 	
@@ -92,7 +118,7 @@ public class HomeController
 		// query.addCriteria(ssc);
 		/*
 		 * query. query.set("q", "中国科学院计算机网络信息中心");
-		 */
+			 */
 		// query.setRows(20);
 		long start = System.currentTimeMillis();
 		

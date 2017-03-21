@@ -17,10 +17,16 @@
 	href="resources/semanticui/semantic.min.css">
 
 <script src="resources/jquery/jquery.min.js"></script>
+<script src="resources/jqueryui/jquery-ui.min.js"></script>
+<script src="resources/timepicker/jquery-ui-timepicker-addon.min.js"></script>
 <script src="resources/semanticui/semantic.min.js"></script>
 <script src="resources/app/admin.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="resources/jstree/themes/default/style.css">
+<link rel="stylesheet" type="text/css"
+	href="resources/jqueryui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css"
+	href="resources/timepicker/jquery-ui-timepicker-addon.min.css">
 <script src="resources/jstree/jstree.min.js"></script>
 <script src="resources/echarts2/echarts-all.js"></script>
 </head>
@@ -45,7 +51,7 @@
 		<p></p>
 		<div id="footer">
 			<div>
-        <p class="ui center aligned header">最新修改日期: 2017年01月19日</p>
+        <p class="ui center aligned header">最新修改日期: 2017年03月16日</p>
         <!-- <p class="ui center aligned header">中国科学院管理、决策与信息系统重点实验室 版权所有 Copyright &copy;2016</p>
         <p class="ui center aligned header"> 电话:010-62565817 电子邮件:master@mdis.amss.ac.cn</p> -->
       </div>
