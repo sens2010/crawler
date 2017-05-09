@@ -9,6 +9,10 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.Query;
+import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.SimpleStringCriteria;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +34,8 @@ import cn.cnic.datapub.schedule.SchedulePool;
 public class HomeController
 {
 	
-	@Resource
-	ElasticsearchTemplate elasticsearchTemplate;
+	/*@Resource
+	ElasticsearchTemplate elasticsearchTemplate;*/
 	
 	
 	private static final Logger logger = LoggerFactory
@@ -44,6 +48,9 @@ public class HomeController
 	 * 
 	 * @Resource AmqpTemplate amqpTemplate;
 	 */
+	
+	/*@Resource SolrTemplate solrTemplate;*/
+	
 	
 	//@Resource
 	@Deprecated
@@ -63,7 +70,7 @@ public class HomeController
 		JSONObject result = new JSONObject();
 		result.put("test", "testes");
 		
-		result.put("test", elasticsearchTemplate);
+		/*result.put("test", elasticsearchTemplate);*/
 		
 		return result.toJSONString();
 	}
@@ -109,20 +116,16 @@ public class HomeController
 		
 		// System.out.println(jdbcTemplate.queryForInt("select count(1) from STAT_TYPE"));
 		
-		// System.out.println(solrTemplate==null);
+/*		System.out.println(solrTemplate==null);
 		
-		// Query query = new SimpleQuery();
-		
-		// SimpleStringCriteria ssc = new SimpleStringCriteria("q=B*");
-		
-		// query.addCriteria(ssc);
-		/*
-		 * query. query.set("q", "中国科学院计算机网络信息中心");
-			 */
-		// query.setRows(20);
+		Query query = new SimpleQuery();
+		SimpleStringCriteria ssc = new SimpleStringCriteria("q=B*");
+		query.addCriteria(ssc);
+		query. query.set("q", "中国科学院计算机网络信息中心");	
+		query.setRows(20);
 		long start = System.currentTimeMillis();
 		
-		// System.out.println(solrTemplate.count(query));
+		System.out.println(solrTemplate.count(query));*/
 		
 		/*
 		 * start = System.currentTimeMillis(); SolrInputDocument sid = new
@@ -152,7 +155,7 @@ public class HomeController
 		 * amqpTemplate.receiveAndConvert("myqueue2"); System.out.println(foo);
 		 * }
 		 */
-		System.out.println("rabbitmq:" + (System.currentTimeMillis() - start));
+		/*System.out.println("rabbitmq:" + (System.currentTimeMillis() - start));*/
 		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
