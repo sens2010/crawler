@@ -1,79 +1,60 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" contentType="text/html; charset=UTF-8"%>
-<!-- index.html -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-  <head>
-   	<meta charset="utf-8" />
-    <title>金融大数据平台</title>
-    <script src="resources/react/react.js"></script>
-    <script src="resources/react/react-dom.js"></script>
-    <script src="resources/react/browser.min.js"></script>
-    <script src="resources/jquery/jquery.min.js"></script>
-    <script src="resources/semanticui/semantic.min.js"></script>
-    
-    <link rel="stylesheet" type="text/css" href="resources/semanticui/semantic.min.css">
-  </head>
-  <body >
+<head>
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-	<div id="header" >
+<!-- Site Properties -->
+<title>金融大数据平台</title>
+
+
+<link rel="stylesheet" type="text/css"
+	href="resources/semanticui/semantic.min.css">
+
+<script src="resources/jquery/jquery.min.js"></script>
+<script src="resources/jqueryui/jquery-ui.min.js"></script>
+<script src="resources/timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="resources/semanticui/semantic.min.js"></script>
+<script src="resources/app/admin.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="resources/jstree/themes/default/style.css">
+<link rel="stylesheet" type="text/css"
+	href="resources/jqueryui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css"
+	href="resources/timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="resources/jstree/jstree.min.js"></script>
+<script src="resources/echarts2/echarts-all.js"></script>
+</head>
+<body>
+	<div class="ui container basic segment">
+		<!-- <h2 class="ui center aligned header">金融大数据采集平台</h2> -->
 		
-	
-	
-	</div>
-	
-	<div id="main">
-		<div id="content"></div>
-			<div class="ui bottom example attached segment pushable">
-  <div class="ui example visible inverted left vertical sidebar menu">
-    <a class="item"><i class="home icon"></i> Home </a>
-    <a class="item"><i class="block layout icon"></i> Topics </a>
-    <a class="item"><i class="smile icon"></i> Friends </a>
-    <a class="item"><i class="calendar icon"></i> History </a>
-  </div>
-  <div class="pusher">
-    <div class="ui basic segment">
-      <h3 class="ui header">Application Content</h3>
-      <p></p>
-      <p></p>
-      <p></p>
-      <p></p>
-    </div>
-  </div>
-</div>
+		<h2 class="ui center aligned header">金融大数据平台</h2>
+		<h2 class="ui center aligned header"><a href="./admin">点击进入</a></h2>
 		
-		<div class="ui primary button" id="test">测试</div>
+		<p></p>
+		<div id="footer">
+			<div>
+        <p class="ui center aligned header">最新修改日期: 2017年05月10日</p>
+        <!-- <p class="ui center aligned header">中国科学院管理、决策与信息系统重点实验室 版权所有 Copyright &copy;2016</p>
+        <p class="ui center aligned header"> 电话:010-62565817 电子邮件:master@mdis.amss.ac.cn</p> -->
+      </div>
+		
+		</div>
 
 	</div>
-    
-    <div id="footer">
-    </div>
-    
-    
-    <script type="text/babel" src="resources/app/example.js"></script>
-    <script type="text/babel" src="resources/app/home.js"></script>
-    <script type="text/babel" src="resources/app/common.js"></script>
-    <script type="text/javascript" src="resources/app/bundle.js"></script>
-    <script type="text/babel">
-     
-    </script>
-    
-    <script type="text/javascript">
-    	console.log(1);
-    	$("#test").click(function(){
-    		console.log(2);	
-    		$('.ui.sidebar')
-    		  .sidebar({
-    		    context: '.bottom.segment'
-    		  })
-    		  .sidebar('hide');
-    		console.log(3);	
-    	});
-    	$('.visible.ui.sidebar').click(function(){
-    		console.log(4);
-    	});
-    
-    </script>
-    
-  </body>
+
+
+
+
+
+
+
+</body>
+
 </html>

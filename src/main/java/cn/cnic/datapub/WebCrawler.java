@@ -383,7 +383,7 @@ public class WebCrawler
 					(boolean) config.get("listscript"));
 			final HtmlPage page = webClient.getPage(config.get("url")
 					.toString());
-			List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(config
+			List<HtmlAnchor> list = page.getByXPath(config
 					.get("list").toString());
 			List<String> newslist = new ArrayList<String>();
 			System.out
@@ -404,14 +404,14 @@ public class WebCrawler
 			}
 			System.out
 					.println("****************************list-end****************************");
-			List<HtmlAnchor> click = (List<HtmlAnchor>) page.getByXPath(config
+			List<HtmlAnchor> click = page.getByXPath(config
 					.get("next").toString());
 			page.cleanUp();
 			System.out.println("click_size:" + click.size());
 			if (click.size() > 0)
 			{
 				final HtmlPage nextpage = click.get(0).click();
-				list = (List<HtmlAnchor>) nextpage.getByXPath(config
+				list = nextpage.getByXPath(config
 						.get("list").toString());
 				System.out
 						.println("****************************next-list****************************");
@@ -438,10 +438,10 @@ public class WebCrawler
 							(boolean) config.get("newsscript"));
 					final HtmlPage newspage = newClient.getPage(newslist.get(0)
 							.toString());
-					List<HtmlElement> title = (List<HtmlElement>)newspage.getByXPath(config.get("title").toString());
-					List<HtmlElement> time = (List<HtmlElement>)newspage.getByXPath(config.get("time").toString());
-					List<HtmlElement> sourceurl = (List<HtmlElement>)newspage.getByXPath(config.get("sourceurl").toString());
-					List<HtmlElement> text = (List<HtmlElement>)newspage.getByXPath(config.get("text").toString());
+					List<HtmlElement> title = newspage.getByXPath(config.get("title").toString());
+					List<HtmlElement> time = newspage.getByXPath(config.get("time").toString());
+					List<HtmlElement> sourceurl = newspage.getByXPath(config.get("sourceurl").toString());
+					List<HtmlElement> text = newspage.getByXPath(config.get("text").toString());
 					System.out.println("title:"+(title.size()>0?title.get(0).asText():""));
 					System.err.println("time:"+(time.size()>0?time.get(0).asText():""));
 					System.out.println("sourceurl:"+(sourceurl.size()>0?sourceurl.get(0).asText():""));

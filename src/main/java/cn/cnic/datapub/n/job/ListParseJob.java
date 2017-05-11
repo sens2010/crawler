@@ -287,7 +287,7 @@ public class ListParseJob extends ParseJob
 					other = previousone;
 				}
 				now.clear();
-				List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(this.getListmatch());
+				List<HtmlAnchor> list = page.getByXPath(this.getListmatch());
 				if(!isflag)
 				{
 					List<String> flagstr = new ArrayList<String>();
@@ -376,7 +376,7 @@ public class ListParseJob extends ParseJob
 			
 			System.out
 					.println("****************************list-end("+page_count+")****************************");
-			List<HtmlAnchor> click = (List<HtmlAnchor>) page.getByXPath(this.getNextmatch());
+			List<HtmlAnchor> click = page.getByXPath(this.getNextmatch());
 			page.cleanUp();
 			System.out.println("click_size:" + click.size());
 			if (click.size() > 0)

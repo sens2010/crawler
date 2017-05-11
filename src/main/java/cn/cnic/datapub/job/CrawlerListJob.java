@@ -91,7 +91,7 @@ public class CrawlerListJob implements Job
 			webClient.getOptions().setCssEnabled(this.isListcss());
 			webClient.getOptions().setJavaScriptEnabled(this.isListscript());
 			final HtmlPage page = webClient.getPage(this.getUrl());
-			List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(this.getListmatch());
+			List<HtmlAnchor> list = page.getByXPath(this.getListmatch());
 			List<String> newslist = new ArrayList<String>();
 			System.out
 					.println("******************************list******************************");
@@ -111,13 +111,13 @@ public class CrawlerListJob implements Job
 			}
 			System.out
 					.println("****************************list-end****************************");
-			List<HtmlAnchor> click = (List<HtmlAnchor>) page.getByXPath(this.getNextmatch());
+			List<HtmlAnchor> click = page.getByXPath(this.getNextmatch());
 			page.cleanUp();
 			System.out.println("click_size:" + click.size());
 			if (click.size() > 0)
 			{
 				final HtmlPage nextpage = click.get(0).click();
-				list = (List<HtmlAnchor>) nextpage.getByXPath(this.getListmatch());
+				list = nextpage.getByXPath(this.getListmatch());
 				System.out
 						.println("****************************next-list****************************");
 				System.out.println("list_size:" + list.size());

@@ -1,111 +1,57 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Standard Meta -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <!-- Site Properties -->
-  <title>Login Example - Semantic</title>
-  
- 
-  <link rel="stylesheet" type="text/css" href="resources/semanticui/semantic.min.css">
+<!-- Site Properties -->
+<title>金融大数据平台</title>
 
-  <script src="resources/jquery/jquery-3.0.0.min.js"></script>
-  <script src="resources/semanticui/semantic.min.js"></script>
 
-  <style type="text/css">
-    body {
-      background-color: #DADADA;
-    }
-    body > .grid {
-      height: 100%;
-    }
-    .image {
-      margin-top: -100px;
-    }
-    .column {
-      max-width: 450px;
-    }
-  </style>
-  <script>
-  $(document)
-    .ready(function() {
-      $('.ui.form')
-        .form({
-          fields: {
-            email: {
-              identifier  : 'email',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your e-mail'
-                },
-                {
-                  type   : 'email',
-                  prompt : 'Please enter a valid e-mail'
-                }
-              ]
-            },
-            password: {
-              identifier  : 'password',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your password'
-                },
-                {
-                  type   : 'length[6]',
-                  prompt : 'Your password must be at least 6 characters'
-                }
-              ]
-            }
-          }
-        })
-      ;
-    })
-  ;
-  </script>
+<link rel="stylesheet" type="text/css"
+	href="resources/semanticui/semantic.min.css">
+
+<script src="resources/jquery/jquery.min.js"></script>
+<script src="resources/jqueryui/jquery-ui.min.js"></script>
+<script src="resources/timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="resources/semanticui/semantic.min.js"></script>
+<script src="resources/app/admin.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="resources/jstree/themes/default/style.css">
+<link rel="stylesheet" type="text/css"
+	href="resources/jqueryui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css"
+	href="resources/timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="resources/jstree/jstree.min.js"></script>
+<script src="resources/echarts2/echarts-all.js"></script>
 </head>
 <body>
-
-<div class="ui middle aligned center aligned grid">
-  <div class="column">
-    <h2 class="ui teal image header">
-      <img src="resources/semanticui/assets/images/logo.png" class="image"/>
-      <span class="content">
-        Log-in to your account
-      </span>
-    </h2>
-    <form class="ui large form">
-      <div class="ui stacked segment">
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="text" name="email" placeholder="E-mail address">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="lock icon"></i>
-            <input type="password" name="password" placeholder="Password">
-          </div>
-        </div>
-        <div class="ui fluid large teal submit button">Login</div>
+	<div class="ui container basic segment">
+		<!-- <h2 class="ui center aligned header">金融大数据采集平台</h2> -->
+		<h2 class="ui center aligned header"><a href="./admin">金融大数据平台</a></h2>
+		
+		<p></p>
+		<div id="footer">
+			<div>
+        <p class="ui center aligned header">最新修改日期: 2017年05月10日</p>
+        <!-- <p class="ui center aligned header">中国科学院管理、决策与信息系统重点实验室 版权所有 Copyright &copy;2016</p>
+        <p class="ui center aligned header"> 电话:010-62565817 电子邮件:master@mdis.amss.ac.cn</p> -->
       </div>
+		
+		</div>
 
-      <div class="ui error message"></div>
+	</div>
 
-    </form>
 
-    <div class="ui message">
-      New to us? <a href="#">Sign Up</a>
-    </div>
-  </div>
-</div>
+
+
+
+
 
 </body>
 

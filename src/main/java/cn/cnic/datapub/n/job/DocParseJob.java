@@ -96,10 +96,10 @@ public class DocParseJob extends ParseJob implements MessageListener
 				try
 				{
 			final HtmlPage newspage = newClient.getPage(url);
-			List<HtmlElement> titlelist = (List<HtmlElement>)newspage.getByXPath(titlematch);
-			List<HtmlElement> timelist = (List<HtmlElement>)newspage.getByXPath(timematch);
-			List<HtmlElement> sourceurllist = (List<HtmlElement>)newspage.getByXPath(sourceurlmatch);
-			List<HtmlElement> textlist = (List<HtmlElement>)newspage.getByXPath(textmatch);
+			List<HtmlElement> titlelist = newspage.getByXPath(titlematch);
+			List<HtmlElement> timelist = newspage.getByXPath(timematch);
+			List<HtmlElement> sourceurllist = newspage.getByXPath(sourceurlmatch);
+			List<HtmlElement> textlist = newspage.getByXPath(textmatch);
 			
 			if(titlelist.size()>0)
 			{

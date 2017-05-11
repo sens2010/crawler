@@ -79,7 +79,8 @@ public class ParserServiceImpl implements IParserService
 			webClient.getOptions().setJavaScriptEnabled(parser.isListjs());
 			final HtmlPage page = webClient.getPage(url);
 			@SuppressWarnings("unchecked")
-			List<HtmlAnchor> list = (List<HtmlAnchor>) page.getByXPath(parser.getListparser());
+			List<HtmlAnchor> list = page.getByXPath(parser.getListparser());
+			
 			if(list.size()<=0)
 			{
 				result.put("code", 404);
@@ -103,14 +104,14 @@ public class ParserServiceImpl implements IParserService
 				
 				final HtmlPage newspage = webClient.getPage(news_url);
 				
-				@SuppressWarnings("unchecked")
-				List<HtmlElement> titles = (List<HtmlElement>)newspage.getByXPath(parser.getTitleparser());
-				@SuppressWarnings("unchecked")
-				List<HtmlElement> times = (List<HtmlElement>)newspage.getByXPath(parser.getTimeparser());
-				@SuppressWarnings("unchecked")
-				List<HtmlElement> sourceurls = (List<HtmlElement>)newspage.getByXPath(parser.getSourceparser());
-				@SuppressWarnings("unchecked")
-				List<HtmlElement> texts = (List<HtmlElement>)newspage.getByXPath(parser.getTextparser());
+				//@SuppressWarnings("unchecked")
+				List<HtmlElement> titles = newspage.getByXPath(parser.getTitleparser());
+				//@SuppressWarnings("unchecked")
+				List<HtmlElement> times = newspage.getByXPath(parser.getTimeparser());
+				//@SuppressWarnings("unchecked")
+				List<HtmlElement> sourceurls = newspage.getByXPath(parser.getSourceparser());
+				//@SuppressWarnings("unchecked")
+				List<HtmlElement> texts = newspage.getByXPath(parser.getTextparser());
 			
 				String title ="";
 				String time ="";

@@ -32,16 +32,16 @@ public interface NewsDao extends CrudRepository<News, Integer>
 	@Query("from News n where n.newsid=?1")
 	News findByNewId(String newsid);
 	
-	@Query(value="select * from result_news n order by n.pubtime desc limit ?1 offset ?2", nativeQuery=true)
+	@Query(value="select * from result_news n right join (select id from result_news order by pubtime desc limit ?1 offset ?2) as m on m.id=n.id", nativeQuery=true)
 	List<News> findAll(int limit, int offset);
 	
-	@Query(value="select * from result_news n where n.title like ?1 order by n.pubtime desc limit ?2 offset ?3", nativeQuery=true)
+	@Query(value="select * from result_news n right join (select id from result_news where title like ?1 order by pubtime desc limit ?2 offset ?3) as m on m.id=n.id", nativeQuery=true)
 	List<News> findAllByName(String value, int limit, int offset);
 	
-	@Query(value="select * from result_news n where n.resource like ?1 order by n.pubtime desc limit ?2 offset ?3", nativeQuery=true)
+	@Query(value="select * from result_news n right join (select id from result_news where resource like ?1 order by pubtime desc limit ?2 offset ?3) as m on m.id=n.id", nativeQuery=true)
 	List<News> findAllByResource(String value, int limit, int offset);
 	
-	@Query(value="select * from result_news n where n.text like ?1 order by n.pubtime desc limit ?2 offset ?3", nativeQuery=true)
+	@Query(value="select * from result_news n right join (select id from result_news where text like ?1 order by pubtime desc limit ?2 offset ?3) as m on m.id=n.id", nativeQuery=true)
 	List<News> findAllByText(String value, int limit, int offset);
 	
 }

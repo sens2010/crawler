@@ -1,5 +1,5 @@
 var chooselabels = [];
-var choosenews =[];
+var choosenews ={};
 var timerangetype = 0;
 var datalist=[];
 var timelabels=[];
@@ -131,6 +131,7 @@ function getContent(index)
 	}
 	else if(index == "newslist")
 	{
+		choosenews={};
 		getNewsListContent(0);
 	}
 	else if(index == "display")
@@ -237,6 +238,72 @@ function getJobContent(index)
 	});
 }
 
+/*function getJobContent(index)
+{
+	$.get("admin/njob/categorymap/",function(raw_result){
+		var result = raw_result._data;
+
+		var table = "<thead><tr>";
+		table += "<th>任务分类</th><th>采集任务/th><th>执行计划</th><th>执行规则</th><th>创建时间</th><th>最近执行时间</th><th>操作</th>";
+		table += "</tr></thead>";
+		table += "<tbody>";
+		for(var i=0;i<result.length;i++)
+		{
+			table += "<tr>";
+			
+			var category_size = result[i]._total;
+			
+			var row_element = "<td rowspan=\""+category_size+"\">"+result[i].name+"</td>";
+			var jobs = result[i]._job;
+			if(jobs==null||jobs==undefined)
+			{
+				
+			}
+			else
+			{
+				
+			}
+			
+			
+			for(var j=0;j<jobs.length;j++)
+			{
+				var job = jobs[j];
+				row_element+= "<td rowspan=\""+job._size+"\">"+job.name+"</td>";
+				var plans = job._plan;
+				for(var k=0;k<plans.length;k++)
+				{
+					var plan = plans[k];
+					row_element+= 
+				}
+			}
+			
+			var statuslist = "";
+			
+			if(result[i]["status"]=="R")
+			{
+				statuslist = "<td><span class=\"ui small basic icon buttons\"><button class=\"ui active button\" onclick=\"startJob("+result[i]["id"]+");\"><i class=\"play icon\" /></button><button class=\"ui button\" onclick=\"stopJob("+result[i]["id"]+");\"><i class=\"pause icon\" /></button><button class=\"ui button\" onclick=\"restartJob("+result[i]["id"]+");\"><i class=\"undo icon\" /></button></span></td>";
+			}
+			else
+			{
+				statuslist = "<td><span class=\"ui small basic icon buttons\"><button class=\"ui  button\" onclick=\"startJob("+result[i]["id"]+");\"><i class=\"play icon\" /></button><button class=\"ui active button\" onclick=\"stopJob("+result[i]["id"]+");\"><i class=\"pause icon\" /></button><button class=\"ui button\" onclick=\"restartJob("+result[i]["id"]+");\"><i class=\"undo icon\" /></button></span></td>";
+			}
+			var oplist = "<td > <span class=\"ui small basic icon buttons\"><button class=\"ui button\" onclick=\"changeJob("+result[i]["id"]+");\"><i class=\"write icon\" /></button><button class=\"ui button\" onclick=\"infoJob("+result[i]["id"]+");\"><i class=\"info Circle icon\" /></button><button class=\"ui button\" onclick=\"deleteJob("+result[i]["id"]+");\"><i class=\"remove icon\" /></button></span></td>";
+			table += "<td>"+result[i]["name"]+"</td><td>"+result[i]["plan"]+"</td><td>"+(typeof(result[i]["category"])=="undefined"?"-":result[i]["category"])+"</td><td>"+result[i]["createtime"]+"</td><td>"+(typeof(result[i]["lastmodifytime"])=="undefined"?"-":result[i]["lastmodifytime"])+"</td>"+statuslist+""+oplist+"";
+			
+			
+			table += "</tr>";
+		}
+		table += "</tbody>";
+		table += "<tfoot>";
+		table += "<th><span class=\"ui left floated\"><button class=\"ui primary button\" onclick=\"addJob();\">添加任务</button></span></th>";
+		table += "<th colSpan=\"6\"><span class=\"ui right floated pagination menu\">";
+		table +="</span></th>";
+		table += "</tfoot>";
+		$("#content_table").html(table);
+	});
+}*/
+
+
 function display_page(index,count,size)
 {
 	console.log("index:"+index+",count:"+count+",size:"+size);
@@ -259,7 +326,7 @@ function display_page(index,count,size)
 		if(count<(size/2)+index)
 		{
 			top_down["top"]=count-size;
-			top_down["down"]=size-1;
+			top_down["down"]=count-1;
 		}
 		else
 		{
@@ -273,6 +340,15 @@ function display_page(index,count,size)
 
 function getNewsListContent(index)
 {
+	var checklist = $(".newscheck").get();
+	for(var i=0;i<checklist.length;i++)
+	{
+		if(checklist[i].checked)
+		{
+			choosenews[checklist[i].id]=checklist[i].id.substr(5);	
+		}
+	}
+	
 	var pagesize = 5;
 	$.get("admin/news/list/"+index,function(raw_result){
 		var result = raw_result.data;
@@ -284,6 +360,9 @@ function getNewsListContent(index)
 		var pagelist = "<a class=\"icon item\" onclick=\"getNewsListContent("+pre+")\"><i class=\"left chevron icon\"></i></a>";
 		
 		var top_down = display_page(index,count,pagesize);
+		
+		console.log(top_down);
+		
 		
 		for(var c=top_down["top"];c<=top_down["down"];c++)
 		{
@@ -297,6 +376,9 @@ function getNewsListContent(index)
 			}
 		}
 		pagelist += "<a class=\"icon item\" onclick=\"getNewsListContent("+next+");\"><i class=\"right chevron icon\"></i></a>";
+		
+		var pagejump="<span class=\"ui right labeled input\"><span class=\"ui label\">共"+count+"页，第</span><input type=\"text\" style=\"width:50px\" id=\"ipagenum\"><span class=\"ui label\">页</span><button class=\"ui button\" onclick=\"jumpListContent();\">跳转</button></span>";
+		
 		console.log(pagelist);
 		var table = "<thead><tr>";
 		table += "<th></th><th>新闻ID</th><th>新闻标题</th><th>发布时间</th><th>标签</th><th>操作</th>";
@@ -324,7 +406,8 @@ function getNewsListContent(index)
 		table += "<tfoot>";
 		table += "<th colSpan=\"6\"><span class=\"ui right floated pagination menu\">";
 		table += pagelist;
-		table +="</span></th>";
+		table +="</span>" +pagejump+
+				"</th>";
 		table += "</tfoot>";
 		$("#content_table").html(table);
 		//var precontent = "<span class=\"ui left floated\"><button class=\"ui primary button\" onclick=\"addJob();\">全选</button><button class=\"ui primary button\" onclick=\"addJob();\">添加标签</button></span>";
@@ -339,21 +422,57 @@ function getNewsListContent(index)
 		
 		
 		
-		var precontent = "<div class=\"ui container\"><button class=\"ui primary button left floated\" onclick=\"selectAllNews();\"><i class=\"checkmark icon\"></i>全选</button><button class=\"ui primary button left floated\" onclick=\"reverseSelectAllNews();\"><i class=\"remove icon\"></i>反选</button><button class=\"ui primary button left floated\" onclick=\"getNewsLabels("+index+");\"><i class=\"plus icon\"></i>标注</button><div class=\"ui search buttons right floated\"><div class=\"ui icon input \">"+selector+"<input class=\"prompt\" type=\"text\" id=\"newssearchcontent\" placeholder=\"查询内容\" onchange=\"changeNewsContent();\"><i class=\"search icon\"></i></div><p></p></div></div>";
+		var precontent = "<div class=\"ui container\"><button class=\"ui primary button left floated\" onclick=\"selectAllNews();\"><i class=\"checkmark icon\"></i>全选</button><button class=\"ui primary button left floated\" onclick=\"reverseSelectAllNews();\"><i class=\"remove icon\"></i>反选</button><button class=\"ui negative button left floated\" onclick=\"clearSelectAllNews();\"><i class=\"remove icon\"></i>清除所有</button><button class=\"ui primary button left floated\" onclick=\"getNewsLabels("+index+");\"><i class=\"plus icon\"></i>标注</button><div class=\"ui search buttons right floated\"><div class=\"ui icon input \">"+selector+"<input class=\"prompt\" type=\"text\" id=\"newssearchcontent\" placeholder=\"查询内容\" onchange=\"changeNewsContent();\"><i class=\"search icon\"></i></div><p></p></div></div>";
 		
 		$("#pretable_content").html(precontent);
 		$("#aftertable_content").html("");
+		
+		var checklist = $(".newscheck").get();
+		for(var i=0;i<checklist.length;i++)
+		{
+			if(checklist[i].id in choosenews)
+			{
+				checklist[i].checked=true;
+			}
+		}
 		
 	});
 
 }
 
+function jumpListContent()
+{
+	var numbr = $("#ipagenum").val();
+	
+	getNewsListContent(parseInt(numbr)-1);
+}
+
+
+
+
+
+
 function changeNewsContent(index)
 {
+
+	
+	var checklist = $(".newscheck").get();
+	for(var i=0;i<checklist.length;i++)
+	{
+		if(checklist[i].checked)
+		{
+			choosenews[checklist[i].id]=checklist[i].id.substr(5);	
+		}
+	}
+	
 	var pagesize = 5;
 	if(typeof(index)=="undefined")index=0;
 	var searchstr = $("#newssearchcontent").val();
 	var selector = $("#newssearchselector").val();
+	
+
+	
+	
 	if(selector!="default"&&searchstr!="")
 	{
 		var data = {};
@@ -370,7 +489,7 @@ function changeNewsContent(index)
 			var pagelist = "<a class=\"icon item\" onclick=\"changeNewsContent("+pre+")\"><i class=\"left chevron icon\"></i></a>";
 			
 			var top_down = display_page(index,count,pagesize);
-			
+			console.log(top_down);
 			for(var c=top_down["top"];c<=top_down["down"];c++)
 			{
 				if(index!=c)
@@ -384,6 +503,10 @@ function changeNewsContent(index)
 			}
 			pagelist += "<a class=\"icon item\" onclick=\"changeNewsContent("+next+");\"><i class=\"right chevron icon\"></i></a>";
 			console.log(pagelist);
+			
+			var pagejump="<span class=\"ui right labeled input\"><span class=\"ui label\">共"+count+"页，第</span><input type=\"text\" style=\"width:50px\" id=\"ipagenum\"><span class=\"ui label\">页</span><button class=\"ui button\" onclick=\"jumpChangeListContent();\">跳转</button></span>";
+			
+			
 			var table = "<thead><tr>";
 			table += "<th></th><th>新闻ID</th><th>新闻标题</th><th>发布时间</th><th>标签</th><th>操作</th>";
 			table += "</tr></thead>";
@@ -410,10 +533,23 @@ function changeNewsContent(index)
 			table += "<tfoot>";
 			table += "<th colSpan=\"6\"><span class=\"ui right floated pagination menu\">";
 			table += pagelist;
-			table +="</span></th>";
+			table +="</span>" +pagejump+
+					"</th>";
 			table += "</tfoot>";
 			$("#content_table").html(table);
+			var checklist = $(".newscheck").get();
+			for(var i=0;i<checklist.length;i++)
+			{
+				if(checklist[i].id in choosenews)
+				{
+					checklist[i].checked=true;
+				}
+			}
 		});
+		
+		
+		
+
 	}
 	else
 	{
@@ -421,7 +557,23 @@ function changeNewsContent(index)
 	}
 }
 
+function jumpChangeListContent()
+{
+	var numbr = $("#ipagenum").val();
+	
+	changeNewsContent(parseInt(numbr)-1);
+}
 
+function clearSelectAllNews()
+{
+	choosenews={};
+	var checklist = $(".newscheck").get();
+	for(var i=0;i<checklist.length;i++)
+	{
+		checklist[i].checked=false;	
+		
+	}
+}
 
 function removeNewsLabels(index,id)
 {
@@ -661,10 +813,21 @@ function reverseSelectAllNews()
 	}
 }
 
+function reverseSelectAllNews()
+{
+	var checklist = $(".newscheck").get();
+	for(var i=0;i<checklist.length;i++)
+	{
+		checklist[i].checked=false;	
+		
+	}
+}
+
+
 function getNewsLabels(index,id)
 {
 	var checklist = $(".newscheck").get();
-	choosenews=[];
+	//choosenews={};
 	
 	console.log(choosenews);
 	var color_size = 4;
@@ -699,7 +862,7 @@ function getNewsLabels(index,id)
 			{
 				if(checklist[i].checked)
 				{
-					choosenews.push(checklist[i].id.substr(5));	
+					choosenews[checklist[i].id]=checklist[i].id.substr(5);	
 				}
 			}
 			var actions = "<div class=\"ui primary button close\" onclick=\"submitNewsLabels("+index+");\">提交</div>";
@@ -710,7 +873,7 @@ function getNewsLabels(index,id)
 		}
 		else
 		{
-			choosenews.push(id);
+			choosenews["news_"+id]=id;
 			$.get("admin/news/"+id,function(raw_result){
 				var result = raw_result.data;
 				var labels = result.labels;
@@ -811,7 +974,12 @@ function submitNewsLabels(index,id)
 		labels.push(chooselabels[i].id);
 	}
 	var data = {};
-	data["news"]=choosenews;
+	var choosennewslist = [];
+	for (var prop in choosenews) {
+		choosennewslist.push(choosenews[prop]);
+	}
+	
+	data["news"]=choosennewslist;
 	data["labels"]=labels;
 	console.log(data);
 	chooselabels
@@ -823,6 +991,13 @@ function submitNewsLabels(index,id)
 			if(typeof(result["createtime"])!=undefined)
 			{
 				alert("添加标签成功");
+				choosenews={};
+				var checklist = $(".newscheck").get();
+				for(var i=0;i<checklist.length;i++)
+				{
+					checklist[i].checked=false;	
+					
+				}
 				$("#content_modal").modal("hide");
 				getNewsListContent(index);
 			}
@@ -832,6 +1007,13 @@ function submitNewsLabels(index,id)
 	{
 		$.putJSON("admin/news/labels/"+id, data, function(raw_result){
 			alert("修改标签成功");
+			choosenews={};
+			var checklist = $(".newscheck").get();
+			for(var i=0;i<checklist.length;i++)
+			{
+				checklist[i].checked=false;	
+				
+			}
 			$("#content_modal").modal("hide");
 			getNewsListContent(index);
 		});

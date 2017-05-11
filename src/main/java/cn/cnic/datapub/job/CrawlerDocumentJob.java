@@ -113,10 +113,10 @@ public class CrawlerDocumentJob implements Job
 			newClient.getOptions().setCssEnabled(this.isDoccss());
 			newClient.getOptions().setJavaScriptEnabled(this.isDocscript());
 			final HtmlPage newspage = newClient.getPage(this.getUrl());
-			List<HtmlElement> title = (List<HtmlElement>)newspage.getByXPath(this.getTitlematch());
-			List<HtmlElement> time = (List<HtmlElement>)newspage.getByXPath(this.getTimematch());
-			List<HtmlElement> sourceurl = (List<HtmlElement>)newspage.getByXPath(this.getSourceurlmatch());
-			List<HtmlElement> text = (List<HtmlElement>)newspage.getByXPath(this.getTextmatch());
+			List<HtmlElement> title = newspage.getByXPath(this.getTitlematch());
+			List<HtmlElement> time = newspage.getByXPath(this.getTimematch());
+			List<HtmlElement> sourceurl = newspage.getByXPath(this.getSourceurlmatch());
+			List<HtmlElement> text = newspage.getByXPath(this.getTextmatch());
 			System.out.println("title:"+(title.size()>0?title.get(0).asText():""));
 			System.out.println("time:"+(time.size()>0?time.get(0).asText():""));
 			System.out.println("sourceurl:"+(sourceurl.size()>0?sourceurl.get(0).asText():""));

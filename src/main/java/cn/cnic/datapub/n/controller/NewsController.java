@@ -272,7 +272,7 @@ public class NewsController
 			return getNewsList();
 		}
 		
-		int pagesize = 10;
+		int pagesize = 30;
 		int sum = newsServiceImpl.countAll(name,value);
 		int page_count=sum/pagesize+(sum%pagesize==0?0:1);
 		int courrent_index = pid;
@@ -372,7 +372,7 @@ public class NewsController
 	@RequestMapping(value="/list/{pid}",method = RequestMethod.GET, produces = "application/json;charset=UTF8")
 	public String getNewsList(@PathVariable("pid") int pid)
 	{
-		int pagesize = 10;
+		int pagesize = 30;
 		int sum = newsServiceImpl.countAll();
 		int page_count=sum/pagesize+(sum%pagesize==0?0:1);
 		int courrent_index = pid;
